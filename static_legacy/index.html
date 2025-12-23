@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion AI Generator - 패션 AI 생성 시스템</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <h1>Fashion AI Generator</h1>
+                    <span class="subtitle" data-i18n="common.appSubtitle">패션 트렌드 분석 및 이미지 생성 시스템</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#trend-analysis" class="nav-link active" data-i18n="navigation.trendAnalysis">트렌드 분석</a></li>
+                    <li><a href="#image-generation" class="nav-link" data-i18n="navigation.imageGeneration">이미지 생성</a></li>
+                    <li><a href="#blueprint" class="nav-link" data-i18n="navigation.blueprint">패턴 생성</a></li>
+                    <li><a href="#crawler" class="nav-link" data-i18n="navigation.crawler">데이터 수집</a></li>
+                    <li><a href="#settings" class="nav-link" data-i18n="common.settings">⚙️ 설정</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <div class="language-selector">
+                        <select id="language-select">
+                            <option value="ko">한국어</option>
+                            <option value="en">English</option>
+                            <option value="zh-CN">中文(简体)</option>
+                            <option value="zh-TW">中文(繁體)</option>
+                        </select>
+                    </div>
+                    <div class="api-status-indicator" id="api-status">
+                        <span class="status-dot offline"></span>
+                        <span class="status-text" data-i18n="settings.status.notConfigured">API 미설정</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 트렌드 분석 섹션 -->
+        <section id="trend-analysis" class="section active">
+            <div class="container">
+                <h2 data-i18n="trendAnalysis.title">패션 트렌드 분석</h2>
+                <div class="analysis-container">
+                    <div class="input-panel">
+                        <div class="form-group">
+                            <label for="trend-keywords" data-i18n="trendAnalysis.keywords">키워드</label>
+                            <input type="text" id="trend-keywords" data-i18n-placeholder="trendAnalysis.keywordsPlaceholder" placeholder="예: 오버사이즈, 미니멀, 빈티지" class="form-control">
+                            <small class="form-help" data-i18n="trendAnalysis.keywordsHelp">쉼표로 여러 키워드를 입력하세요</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="time-range" data-i18n="trendAnalysis.timeRange">분석 기간</label>
+                            <select id="time-range" class="form-control">
+                                <option value="1d" data-i18n="trendAnalysis.timeRanges.1d">최근 1일</option>
+                                <option value="7d" selected data-i18n="trendAnalysis.timeRanges.7d">최근 7일</option>
+                                <option value="30d" data-i18n="trendAnalysis.timeRanges.30d">최근 30일</option>
+                            </select>
+                        </div>
+                        <button id="analyze-trends" class="btn btn-primary" data-i18n="trendAnalysis.startAnalysis">트렌드 분석 시작</button>
+                    </div>
+                    <div class="result-panel">
+                        <div id="trend-results" class="results-container">
+                            <div class="empty-state">
+                                <p data-i18n="trendAnalysis.results.enterKeywords">키워드를 입력하고 트렌드 분석을 시작하세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 이미지 생성 섹션 -->
+        <section id="image-generation" class="section">
+            <div class="container">
+                <h2 data-i18n="imageGeneration.title">패션 디자인 이미지 생성</h2>
+                <div class="generation-container">
+                    <div class="input-panel">
+                        <div class="form-group">
+                            <label for="design-prompt" data-i18n="imageGeneration.designPrompt.label">디자인 설명</label>
+                            <textarea id="design-prompt" data-i18n-placeholder="imageGeneration.designPrompt.placeholder" placeholder="생성하고 싶은 패션 디자인을 자세히 설명하세요" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="garment-type" data-i18n="imageGeneration.garmentType.label">의류 종류</label>
+                                <select id="garment-type" class="form-control">
+                                    <option value="dress" data-i18n="imageGeneration.garmentType.options.dress">드레스</option>
+                                    <option value="shirt" data-i18n="imageGeneration.garmentType.options.shirt">셔츠</option>
+                                    <option value="pants" data-i18n="imageGeneration.garmentType.options.pants">바지</option>
+                                    <option value="skirt" data-i18n="imageGeneration.garmentType.options.skirt">스커트</option>
+                                    <option value="jacket" data-i18n="imageGeneration.garmentType.options.jacket">자켓</option>
+                                    <option value="coat" data-i18n="imageGeneration.garmentType.options.coat">코트</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="style" data-i18n="imageGeneration.style.label">스타일</label>
+                                <select id="style" class="form-control">
+                                    <option value="modern" data-i18n="imageGeneration.style.options.modern">모던</option>
+                                    <option value="minimal" data-i18n="imageGeneration.style.options.minimal">미니멀</option>
+                                    <option value="vintage" data-i18n="imageGeneration.style.options.vintage">빈티지</option>
+                                    <option value="casual" data-i18n="imageGeneration.style.options.casual">캐주얼</option>
+                                    <option value="formal" data-i18n="imageGeneration.style.options.formal">포멀</option>
+                                    <option value="street" data-i18n="imageGeneration.style.options.street">스트릿</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="color-scheme" data-i18n="imageGeneration.colorScheme.label">색상 구성 (선택사항)</label>
+                            <input type="text" id="color-scheme" data-i18n-placeholder="imageGeneration.colorScheme.placeholder" placeholder="예: 파스텔 톤, 모노크롬" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="fabric-type" data-i18n="imageGeneration.fabricType.label">소재 (선택사항)</label>
+                            <input type="text" id="fabric-type" data-i18n-placeholder="imageGeneration.fabricType.placeholder" placeholder="예: 코튼, 실크, 데님" class="form-control">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quality" data-i18n="imageGeneration.quality.label">품질</label>
+                                <select id="quality" class="form-control">
+                                    <option value="low" data-i18n="imageGeneration.quality.options.low">낮음</option>
+                                    <option value="medium" data-i18n="imageGeneration.quality.options.medium">보통</option>
+                                    <option value="high" selected data-i18n="imageGeneration.quality.options.high">높음</option>
+                                    <option value="ultra" data-i18n="imageGeneration.quality.options.ultra">최고</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="num-variations" data-i18n="imageGeneration.numVariations.label">변형 개수</label>
+                                <input type="number" id="num-variations" value="1" min="1" max="4" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reference-image" data-i18n="imageGeneration.referenceImage.label">참조 이미지 (선택사항)</label>
+                            <input type="file" id="reference-image" accept="image/*" class="form-control">
+                        </div>
+                        <button id="generate-design" class="btn btn-primary" data-i18n="imageGeneration.generate">디자인 생성</button>
+                    </div>
+                    <div class="result-panel">
+                        <div id="generation-results" class="results-container">
+                            <div class="empty-state">
+                                <p data-i18n="imageGeneration.results.enterPrompt">디자인 설명을 입력하고 생성을 시작하세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 패턴 생성 섹션 -->
+        <section id="blueprint" class="section">
+            <div class="container">
+                <h2 data-i18n="blueprint.title">패턴 블루프린트 생성</h2>
+                <div class="blueprint-container">
+                    <div class="input-panel">
+                        <div class="form-group">
+                            <label for="bp-garment-type" data-i18n="blueprint.garmentType.label">의류 종류</label>
+                            <select id="bp-garment-type" class="form-control">
+                                <option value="dress" data-i18n="blueprint.garmentType.options.dress">드레스</option>
+                                <option value="shirt" data-i18n="blueprint.garmentType.options.shirt">셔츠</option>
+                                <option value="pants" data-i18n="blueprint.garmentType.options.pants">바지</option>
+                                <option value="skirt" data-i18n="blueprint.garmentType.options.skirt">스커트</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bp-design" data-i18n="blueprint.design.label">디자인 설명</label>
+                            <textarea id="bp-design" data-i18n-placeholder="blueprint.design.placeholder" placeholder="생성할 패턴의 디자인을 설명하세요" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="size-system" data-i18n="blueprint.sizeSystem.label">치수 시스템</label>
+                                <select id="size-system" class="form-control">
+                                    <option value="KS" selected data-i18n="blueprint.sizeSystem.options.KS">KS (한국)</option>
+                                    <option value="GB" data-i18n="blueprint.sizeSystem.options.GB">GB (영국)</option>
+                                    <option value="ASTM" data-i18n="blueprint.sizeSystem.options.ASTM">ASTM (미국)</option>
+                                    <option value="ISO" data-i18n="blueprint.sizeSystem.options.ISO">ISO (국제)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="size" data-i18n="blueprint.size.label">사이즈</label>
+                                <select id="size" class="form-control">
+                                    <option value="S" data-i18n="blueprint.size.options.S">S</option>
+                                    <option value="M" selected data-i18n="blueprint.size.options.M">M</option>
+                                    <option value="L" data-i18n="blueprint.size.options.L">L</option>
+                                    <option value="XL" data-i18n="blueprint.size.options.XL">XL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="include-instructions" checked>
+                                <span data-i18n="blueprint.includeInstructions">제작 지시문 포함</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="include-seam" checked>
+                                <span data-i18n="blueprint.includeSeamAllowance">시접 여유 (1.5cm)</span>
+                            </label>
+                        </div>
+                        <button id="generate-blueprint" class="btn btn-primary" data-i18n="blueprint.generate">패턴 생성</button>
+                    </div>
+                    <div class="result-panel">
+                        <div id="blueprint-results" class="results-container">
+                            <div class="empty-state">
+                                <p data-i18n="blueprint.results.enterDesign">디자인 정보를 입력하고 패턴 생성을 시작하세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 데이터 수집 섹션 -->
+        <section id="crawler" class="section">
+            <div class="container">
+                <h2 data-i18n="crawler.title">패션 데이터 수집</h2>
+                <div class="crawler-container">
+                    <div class="input-panel">
+                        <div class="form-group">
+                            <label data-i18n="crawler.sources.label">데이터 소스</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="sources" value="fashion_news" checked> <span data-i18n="crawler.sources.fashion_news">패션 뉴스</span></label>
+                                <label><input type="checkbox" name="sources" value="fashion_insta"> <span data-i18n="crawler.sources.fashion_insta">패션 인스타그램</span></label>
+                                <label><input type="checkbox" name="sources" value="musinsa"> <span data-i18n="crawler.sources.musinsa">무신사</span></label>
+                                <label><input type="checkbox" name="sources" value="wgsn"> <span data-i18n="crawler.sources.wgsn">WGSN</span></label>
+                                <label><input type="checkbox" name="sources" value="pinterest"> <span data-i18n="crawler.sources.pinterest">Pinterest</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="crawler-keywords" data-i18n="crawler.keywords.label">수집 키워드</label>
+                            <input type="text" id="crawler-keywords" data-i18n-placeholder="crawler.keywords.placeholder" placeholder="예: 2024 패션 트렌드, 오버핏" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="max-items" data-i18n="crawler.maxItems.label">최대 수집량</label>
+                            <input type="number" id="max-items" value="100" min="10" max="1000" class="form-control">
+                        </div>
+                        <button id="start-crawling" class="btn btn-primary" data-i18n="crawler.start">데이터 수집 시작</button>
+                    </div>
+                    <div class="result-panel">
+                        <div id="crawler-results" class="results-container">
+                            <div class="empty-state">
+                                <p data-i18n="crawler.results.selectSources">데이터 소스를 선택하고 수집을 시작하세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 설정 섹션 -->
+        <section id="settings" class="section">
+            <div class="container">
+                <h2 data-i18n="settings.title">설정</h2>
+                <div class="settings-container">
+                    <div class="settings-tabs">
+                        <button class="tab-btn active" data-tab="ai-keys" data-i18n="settings.tabs.apiKeys">API 키</button>
+                        <button class="tab-btn" data-tab="system" data-i18n="settings.tabs.system">시스템</button>
+                        <button class="tab-btn" data-tab="export" data-i18n="settings.tabs.export">내보내기/가져오기</button>
+                    </div>
+
+                    <!-- AI API 키 탭 -->
+                    <div class="tab-content active" id="ai-keys">
+                        <form id="api-keys-form">
+                            <div class="api-keys-grid">
+                                <div class="form-group">
+                                    <label for="gemini-api-key" data-i18n="settings.apiKeys.gemini">
+                                        Gemini API Key
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="password" id="gemini-api-key" class="form-control api-key-input" data-i18n-placeholder="settings.apiKeys.placeholder" placeholder="API 키를 입력하세요">
+                                    <button type="button" class="btn-toggle-visibility" data-target="gemini-api-key">👁️</button>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="glm-api-key" data-i18n="settings.apiKeys.glm">
+                                        GLM API Key
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="password" id="glm-api-key" class="form-control api-key-input" data-i18n-placeholder="settings.apiKeys.placeholder" placeholder="API 키를 입력하세요">
+                                    <button type="button" class="btn-toggle-visibility" data-target="glm-api-key">👁️</button>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="zimage-api-key" data-i18n="settings.apiKeys.zimage">Z-Image API Key</label>
+                                    <input type="password" id="zimage-api-key" class="form-control api-key-input" data-i18n-placeholder="settings.apiKeys.placeholder" placeholder="API 키를 입력하세요">
+                                    <button type="button" class="btn-toggle-visibility" data-target="zimage-api-key">👁️</button>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="seedream-api-key" data-i18n="settings.apiKeys.seedream">Seedream API Key</label>
+                                    <input type="password" id="seedream-api-key" class="form-control api-key-input" data-i18n-placeholder="settings.apiKeys.placeholder" placeholder="API 키를 입력하세요">
+                                    <button type="button" class="btn-toggle-visibility" data-target="seedream-api-key">👁️</button>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nanoBanana-api-key" data-i18n="settings.apiKeys.nanoBanana">Nano Banana API Key</label>
+                                    <input type="password" id="nanoBanana-api-key" class="form-control api-key-input" data-i18n-placeholder="settings.apiKeys.placeholder" placeholder="API 키를 입력하세요">
+                                    <button type="button" class="btn-toggle-visibility" data-target="nanoBanana-api-key">👁️</button>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" data-i18n="settings.apiKeys.save">💾 저장</button>
+                                <button type="button" id="test-api-connection" class="btn btn-secondary" data-i18n="settings.apiKeys.test">🔗 연결 테스트</button>
+                                <button type="button" id="reset-keys" class="btn btn-danger" data-i18n="settings.apiKeys.reset">🔄 초기화</button>
+                            </div>
+                        </form>
+
+                        <div id="connection-status" class="connection-status hidden">
+                            <h3 data-i18n="settings.apiKeys.title">API 연결 상태</h3>
+                            <div class="status-list">
+                                <div class="status-item">
+                                    <span class="api-name">Gemini</span>
+                                    <span class="status-indicator" id="gemini-status">
+                                        <span class="status-dot"></span>
+                                        <span class="status-text" data-i18n="settings.status.testing">테스트 안됨</span>
+                                    </span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="api-name">GLM</span>
+                                    <span class="status-indicator" id="glm-status">
+                                        <span class="status-dot"></span>
+                                        <span class="status-text" data-i18n="settings.status.testing">테스트 안됨</span>
+                                    </span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="api-name">Z-Image</span>
+                                    <span class="status-indicator" id="zimage-status">
+                                        <span class="status-dot"></span>
+                                        <span class="status-text" data-i18n="settings.status.testing">테스트 안됨</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 시스템 설정 탭 -->
+                    <div class="tab-content" id="system">
+                        <form id="system-settings-form">
+                            <div class="form-group">
+                                <label for="max-concurrent-requests" data-i18n="settings.system.maxConcurrent">최대 동시 요청 수</label>
+                                <input type="number" id="max-concurrent-requests" class="form-control" value="5" min="1" max="20">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="request-timeout" data-i18n="settings.system.timeout">요청 타임아웃 (초)</label>
+                                <input type="number" id="request-timeout" class="form-control" value="300" min="30" max="600">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="default-language" data-i18n="settings.system.defaultLanguage">기본 언어</label>
+                                <select id="default-language" class="form-control">
+                                    <option value="ko" selected>한국어</option>
+                                    <option value="en">English</option>
+                                    <option value="zh-CN">中文(简体)</option>
+                                    <option value="zh-TW">中文(繁體)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="default-quality" data-i18n="settings.system.defaultQuality">기본 이미지 품질</label>
+                                <select id="default-quality" class="form-control">
+                                    <option value="low" data-i18n="imageGeneration.quality.options.low">낮음</option>
+                                    <option value="medium" data-i18n="imageGeneration.quality.options.medium">보통</option>
+                                    <option value="high" selected data-i18n="imageGeneration.quality.options.high">높음</option>
+                                    <option value="ultra" data-i18n="imageGeneration.quality.options.ultra">최고</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="auto-save-results" checked>
+                                    <span data-i18n="settings.system.autoSave">결과 자동 저장</span>
+                                </label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" data-i18n="settings.system.save">💾 저장</button>
+                                <button type="button" id="reset-system" class="btn btn-secondary" data-i18n="settings.system.reset">기본값으로</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 내보내기/가져오기 탭 -->
+                    <div class="tab-content" id="export">
+                        <div class="import-export-section">
+                            <h3 data-i18n="settings.export">설정 내보내기</h3>
+                            <button id="export-settings" class="btn btn-primary" data-i18n="settings.export">📥 내보내기</button>
+
+                            <h3 data-i18n="settings.import">설정 가져오기</h3>
+                            <input type="file" id="import-settings" accept=".fashion" class="form-control" style="display: none;">
+                            <button id="import-settings-btn" class="btn btn-secondary" data-i18n="settings.import">📤 가져오기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loading-text" data-i18n="ui.processing">처리 중...</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 알림 컨테이너 -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- 모달 다이얼로그 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">제목</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">내용</div>
+            <div class="modal-actions">
+                <button id="modal-confirm" class="btn btn-primary" data-i18n="ui.modal.confirm">확인</button>
+                <button id="modal-cancel" class="btn btn-secondary" data-i18n="ui.modal.cancel">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/crypto-js.min.js"></script>
+    <script src="/static/js/i18n.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/ui.js"></script>
+    <script src="/static/js/settings.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

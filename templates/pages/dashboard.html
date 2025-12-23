@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.dashboard{% endblock %}
+{% block title %}대시보드 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/pages/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <!-- 왼쪽 패널: 프로젝트/세션 선택 -->
+    <div class="left-panel">
+        <!-- 프로젝트 섹션 -->
+        <div class="panel-section">
+            <div class="section-header">
+                <span class="section-title" data-i18n="dashboard.panels.projects">프로젝트</span>
+                <button class="btn btn-primary btn-sm" onclick="showCreateProjectModal()" style="padding: 4px 8px; font-size: 11px;" data-i18n="dashboard.actions.add">+ 추가</button>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <select id="project-select" class="form-input" style="flex: 1; padding: 10px 12px; font-size: 13px;" onchange="onProjectSelect(this.value)">
+                    <option value="" data-i18n="dashboard.placeholders.selectProject">프로젝트를 선택하세요</option>
+                </select>
+                <button id="edit-project-btn" class="btn-icon" onclick="showEditProjectModal()" title="프로젝트 수정" data-i18n-title="dashboard.tooltips.editProject" style="display: none; padding: 8px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">✏️</button>
+                <button id="delete-project-btn" class="btn-icon" onclick="confirmDeleteProject()" title="프로젝트 삭제" data-i18n-title="dashboard.tooltips.deleteProject" style="display: none; padding: 8px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">🗑️</button>
+            </div>
+        </div>
+
+        <!-- 세션 섹션 -->
+        <div class="panel-section">
+            <div class="section-header">
+                <span class="section-title" data-i18n="dashboard.panels.sessions">세션</span>
+                <button class="btn btn-primary btn-sm" id="add-session-btn" onclick="showCreateSessionModal()" style="padding: 4px 8px; font-size: 11px;" disabled data-i18n="dashboard.actions.add">+ 추가</button>
+            </div>
+            <div id="session-list" class="item-list">
+                <div style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 16px;" data-i18n="dashboard.placeholders.selectProject">프로젝트를 선택하세요</div>
+            </div>
+        </div>
+
+        <!-- 크롤러 상태 요약 -->
+        <div class="panel-section">
+            <div class="section-header">
+                <span class="section-title" data-i18n="dashboard.panels.crawlerStatus">크롤러 상태</span>
+                <a href="/settings" style="font-size: 11px; color: var(--primary);" data-i18n="common.details">상세</a>
+            </div>
+            <div id="crawler-summary" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 11px; color: var(--text-muted);" data-i18n="common.loading">로딩 중...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 패널: 보고서 -->
+    <div class="right-panel">
+        <!-- 세션 선택 안내 / 세션 정보 -->
+        <div id="session-header" class="panel-section" style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <h2 id="session-title" style="font-size: 18px; font-weight: 600; margin: 0;" data-i18n="dashboard.placeholders.selectSession">세션을 선택하세요</h2>
+                        <button id="edit-session-btn" class="btn-icon-sm" onclick="showEditSessionModal()" title="세션 수정" data-i18n-title="dashboard.tooltips.editSession" style="display: none; padding: 4px 6px; background: transparent; border: none; cursor: pointer; font-size: 12px;">✏️</button>
+                        <button id="delete-session-btn" class="btn-icon-sm" onclick="confirmDeleteSession()" title="세션 삭제" data-i18n-title="dashboard.tooltips.deleteSession" style="display: none; padding: 4px 6px; background: transparent; border: none; cursor: pointer; font-size: 12px;">🗑️</button>
+                    </div>
+                    <p id="session-desc" style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;" data-i18n="dashboard.placeholders.sessionHelp">왼쪽에서 프로젝트와 세션을 선택하면 결과가 표시됩니다</p>
+                </div>
+                <!-- 인라인 통계 -->
+                <div id="inline-stats" style="display: none; font-size: 11px; color: var(--text-secondary); white-space: nowrap;">
+                    <span><span data-i18n="dashboard.inlineStats.crawled">수집</span> <strong id="stat-crawled-inline">0</strong></span>
+                    <span style="margin: 0 6px; color: var(--border);">|</span>
+                    <span><span data-i18n="dashboard.inlineStats.keywords">키워드</span> <strong id="stat-keywords-inline">0</strong></span>
+                    <span style="margin: 0 6px; color: var(--border);">|</span>
+                    <span><span data-i18n="dashboard.inlineStats.designs">디자인</span> <strong id="stat-designs-inline">0</strong></span>
+                    <span style="margin: 0 6px; color: var(--border);">|</span>
+                    <span><span data-i18n="dashboard.inlineStats.models">착장</span> <strong id="stat-models-inline">0</strong></span>
+                </div>
+                <div id="session-actions" style="display: none; gap: 8px;">
+                    <button class="btn btn-primary" id="run-analysis-btn" onclick="runAnalysis()" data-i18n="dashboard.actions.startAnalysis">분석 시작</button>
+                </div>
+            </div>
+            <!-- 진행률 바 -->
+            <div id="progress-container" style="display: none; margin-top: 12px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span id="progress-step" style="font-size: 12px; color: var(--text-secondary);" data-i18n="dashboard.progress.preparing">준비 중...</span>
+                    <span id="progress-percent" style="font-size: 12px; font-weight: 600; color: var(--primary);">0%</span>
+                </div>
+                <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
+                    <div id="progress-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 통계 카드 제거됨 - 인라인 통계로 대체 (session-header 내) -->
+
+        <!-- 탭 영역 -->
+        <div id="tabs-section" class="panel-section" style="flex: 1; display: none; flex-direction: column;">
+            <div class="report-tabs">
+                <button class="report-tab active" data-tab="overview" data-i18n="dashboard.tabs.overview">개요</button>
+                <button class="report-tab" data-tab="data" data-i18n="dashboard.tabs.data">수집 데이터</button>
+                <button class="report-tab" data-tab="analysis" data-i18n="dashboard.tabs.analysis">분석 보고서</button>
+                <button class="report-tab" data-tab="design" data-i18n="dashboard.tabs.design">의상 이미지</button>
+                <button class="report-tab" data-tab="model" data-i18n="dashboard.tabs.model">착장 이미지</button>
+                <button class="report-tab" data-tab="blueprint" data-i18n="dashboard.tabs.blueprint">블루프린트</button>
+            </div>
+
+            <!-- 개요 탭 -->
+            <div id="tab-overview" class="tab-content active">
+                <div id="overview-content">
+                    <p style="color: var(--text-muted); text-align: center; padding: 32px;" data-i18n="dashboard.empty.overview">세션 결과가 여기에 표시됩니다</p>
+                </div>
+            </div>
+
+            <!-- 수집 데이터 탭 -->
+            <div id="tab-data" class="tab-content">
+                <div id="data-content">
+                    <p style="color: var(--text-muted); text-align: center; padding: 32px;" data-i18n="dashboard.empty.data">수집된 데이터가 여기에 표시됩니다</p>
+                </div>
+            </div>
+
+            <!-- 분석 보고서 탭 -->
+            <div id="tab-analysis" class="tab-content">
+                <div id="analysis-content">
+                    <p style="color: var(--text-muted); text-align: center; padding: 32px;" data-i18n="dashboard.empty.analysis">분석 결과가 여기에 표시됩니다</p>
+                </div>
+            </div>
+
+            <!-- 의상 이미지 탭 -->
+            <div id="tab-design" class="tab-content">
+                <div id="design-content" class="image-grid">
+                    <div class="image-card"><div class="image-placeholder">👗</div></div>
+                </div>
+            </div>
+
+            <!-- 착장 이미지 탭 -->
+            <div id="tab-model" class="tab-content">
+                <div id="model-content" class="image-grid">
+                    <div class="image-card"><div class="image-placeholder">🧍</div></div>
+                </div>
+            </div>
+
+            <!-- 블루프린트 탭 -->
+            <div id="tab-blueprint" class="tab-content">
+                <div id="blueprint-content" class="image-grid">
+                    <div class="image-card"><div class="image-placeholder">📐</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Detail Modal (Library style) -->
+<div id="image-modal" class="modal-overlay">
+    <button class="modal-close" onclick="closeImageModal()" data-i18n-aria-label="common.close">&times;</button>
+    <div class="image-modal">
+        <div class="modal-image-section">
+            <img id="modal-image" src="" alt="">
+        </div>
+        <div class="modal-info-section">
+            <h3 id="modal-title" class="modal-title"></h3>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.type">타입</label>
+                <span id="modal-type"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.session">세션</label>
+                <span id="modal-session"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.project">프로젝트</label>
+                <span id="modal-project"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.created">생성일</label>
+                <span id="modal-created"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.prompt">프롬프트</label>
+                <span id="modal-prompt" style="font-size: 12px; line-height: 1.5;"></span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn primary" onclick="downloadImage()" data-i18n="library.modal.download">다운로드</button>
+                <button class="modal-btn secondary" onclick="closeImageModal()" data-i18n="library.modal.close">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "partials/dashboard/project-modal.html" %}
+{% include "partials/dashboard/session-modal.html" %}
+{% include "partials/dashboard/edit-project-modal.html" %}
+{% include "partials/dashboard/edit-session-modal.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/pages/dashboard/state.js"></script>
+<script src="/static/js/pages/dashboard/projects.js"></script>
+<script src="/static/js/pages/dashboard/sessions.js"></script>
+<script src="/static/js/pages/dashboard/overview.js"></script>
+<script src="/static/js/pages/dashboard/reports.js"></script>
+<script src="/static/js/pages/dashboard/crawlers.js"></script>
+<script src="/static/js/pages/dashboard/init.js"></script>
+{% endblock %}

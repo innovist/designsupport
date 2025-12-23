@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+*.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+.eggs/
+
+# Virtual Environments (모든 위치)
+.env
+.env.*
+!.env.template
+.venv/
+venv/
+*/venv/
+**/venv/
+backend/venv/
+ENV/
+
+# Node/Frontend
+node_modules/
+dist/
+build/
+
+# Editors/OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Docker volumes/artifacts
+docker/postgres/data/
+docker/qdrant/data/
+docker/redis/data/
+
+# Test artifacts
+.tox/
+.nox/
+
+# Build artifacts
+*.so
+*.dylib
+
+reference/
+storage/

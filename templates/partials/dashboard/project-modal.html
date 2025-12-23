@@ -1,0 +1,30 @@
+<!-- 프로젝트 생성 모달 -->
+<div id="project-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="panel-section" style="width: 400px; max-width: 90vw;">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;" data-i18n="dashboard.modals.project.title">새 프로젝트 생성</h3>
+        <form id="project-form">
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.project.name">프로젝트 이름</label>
+                <input type="text" id="project-title" class="form-input" placeholder="예: 2025 S/S 컬렉션" data-i18n-placeholder="dashboard.modals.project.namePlaceholder" required style="width: 100%;">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.project.imageModelLabel">이미지 모델</label>
+                <select id="project-image-model" class="form-input" style="width: 100%;">
+                    <option value="" data-i18n="dashboard.modals.project.imageModelAuto">자동 선택</option>
+                    <option value="seedream" data-i18n="dashboard.modals.project.imageModelSeedream">Seedream (클라우드)</option>
+                    <option value="nano_banana" data-i18n="dashboard.modals.project.imageModelNano">Nano Banana (클라우드)</option>
+                    <option value="zimage" data-i18n="dashboard.modals.project.imageModelZImage">Z-Image (GPU)</option>
+                </select>
+                <p id="project-image-model-status" style="font-size: 10px; color: var(--text-muted); margin-top: 4px;" data-i18n="dashboard.modals.project.gpuDetecting">GPU 확인 중...</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.project.description">설명 (선택)</label>
+                <textarea id="project-desc" class="form-input" rows="3" placeholder="프로젝트 설명..." data-i18n-placeholder="dashboard.modals.project.descriptionPlaceholder" style="width: 100%;"></textarea>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeProjectModal()" data-i18n="common.cancel">취소</button>
+                <button type="submit" class="btn btn-primary" data-i18n="common.create">생성</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,373 @@
+{
+  "common": {
+    "appSubtitle": "Fashion Trend Analysis & Image Generation System",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "download": "Download",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "settings": "Settings",
+    "language": "Language",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "retry": "Retry"
+  },
+  "navigation": {
+    "trendAnalysis": "Trend Analysis",
+    "imageGeneration": "Image Generation",
+    "blueprint": "Pattern Generation",
+    "crawler": "Data Collection"
+  },
+  "trendAnalysis": {
+    "title": "Fashion Trend Analysis",
+    "keywords": "Keywords",
+    "keywordsPlaceholder": "e.g., oversized, minimalist, vintage",
+    "keywordsHelp": "Enter multiple keywords separated by commas",
+    "timeRange": "Time Range",
+    "timeRanges": {
+      "1d": "Last 1 day",
+      "7d": "Last 7 days",
+      "30d": "Last 30 days"
+    },
+    "startAnalysis": "Start Trend Analysis",
+    "results": {
+      "noResults": "No analysis results",
+      "enterKeywords": "Enter keywords and start trend analysis"
+    },
+    "notifications": {
+      "enterKeywords": "Please enter at least one keyword.",
+      "analysisFailed": "Trend analysis failed: {error}",
+      "analysisComplete": "Trend analysis completed successfully."
+    }
+  },
+  "imageGeneration": {
+    "title": "Fashion Design Image Generation",
+    "designPrompt": {
+      "label": "Design Description",
+      "placeholder": "Describe the fashion design you want to generate in detail"
+    },
+    "garmentType": {
+      "label": "Garment Type",
+      "options": {
+        "dress": "Dress",
+        "shirt": "Shirt",
+        "pants": "Pants",
+        "skirt": "Skirt",
+        "jacket": "Jacket",
+        "coat": "Coat"
+      }
+    },
+    "style": {
+      "label": "Style",
+      "options": {
+        "modern": "Modern",
+        "minimal": "Minimal",
+        "vintage": "Vintage",
+        "casual": "Casual",
+        "formal": "Formal",
+        "street": "Street"
+      }
+    },
+    "colorScheme": {
+      "label": "Color Scheme (Optional)",
+      "placeholder": "e.g., pastel tone, monochrome"
+    },
+    "fabricType": {
+      "label": "Fabric Type (Optional)",
+      "placeholder": "e.g., cotton, silk, denim"
+    },
+    "quality": {
+      "label": "Quality",
+      "options": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "ultra": "Ultra"
+      }
+    },
+    "numVariations": {
+      "label": "Number of Variations"
+    },
+    "referenceImage": {
+      "label": "Reference Image (Optional)"
+    },
+    "generate": "Generate Design",
+    "results": {
+      "title": "Generated Designs",
+      "noResults": "No generated images",
+      "enterPrompt": "Enter design description and start generation"
+    },
+    "notifications": {
+      "enterPrompt": "Please enter a design description.",
+      "generationFailed": "Design generation failed: {error}",
+      "generationComplete": "Design generation completed successfully.",
+      "referenceImageUpload": "Reference image upload feature is under development."
+    }
+  },
+  "blueprint": {
+    "title": "Pattern Blueprint Generation",
+    "garmentType": {
+      "label": "Garment Type",
+      "options": {
+        "dress": "Dress",
+        "shirt": "Shirt",
+        "pants": "Pants",
+        "skirt": "Skirt"
+      }
+    },
+    "design": {
+      "label": "Design Description",
+      "placeholder": "Describe the design of the pattern to generate"
+    },
+    "sizeSystem": {
+      "label": "Size System",
+      "options": {
+        "KS": "KS (Korean)",
+        "GB": "GB (British)",
+        "ASTM": "ASTM (American)",
+        "ISO": "ISO (International)"
+      }
+    },
+    "size": {
+      "label": "Size",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "Include Sewing Instructions",
+    "includeSeamAllowance": "Include Seam Allowance (1.5cm)",
+    "generate": "Generate Pattern",
+    "tabs": {
+      "pieces": "Pattern Pieces",
+      "layout": "Layout",
+      "instructions": "Instructions",
+      "materials": "Material List"
+    },
+    "results": {
+      "noResults": "No generated patterns",
+      "enterDesign": "Enter design information and start pattern generation"
+    },
+    "materials": {
+      "fabric": "Fabric",
+      "other": "Other Materials"
+    },
+    "notifications": {
+      "enterDesign": "Please enter a design description.",
+      "generationFailed": "Pattern generation failed: {error}",
+      "generationComplete": "Pattern generation completed successfully."
+    }
+  },
+  "crawler": {
+    "title": "Fashion Data Collection",
+    "sources": {
+      "label": "Data Sources",
+      "fashion_news": "Fashion News",
+      "fashion_insta": "Fashion Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "Fashion News",
+        "fashion_insta": "Fashion Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "Collection Keywords",
+      "placeholder": "e.g., 2024 fashion trends, oversized"
+    },
+    "maxItems": {
+      "label": "Maximum Items"
+    },
+    "start": "Start Data Collection",
+    "status": {
+      "title": "Collection Status",
+      "status": "Status",
+      "progress": "Progress",
+      "processed": "Items Collected",
+      "error": "Error"
+    },
+    "results": {
+      "title": "Collected Data",
+      "source": "Source",
+      "noResults": "No collected data",
+      "selectSources": "Select data sources and start collection",
+      "moreItems": "... and {count} more items"
+    },
+    "notifications": {
+      "selectSources": "Please select at least one data source.",
+      "enterKeywords": "Please enter collection keywords.",
+      "startFailed": "Failed to start data collection: {error}",
+      "started": "Data collection has started.",
+      "completed": "Data collection completed successfully.",
+      "failed": "Data collection failed."
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "Image Generation Models",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "Professional fashion image generation",
+        "capabilities": ["fashion_design", "model_fitting", "upscale"]
+      },
+      "seedream": {
+        "name": "Seedream (Bytedance)",
+        "description": "Advanced fashion collection generation",
+        "capabilities": ["fashion_collection", "patterns", "textures"]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "Technical fashion illustrations",
+        "capabilities": ["sketch", "flat_lay", "fabric_simulation"]
+      }
+    },
+    "textGeneration": {
+      "title": "Text Generation Models",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "Google's latest multimodal model",
+        "capabilities": ["text", "multimodal", "analysis"]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "Zhipu AI's powerful language model",
+        "capabilities": ["text", "embedding"]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "Korean Standard",
+      "GB": "British Standard",
+      "ASTM": "American Standard",
+      "ISO": "International Standard"
+    },
+    "measurements": {
+      "cm": "cm",
+      "mm": "mm",
+      "inch": "inch"
+    },
+    "time": {
+      "seconds": "seconds",
+      "minutes": "minutes",
+      "hours": "hours"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "apiKeys": "API Keys",
+      "system": "System",
+      "export": "Export/Import"
+    },
+    "apiKeys": {
+      "title": "API Key Settings",
+      "gemini": "Gemini API Key",
+      "glm": "GLM API Key",
+      "zimage": "Z-Image API Key",
+      "seedream": "Seedream API Key",
+      "nanoBanana": "Nano Banana API Key",
+      "placeholder": "Enter API key",
+      "save": "Save API Keys",
+      "test": "Test Connection",
+      "reset": "Reset"
+    },
+    "system": {
+      "title": "System Settings",
+      "maxConcurrent": "Maximum Concurrent Requests",
+      "timeout": "Request Timeout (seconds)",
+      "defaultLanguage": "Default Language",
+      "defaultQuality": "Default Quality",
+      "autoSave": "Auto-save Results",
+      "save": "Save Settings",
+      "reset": "Reset to Defaults"
+    },
+    "export": "Export Settings",
+    "import": "Import Settings",
+    "status": {
+      "online": "Connected",
+      "offline": "Disconnected",
+      "testing": "Testing...",
+      "configured": "API Configured",
+      "notConfigured": "API Not Configured"
+    },
+    "confirmations": {
+      "resetKeys": "Are you sure you want to reset all API keys?",
+      "resetSystem": "Reset system settings to defaults?"
+    },
+    "notifications": {
+      "saved": "Settings saved successfully.",
+      "reset": "Settings have been reset.",
+      "exported": "Settings exported successfully.",
+      "imported": "Settings imported successfully.",
+      "importFailed": "Failed to import settings.",
+      "decryptFailed": "Cannot decrypt settings file.",
+      "noApiKey": "No API key"
+    }
+  },
+  "ui": {
+    "processing": "Processing...",
+    "generating": "Generating...",
+    "analyzing": "Analyzing...",
+    "collecting": "Collecting...",
+    "noTitle": "No title",
+    "noContent": "No content",
+    "unknown": "Unknown",
+    "link": "Link",
+    "image": "Image",
+    "model": "Model",
+    "generationTime": "Generation time",
+    "seconds": "seconds",
+    "hidden": {
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "modal": {
+      "close": "Close",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "empty": {
+      "noData": "No data available",
+      "noResults": "No results"
+    }
+  },
+  "errors": {
+    "serverError": "Cannot connect to server. Please check if the server is running.",
+    "networkError": "A network error has occurred.",
+    "unauthorized": "Authentication required.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource could not be found.",
+    "internalError": "An internal server error has occurred.",
+    "validationError": "Please check your input values.",
+    "rateLimit": "Too many requests. Please try again later."
+  },
+  "dateFormats": {
+    "short": "MM/DD/YYYY",
+    "long": "MMMM DD, YYYY",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "$",
+    "code": "USD"
+  }
+}

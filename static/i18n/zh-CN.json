@@ -1,0 +1,1180 @@
+{
+  "nav": {
+    "title": "时尚趋势AI",
+    "home": "首页",
+    "projects": "项目",
+    "dashboard": "仪表板",
+    "library": "图库",
+    "sessions": "会话管理",
+    "settings": "设置",
+    "newSession": "新会话",
+    "viewAll": "查看全部"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Fashion Trend AI",
+      "title": "分析时尚趋势并生成新设计",
+      "description": "自动收集并分析最新时尚趋势，生成 AI 设计图像与版型。",
+      "searchPlaceholder": "想分析哪种时尚趋势？",
+      "startButton": "开始分析",
+      "chips": {
+        "casual": "女性休闲",
+        "street": "街头风",
+        "sustainable": "可持续时尚",
+        "luxury": "奢华正装"
+      },
+      "chipsData": {
+        "casual": "2025 S/S 女装休闲趋势",
+        "street": "极简街头男装",
+        "sustainable": "可持续时尚材质趋势",
+        "luxury": "奢华正装配色趋势"
+      },
+      "links": {
+        "newProject": "新项目",
+        "library": "图库",
+        "settings": "设置"
+      },
+      "recentLabel": "最近生成结果",
+      "noRecent": "最近生成的图片将显示在这里",
+      "noRecentCount": "暂无最近生成",
+      "recentCount": "{count}张图片",
+      "viewLibrary": "前往图库"
+    },
+    "quickActions": {
+      "title": "想做什么？",
+      "subtitle": "快速开始常用功能",
+      "newSession": "开始新分析",
+      "cards": {
+        "trend": {
+          "title": "趋势分析",
+          "desc": "采集并分析时尚趋势数据",
+          "action": "前往项目"
+        },
+        "designs": {
+          "title": "设计图库",
+          "desc": "管理生成的服装设计与穿搭图像",
+          "action": "打开图库"
+        },
+        "settings": {
+          "title": "系统设置",
+          "desc": "配置 API 密钥、爬虫与环境",
+          "action": "前往设置"
+        }
+      }
+    },
+    "status": {
+      "title": "系统状态",
+      "subtitle": "查看爬虫与 API 连接状态",
+      "viewDetails": "查看详情",
+      "crawlers": "爬虫",
+      "geminiApi": "Gemini API",
+      "imageGen": "图像生成",
+      "checking": "检查中...",
+      "active": "启用",
+      "connected": "已连接",
+      "notConfigured": "未配置",
+      "error": "错误"
+    },
+    "recentProjects": {
+      "title": "最近项目",
+      "subtitle": "查看最近的项目",
+      "viewAll": "查看全部",
+      "empty": "暂无项目",
+      "createFirst": "创建第一个项目",
+      "sessions": "会话",
+      "error": "加载项目失败"
+    },
+    "recentImages": {
+      "title": "最近生成图像",
+      "subtitle": "最近生成的设计和穿搭图像",
+      "viewAll": "前往图库",
+      "empty": "暂无生成图像",
+      "error": "加载图像失败"
+    }
+  },
+  "common": {
+    "appSubtitle": "时尚趋势分析与图像生成系统",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "cancel": "取消",
+    "create": "创建",
+    "add": "添加",
+    "confirm": "确认",
+    "save": "保存",
+    "download": "下载",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "filter": "筛选",
+    "settings": "设置",
+    "language": "语言",
+    "languages": {
+      "ko": "韩语",
+      "en": "英语",
+      "zhCn": "中文(简体)",
+      "zhTw": "中文(繁體)"
+    },
+    "refresh": "刷新",
+    "apply": "应用",
+    "reset": "重置",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "关闭",
+    "open": "打开",
+    "details": "详情",
+    "summary": "概览",
+    "status": "状态",
+    "createdAt": "创建时间",
+    "all": "全部",
+    "none": "无",
+    "noTitle": "无标题",
+    "noDescription": "无说明",
+    "unknownError": "未知错误",
+    "yes": "是",
+    "no": "否",
+    "ok": "确定",
+    "retry": "重试"
+  },
+  "navigation": {
+    "trendAnalysis": "趋势分析",
+    "imageGeneration": "图像生成",
+    "blueprint": "图案生成",
+    "crawler": "数据收集"
+  },
+  "trendAnalysis": {
+    "title": "时尚趋势分析",
+    "keywords": "关键词",
+    "keywordsPlaceholder": "例如：oversized、极简主义、复古",
+    "keywordsHelp": "用逗号分隔多个关键词",
+    "timeRange": "分析范围",
+    "timeRanges": {
+      "1d": "最近1天",
+      "7d": "最近7天",
+      "30d": "最近30天"
+    },
+    "startAnalysis": "开始趋势分析",
+    "results": {
+      "noResults": "无分析结果",
+      "enterKeywords": "输入关键词并开始趋势分析"
+    },
+    "notifications": {
+      "enterKeywords": "请至少输入一个关键词。",
+      "analysisFailed": "趋势分析失败：{error}",
+      "analysisComplete": "趋势分析成功完成。"
+    }
+  },
+  "imageGeneration": {
+    "title": "时尚设计图像生成",
+    "designPrompt": {
+      "label": "设计描述",
+      "placeholder": "详细描述您想要生成的时尚设计"
+    },
+    "garmentType": {
+      "label": "服装类型",
+      "options": {
+        "dress": "连衣裙",
+        "shirt": "衬衫",
+        "pants": "裤子",
+        "skirt": "裙子",
+        "jacket": "夹克",
+        "coat": "外套"
+      }
+    },
+    "style": {
+      "label": "风格",
+      "options": {
+        "modern": "现代",
+        "minimal": "极简",
+        "vintage": "复古",
+        "casual": "休闲",
+        "formal": "正式",
+        "street": "街头"
+      }
+    },
+    "colorScheme": {
+      "label": "配色方案（可选）",
+      "placeholder": "例如：粉彩色调、单色"
+    },
+    "fabricType": {
+      "label": "面料类型（可选）",
+      "placeholder": "例如：棉、丝、牛仔布"
+    },
+    "quality": {
+      "label": "质量",
+      "options": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "ultra": "极高"
+      }
+    },
+    "numVariations": {
+      "label": "变体数量"
+    },
+    "referenceImage": {
+      "label": "参考图像（可选）"
+    },
+    "generate": "生成设计",
+    "results": {
+      "title": "生成的设计",
+      "noResults": "无生成的图像",
+      "enterPrompt": "输入设计描述并开始生成"
+    },
+    "notifications": {
+      "enterPrompt": "请输入设计描述。",
+      "generationFailed": "设计生成失败：{error}",
+      "generationComplete": "设计生成成功完成。",
+      "referenceImageUpload": "参考图像上传功能正在开发中。"
+    }
+  },
+  "blueprint": {
+    "title": "图案样板生成",
+    "garmentType": {
+      "label": "服装类型",
+      "options": {
+        "dress": "连衣裙",
+        "shirt": "衬衫",
+        "pants": "裤子",
+        "skirt": "裙子"
+      }
+    },
+    "design": {
+      "label": "设计描述",
+      "placeholder": "描述要生成的图案设计"
+    },
+    "sizeSystem": {
+      "label": "尺寸标准",
+      "options": {
+        "KS": "KS（韩国）",
+        "GB": "GB（英国）",
+        "ASTM": "ASTM（美国）",
+        "ISO": "ISO（国际）"
+      }
+    },
+    "size": {
+      "label": "尺寸",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "包含缝制说明",
+    "includeSeamAllowance": "包含缝份（1.5cm）",
+    "generate": "生成图案",
+    "tabs": {
+      "pieces": "图案片段",
+      "layout": "布局",
+      "instructions": "说明",
+      "materials": "材料清单"
+    },
+    "results": {
+      "noResults": "无生成的图案",
+      "enterDesign": "输入设计信息并开始图案生成"
+    },
+    "materials": {
+      "fabric": "面料",
+      "other": "其他材料"
+    },
+    "notifications": {
+      "enterDesign": "请输入设计描述。",
+      "generationFailed": "图案生成失败：{error}",
+      "generationComplete": "图案生成成功完成。"
+    }
+  },
+  "crawler": {
+    "title": "时尚数据收集",
+    "sources": {
+      "label": "数据源",
+      "fashion_news": "时尚新闻",
+      "fashion_insta": "时尚Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "时尚新闻",
+        "fashion_insta": "时尚Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "收集关键词",
+      "placeholder": "例如：2024时尚趋势、oversized"
+    },
+    "maxItems": {
+      "label": "最大收集量"
+    },
+    "start": "开始数据收集",
+    "status": {
+      "title": "收集状态",
+      "status": "状态",
+      "progress": "进度",
+      "processed": "已收集项目",
+      "error": "错误"
+    },
+    "results": {
+      "title": "收集的数据",
+      "source": "来源",
+      "noResults": "无收集的数据",
+      "selectSources": "选择数据源并开始收集",
+      "moreItems": "...以及其他{count}个项目"
+    },
+    "notifications": {
+      "selectSources": "请至少选择一个数据源。",
+      "enterKeywords": "请输入收集关键词。",
+      "startFailed": "数据收集启动失败：{error}",
+      "started": "数据收集已启动。",
+      "completed": "数据收集成功完成。",
+      "failed": "数据收集失败。"
+    }
+  },
+  "crawlers": {
+    "categories": {
+      "fashion": "时尚平台",
+      "community": "社区",
+      "portal": "门户/博客",
+      "media": "媒体",
+      "news": "新闻/媒体",
+      "search": "搜索"
+    },
+    "names": {
+      "musinsa": "Musinsa",
+      "fashion_insta": "Instagram",
+      "pinterest": "Pinterest",
+      "dcinside": "DC Inside",
+      "theqoo": "Theqoo",
+      "fmkorea": "FMKorea",
+      "clien": "Clien",
+      "ruliweb": "Ruliweb",
+      "ppomppu": "Ppomppu",
+      "mlbpark": "MLB Park",
+      "blind": "Blind",
+      "etoland": "Etoland",
+      "inven": "Inven",
+      "naver_blog": "Naver 博客",
+      "naver_cafe": "Naver Cafe",
+      "daum_cafe": "Daum Cafe",
+      "youtube": "YouTube",
+      "fashion_news": "Fashion N",
+      "wgsn": "WGSN",
+      "natenews": "Nate News",
+      "searxng": "SearXNG"
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "图像生成模型",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "专业时尚图像生成",
+        "capabilities": [
+          "fashion_design",
+          "model_fitting",
+          "upscale"
+        ]
+      },
+      "seedream": {
+        "name": "Seedream（字节跳动）",
+        "description": "高级时尚系列生成",
+        "capabilities": [
+          "fashion_collection",
+          "patterns",
+          "textures"
+        ]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "技术时尚插画",
+        "capabilities": [
+          "sketch",
+          "flat_lay",
+          "fabric_simulation"
+        ]
+      }
+    },
+    "textGeneration": {
+      "title": "文本生成模型",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "谷歌最新的多模态模型",
+        "capabilities": [
+          "text",
+          "multimodal",
+          "analysis"
+        ]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "智谱AI强大的语言模型",
+        "capabilities": [
+          "text",
+          "embedding"
+        ]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "韩国标准",
+      "GB": "英国标准",
+      "ASTM": "美国标准",
+      "ISO": "国际标准"
+    },
+    "measurements": {
+      "cm": "厘米",
+      "mm": "毫米",
+      "inch": "英寸"
+    },
+    "time": {
+      "seconds": "秒",
+      "minutes": "分钟",
+      "hours": "小时"
+    }
+  },
+  "errors": {
+    "serverError": "无法连接到服务器。请检查服务器是否正在运行。",
+    "networkError": "发生网络错误。",
+    "unauthorized": "需要身份验证。",
+    "forbidden": "访问被拒绝。",
+    "notFound": "找不到请求的资源。",
+    "internalError": "发生内部服务器错误。",
+    "validationError": "请检查您的输入值。",
+    "rateLimit": "请求过于频繁。请稍后再试。"
+  },
+  "dateFormats": {
+    "short": "YYYY.MM.DD",
+    "long": "YYYY年MM月DD日",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "¥",
+    "code": "CNY"
+  },
+  "settings": {
+    "title": "设置",
+    "tabs": {
+      "apiKeys": "API密钥",
+      "system": "系统",
+      "export": "导出/导入"
+    },
+    "apiKeys": {
+      "title": "API密钥设置",
+      "gemini": "Gemini API密钥",
+      "glm": "GLM API密钥",
+      "zimage": "Z-Image API密钥",
+      "seedream": "Seedream API密钥",
+      "nanoBanana": "Nano Banana API密钥",
+      "placeholder": "请输入API密钥",
+      "save": "保存API密钥",
+      "test": "连接测试",
+      "reset": "重置"
+    },
+    "system": {
+      "title": "系统设置",
+      "maxConcurrent": "最大并发请求数",
+      "timeout": "请求超时（秒）",
+      "defaultLanguage": "默认语言",
+      "defaultQuality": "默认质量",
+      "autoSave": "自动保存结果",
+      "save": "保存设置",
+      "reset": "恢复默认设置"
+    },
+    "export": "导出设置",
+    "import": "导入设置",
+    "status": {
+      "online": "已连接",
+      "offline": "断开连接",
+      "testing": "测试中...",
+      "configured": "API已配置",
+      "notConfigured": "API未配置"
+    },
+    "confirmations": {
+      "resetKeys": "确定要重置所有API密钥吗？",
+      "resetSystem": "将系统设置恢复为默认值？"
+    },
+    "notifications": {
+      "saved": "设置已保存。",
+      "reset": "设置已重置。",
+      "exported": "设置已导出。",
+      "imported": "设置已导入。",
+      "importFailed": "设置导入失败。",
+      "decryptFailed": "无法解密设置文件。",
+      "noApiKey": "无API密钥"
+    }
+  },
+  "entities": {
+    "project": "项目",
+    "session": "会话",
+    "crawler": "爬虫",
+    "analysis": "分析",
+    "design": "服装设计",
+    "modelImage": "模特穿搭",
+    "blueprint": "蓝图",
+    "idea": "创意",
+    "library": "图库",
+    "chatbot": "聊天机器人"
+  },
+  "status": {
+    "draft": "草稿",
+    "created": "已创建",
+    "running": "运行中",
+    "analyzing": "分析中",
+    "completed": "已完成",
+    "failed": "失败",
+    "cancelled": "已取消",
+    "active": "启用",
+    "unknown": "未知"
+  },
+  "filters": {
+    "gender": {
+      "label": "性别",
+      "options": {
+        "": "全部",
+        "female": "女性",
+        "male": "男性",
+        "unisex": "中性"
+      }
+    },
+    "age": {
+      "label": "年龄段",
+      "options": {
+        "": "全部",
+        "10s": "10代",
+        "20s": "20代",
+        "30s": "30代",
+        "40s": "40代",
+        "50s_plus": "50+岁"
+      }
+    },
+    "season": {
+      "label": "季节",
+      "options": {
+        "": "全部",
+        "spring": "春",
+        "summer": "夏",
+        "fall": "秋",
+        "winter": "冬",
+        "ss": "春/夏",
+        "fw": "秋/冬"
+      }
+    },
+    "category": {
+      "label": "类别",
+      "options": {
+        "": "全部",
+        "casual": "休闲",
+        "formal": "正式",
+        "sports": "运动",
+        "outdoor": "户外",
+        "top": "上装",
+        "bottom": "下装",
+        "dress": "连衣裙",
+        "outer": "外套",
+        "accessory": "配饰"
+      }
+    }
+  },
+  "pageTitles": {
+    "home": "首页 - 时尚趋势AI生成系统",
+    "dashboard": "仪表板 - 时尚趋势AI生成系统",
+    "projects": "项目管理 - 时尚趋势AI生成系统",
+    "newProject": "创建项目 - 时尚趋势AI生成系统",
+    "projectDetail": "项目详情 - 时尚趋势AI生成系统",
+    "newSession": "创建会话 - 时尚趋势AI生成系统",
+    "sessionDetail": "会话详情 - 时尚趋势AI生成系统",
+    "history": "会话管理 - 时尚趋势AI生成系统",
+    "ideas": "创意管理 - 时尚趋势AI生成系统",
+    "chatbot": "AI聊天机器人 - 时尚趋势AI生成系统",
+    "library": "图库 - 时尚趋势AI生成系统",
+    "settings": "设置 - 时尚趋势AI生成系统"
+  },
+  "dashboard": {
+    "panels": {
+      "projects": "项目",
+      "sessions": "会话",
+      "crawlerStatus": "爬虫状态"
+    },
+    "actions": {
+      "add": "+ 添加",
+      "newProject": "+ 新项目",
+      "startAnalysis": "开始分析",
+      "reanalyze": "重新分析",
+      "running": "分析中...",
+      "starting": "正在启动..."
+    },
+    "placeholders": {
+      "selectProject": "请选择项目",
+      "selectSession": "请选择会话",
+      "sessionHelp": "在左侧选择项目和会话以查看结果"
+    },
+    "progress": {
+      "preparing": "准备中..."
+    },
+    "stats": {
+      "crawled": "采集数据",
+      "keywords": "提取关键词",
+      "designs": "服装设计",
+      "models": "模特穿搭"
+    },
+    "inlineStats": {
+      "crawled": "采集",
+      "keywords": "关键词",
+      "designs": "设计",
+      "models": "穿搭"
+    },
+    "tabs": {
+      "overview": "概览",
+      "data": "采集数据",
+      "analysis": "分析报告",
+      "design": "服装图像",
+      "model": "穿搭图像",
+      "blueprint": "蓝图"
+    },
+    "empty": {
+      "overview": "会话结果将在此显示",
+      "data": "采集数据将在此显示",
+      "analysis": "分析结果将在此显示",
+      "designImages": "暂无服装图像",
+      "modelImages": "暂无穿搭图像",
+      "projects": "暂无项目",
+      "sessions": "暂无会话",
+      "blueprints": "暂无蓝图"
+    },
+    "modals": {
+      "project": {
+        "title": "创建项目",
+        "name": "项目名称",
+        "namePlaceholder": "例如：2025 S/S 系列",
+        "imageModelLabel": "图像模型",
+        "imageModelAuto": "自动选择",
+        "imageModelSeedream": "Seedream（云端）",
+        "imageModelNano": "Nano Banana（云端）",
+        "imageModelZImage": "Z-Image（GPU）",
+        "gpuDetecting": "正在检测 GPU...",
+        "gpuAvailable": "GPU 可用{info}",
+        "gpuUnavailable": "GPU 不可用",
+        "gpuUnknown": "GPU 状态不可用",
+        "description": "描述（可选）",
+        "descriptionPlaceholder": "项目描述..."
+      },
+      "session": {
+        "title": "创建会话",
+        "name": "会话名称",
+        "namePlaceholder": "例如：休闲女装分析",
+        "description": "描述",
+        "descriptionPlaceholder": "分析目标...",
+        "crawlerSelect": "选择爬虫"
+      },
+      "editProject": {
+        "title": "编辑项目"
+      },
+      "editSession": {
+        "title": "编辑会话"
+      }
+    },
+    "crawlerConfig": {
+      "title": "采集设置",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "maxPosts": "每个爬虫最大帖子数"
+    },
+    "labels": {
+      "sessionCount": "{count} 个会话"
+    },
+    "summary": {
+      "title": "会话概览",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "gender": "性别",
+      "season": "季节"
+    },
+    "overview": {
+      "keywordsTitle": "采集关键词",
+      "keywordsEmpty": "暂无关键词",
+      "crawlProgress": "采集进度",
+      "keywordProgress": "关键词进度",
+      "logsTitle": "采集日志",
+      "logsHint": "最新 200 条",
+      "logsEmpty": "暂无日志",
+      "logsLoadFailed": "日志加载失败",
+      "errorTitle": "错误"
+    },
+    "crawlers": {
+      "active": "已启用：{count}",
+      "total": "总计：{count}",
+      "searxngDisabled": "SearXNG 未配置"
+    },
+    "messages": {
+      "runFailed": "启动分析失败",
+      "selectProject": "请先选择项目",
+      "projectNameRequired": "请输入项目名称",
+      "sessionNameRequired": "请输入会话名称",
+      "createFailed": "创建失败：{error}",
+      "projectCreateError": "创建项目时出错",
+      "sessionCreateError": "创建会话时出错",
+      "updateFailed": "更新失败：{error}",
+      "projectUpdateError": "更新项目时出错",
+      "confirmDeleteProject": "删除项目“{name}”？相关会话将一并删除。",
+      "deleteFailed": "删除失败：{error}",
+      "projectDeleteError": "删除项目时出错",
+      "sessionUpdateError": "更新会话时出错",
+      "confirmDeleteSession": "删除会话“{name}”？",
+      "sessionDeleteError": "删除会话时出错",
+      "searxngConfigRequired": "未设置 SearXNG API URL，请在设置中填写。"
+    },
+    "report": {
+      "loading": "正在加载报告...",
+      "notFound": "暂无报告。",
+      "fetchFailed": "报告加载失败",
+      "pending": "分析完成后可查看报告。",
+      "selectSession": "请选择会话以查看报告。",
+      "titleFallback": "趋势分析报告",
+      "empty": "报告内容为空。",
+      "unnamed": "未命名",
+      "meta": {
+        "language": "语言"
+      },
+      "sections": {
+        "executiveSummary": "执行摘要",
+        "targetAudience": "目标受众",
+        "researchScope": "研究范围",
+        "marketAnalysis": "市场分析",
+        "trendAnalysis": "趋势分析",
+        "competitorAnalysis": "竞争对手分析",
+        "designProposals": "设计提案",
+        "recommendations": "建议",
+        "conclusion": "结论"
+      }
+    },
+    "tooltips": {
+      "editProject": "编辑项目",
+      "deleteProject": "删除项目",
+      "editSession": "编辑会话",
+      "deleteSession": "删除会话"
+    }
+  },
+  "projects": {
+    "title": "项目管理",
+    "subtitle": "管理并跟踪时尚分析项目",
+    "actions": {
+      "new": "新项目",
+      "newStart": "开始新项目"
+    },
+    "filters": {
+      "searchPlaceholder": "搜索项目...",
+      "statusAll": "所有状态",
+      "sortRecent": "最新",
+      "sortTitle": "按标题"
+    },
+    "loading": "加载项目中...",
+    "empty": {
+      "title": "暂无项目",
+      "subtitle": "开始你的第一个项目。"
+    },
+    "confirmDelete": "确定删除该项目？",
+    "messages": {
+      "deleteFailed": "删除失败",
+      "deleteError": "删除时出错"
+    }
+  },
+  "newProject": {
+    "backToList": "← 项目列表",
+    "title": "创建项目",
+    "subtitle": "填写项目信息",
+    "form": {
+      "titleLabel": "项目标题",
+      "titlePlaceholder": "例如：2025 SS 极简风格分析",
+      "descriptionLabel": "项目说明（可选）",
+      "descriptionPlaceholder": "填写背景与预期结果",
+      "promptLabel": "目标/指示",
+      "promptPlaceholder": "例如：分析中性休闲线的功能性需求",
+      "promptHint": "请具体说明范围、排除项和预期结果。"
+    },
+    "actions": {
+      "create": "创建项目"
+    },
+    "messages": {
+      "required": "请输入项目标题和分析目标。",
+      "created": "项目已创建",
+      "createFailed": "项目创建失败：{error}",
+      "createError": "创建项目时发生错误"
+    }
+  },
+  "newSession": {
+    "backToProject": "← 返回项目",
+    "title": "创建分析会话",
+    "subtitle": "设置趋势分析与设计生成条件",
+    "sections": {
+      "sessionInfo": "会话信息",
+      "filters": "时尚分析条件",
+      "filtersHelp": "按需选择（均为可选）",
+      "inputs": "输入数据（可选）",
+      "inputsHelp": "文本、文件、URL 会参与分析",
+      "pipelineOptions": "流程选项"
+    },
+    "fields": {
+      "title": "会话标题",
+      "titlePlaceholder": "例如：2025 春夏街头趋势",
+      "description": "会话说明",
+      "descriptionPlaceholder": "输入目标、排除项、关注点",
+      "descriptionHint": "例如：“偏中性休闲，强调实用性”，“排除过度奢华”",
+      "userKeywords": "自定义关键词（可选）",
+      "userKeywordsPlaceholder": "例如：极简、廓形、复古（逗号分隔）"
+    },
+    "inputs": {
+      "textLabel": "文本输入",
+      "textPlaceholder": "输入补充说明或参考内容",
+      "fileLabel": "文件上传",
+      "fileHelp": "支持格式：PDF、图片",
+      "urlLabel": "URL 输入（可多个）",
+      "addUrl": "+ 添加 URL",
+      "urlPlaceholder": "https://example.com/article"
+    },
+    "options": {
+      "autoStart": "创建后自动开始分析",
+      "generateImages": "包含图像生成",
+      "generateBlueprints": "包含蓝图生成"
+    },
+    "crawlers": {
+      "title": "选择爬虫",
+      "subtitle": "选择用于数据采集的爬虫",
+      "selectAll": "全选",
+      "deselectAll": "全不选",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "maxItems": "文章数"
+    },
+    "actions": {
+      "create": "创建会话"
+    },
+    "messages": {
+      "minUrl": "至少需要 1 个 URL 输入框。",
+      "required": "请输入会话标题和说明。",
+      "createFailed": "会话创建失败",
+      "created": "会话已创建。",
+      "createError": "创建会话时发生错误：{error}"
+    }
+  },
+  "projectDetail": {
+    "backToList": "← 项目列表",
+    "actions": {
+      "editDescription": "编辑说明",
+      "newSession": "+ 新会话"
+    },
+    "sessionsTitle": "分析会话",
+    "loading": "加载会话中...",
+    "empty": {
+      "title": "暂无会话",
+      "subtitle": "创建会话以开始分析。",
+      "action": "创建会话"
+    },
+    "labels": {
+      "progress": "进度 {percent}%"
+    },
+    "messages": {
+      "notFound": "未找到项目",
+      "descriptionSaveFailed": "保存说明失败",
+      "confirmDeleteSession": "确定删除该会话？",
+      "deleteFailed": "删除失败"
+    }
+  },
+  "history": {
+    "title": "会话管理",
+    "subtitle": "查看近期会话与结果",
+    "actions": {
+      "newSession": "新会话"
+    },
+    "filters": {
+      "projectAll": "全部项目",
+      "statusAll": "所有状态",
+      "sortRecent": "最新",
+      "sortOldest": "最早"
+    },
+    "loading": "加载会话中...",
+    "empty": {
+      "title": "暂无会话",
+      "subtitle": "请在项目中创建新会话。",
+      "action": "前往项目"
+    },
+    "labels": {
+      "progress": "进度 {percent}%"
+    }
+  },
+  "ideas": {
+    "title": "创意管理",
+    "subtitle": "查看会话生成的设计创意",
+    "actions": {
+      "viewSessions": "查看会话",
+      "openSession": "打开会话"
+    },
+    "filters": {
+      "searchPlaceholder": "搜索创意...",
+      "statusAll": "所有状态",
+      "sortRecent": "最新",
+      "sortTitle": "按标题"
+    },
+    "status": {
+      "generated": "已生成",
+      "selected": "已选择"
+    },
+    "loading": "加载创意中...",
+    "empty": {
+      "title": "暂无创意",
+      "subtitle": "运行会话以生成创意。",
+      "action": "前往项目"
+    },
+    "labels": {
+      "defaultTitle": "创意",
+      "sessionPrefix": "会话 {id}"
+    }
+  },
+  "chatbot": {
+    "sidebar": {
+      "title": "对话会话",
+      "newSession": "新会话"
+    },
+    "header": {
+      "title": "AI 聊天机器人",
+      "subtitle": "自由提问时尚创意"
+    },
+    "empty": {
+      "state": "请选择或创建对话会话"
+    },
+    "form": {
+      "placeholder": "输入消息",
+      "send": "发送"
+    },
+    "modal": {
+      "title": "创建聊天会话",
+      "projectLabel": "选择项目",
+      "projectPlaceholder": "选择项目",
+      "sessionTitleLabel": "会话标题（可选）",
+      "sessionTitlePlaceholder": "例如：极简风格创意"
+    },
+    "messages": {
+      "noSessions": "暂无会话",
+      "selectProject": "请选择项目",
+      "sessionCreateFailed": "创建会话失败",
+      "selectSession": "请先选择对话会话",
+      "messageSendFailed": "消息发送失败",
+      "noMessages": "暂无消息。"
+    },
+    "labels": {
+      "newChat": "新对话",
+      "chat": "对话",
+      "me": "我",
+      "ai": "AI"
+    }
+  },
+  "sessionDetail": {
+    "backToList": "← 会话列表",
+    "actions": {
+      "startAnalysis": "开始分析",
+      "running": "分析中...",
+      "clearLogs": "清空日志"
+    },
+    "summary": {
+      "title": "会话概览",
+      "loading": "正在加载会话信息..."
+    },
+    "sections": {
+      "progress": "进度",
+      "logs": "执行日志",
+      "trendSummary": "趋势概览",
+      "designIdeas": "设计创意",
+      "generatedImages": "生成图像",
+      "blueprintSummary": "蓝图概览"
+    },
+    "labels": {
+      "createdAt": "创建",
+      "description": "说明",
+      "filters": "筛选",
+      "crawlers": "爬虫",
+      "keywords": "关键词"
+    },
+    "status": {
+      "waiting": "等待中"
+    },
+    "trends": {
+      "empty": "暂无分析结果。"
+    },
+    "ideas": {
+      "item": "创意 {index}",
+      "empty": "暂无创意。"
+    },
+    "images": {
+      "empty": "暂无图像。"
+    },
+    "blueprints": {
+      "counts": "草图 {sketch}，版型 {layout}，纸样 {pattern}",
+      "empty": "暂无蓝图。"
+    },
+    "logs": {
+      "loadFailed": "日志加载失败。",
+      "empty": "暂无日志。",
+      "cleared": "日志已清空。"
+    },
+    "messages": {
+      "notFound": "未找到会话。",
+      "startFailed": "启动分析失败",
+      "confirmDelete": "确定删除该会话？",
+      "deleteFailed": "删除失败"
+    }
+  },
+  "library": {
+    "title": "图像库",
+    "filter": {
+      "project": "项目",
+      "session": "会话",
+      "type": "图像类型",
+      "dateFrom": "开始日期",
+      "dateTo": "结束日期",
+      "sort": "排序",
+      "apply": "应用",
+      "reset": "重置"
+    },
+    "stats": {
+      "total": "张图像",
+      "design": "服装设计",
+      "model": "模特穿搭",
+      "blueprint": "蓝图"
+    },
+    "empty": {
+      "title": "暂无图像",
+      "description": "运行分析以生成图像"
+    },
+    "modal": {
+      "type": "类型",
+      "session": "会话",
+      "project": "项目",
+      "created": "创建时间",
+      "prompt": "提示词",
+      "download": "下载",
+      "close": "关闭"
+    },
+    "types": {
+      "design": "设计",
+      "model": "穿搭",
+      "blueprint": "蓝图"
+    },
+    "sort": {
+      "recent": "最新",
+      "oldest": "最早",
+      "name": "名称"
+    },
+    "labels": {
+      "untitled": "无标题"
+    }
+  },
+  "youtube": {
+    "channelsTitle": "YouTube 频道",
+    "manageTitle": "YouTube 频道管理",
+    "addChannel": "+ 添加频道",
+    "manageDescription": "此处添加的频道可在创建会话时选择。使用 YouTube 爬虫时仅采集勾选的频道。",
+    "manageHint": "在设置页管理频道",
+    "selectionHint": "仅采集勾选的频道。需选择 YouTube 爬虫后生效。",
+    "settingsTitle": "YouTube 设置",
+    "keywordCount": "关键词搜索视频数",
+    "channelMax": "每个频道最大视频数",
+    "parallel": "并行数（1–5）",
+    "parallelWarning": "⚠️ 设为 2 以上可能出错",
+    "enableStt": "启用 STT 语音转写",
+    "enableSttHint": "将音频转写为文本（处理时间更长）",
+    "loadFailed": "频道加载失败",
+    "empty": "暂无已注册频道",
+    "prompt": "请输入 YouTube 频道 URL：\n示例: https://www.youtube.com/@channelname",
+    "invalidUrl": "请输入有效的 YouTube URL。",
+    "invalidFormat": "请检查频道 URL 格式（@handle 或 /channel/UC...）。",
+    "duplicate": "该频道已注册。",
+    "added": "频道已注册：{name}",
+    "addFailed": "频道注册失败：{error}",
+    "deleteConfirm": "确定删除该频道？",
+    "deleteFailed": "频道删除失败：{error}"
+  },
+  "settingsPage": {
+    "subtitle": "管理 API 密钥和爬虫设置",
+    "apiKeysTitle": "API 密钥管理",
+    "apiStatusLoading": "状态加载中...",
+    "seedreamKey": "Seedream API 密钥（字节跳动）",
+    "modelSettingsTitle": "AI 模型设置",
+    "models": {
+      "geminiLabel": "Gemini 模型",
+      "geminiFlash": "gemini-2.5-flash（默认）",
+      "geminiFlashLite": "gemini-2.5-flash-lite",
+      "geminiPro": "gemini-2.5-pro",
+      "glmLabel": "GLM 模型（备用）",
+      "glm46": "glm-4.7（默认）",
+      "glm4Flash": "glm-4-flash",
+      "saved": "模型设置已保存。",
+      "saveFailed": "模型设置保存失败",
+      "saveError": "保存模型设置时出错。"
+    },
+    "crawlerSettingsTitle": "爬虫设置",
+    "crawlerWorkers": "并发数量",
+    "crawlerTimeout": "爬取超时（秒）",
+    "searxngUrlLabel": "SearXNG API 地址",
+    "searxngUrlPlaceholder": "http://localhost:8888",
+    "searxngUrlHint": "请输入 SearXNG 服务器地址。本应用使用 8912 端口，请在其他端口运行 SearXNG。",
+    "crawlerStatusTitle": "爬虫状态",
+    "messages": {
+      "apiKeysSaved": "API 密钥已保存。",
+      "saveFailed": "保存失败",
+      "saveError": "保存时出错",
+      "crawlerSaved": "爬虫设置已保存。"
+    },
+    "crawlerStatus": {
+      "active": "启用",
+      "inactive": "停用",
+      "empty": "暂无爬虫。",
+      "loadFailed": "无法加载爬虫状态。"
+    }
+  },
+  "pipeline": {
+    "steps": {
+      "input_analysis": "输入分析",
+      "keyword_extraction": "关键词提取",
+      "crawling": "数据采集",
+      "trend_analysis": "趋势分析",
+      "idea_generation": "创意生成",
+      "report_generation": "报告生成",
+      "image_generation": "图像生成",
+      "blueprint_generation": "蓝图生成",
+      "completed": "完成",
+      "error": "错误"
+    }
+  },
+  "ui": {
+    "processing": "处理中...",
+    "generating": "生成中...",
+    "analyzing": "分析中...",
+    "collecting": "收集中...",
+    "noTitle": "无标题",
+    "noContent": "无内容",
+    "unknown": "未知",
+    "link": "链接",
+    "image": "图片",
+    "model": "模型",
+    "generationTime": "生成时间",
+    "seconds": "秒",
+    "hidden": {
+      "showMore": "显示更多",
+      "showLess": "收起"
+    },
+    "modal": {
+      "close": "关闭",
+      "confirm": "确认",
+      "cancel": "取消"
+    },
+    "empty": {
+      "noData": "暂无数据",
+      "noResults": "暂无结果"
+    }
+  }
+}

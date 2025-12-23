@@ -1,0 +1,1180 @@
+{
+  "nav": {
+    "title": "Fashion Trend AI",
+    "home": "Home",
+    "projects": "Projects",
+    "dashboard": "Dashboard",
+    "library": "Library",
+    "sessions": "Session Management",
+    "settings": "Settings",
+    "newSession": "New Session",
+    "viewAll": "View All"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Fashion Trend AI",
+      "title": "Analyze fashion trends and generate new designs",
+      "description": "Automatically collect and analyze the latest fashion trends, and generate AI-based design images and patterns.",
+      "searchPlaceholder": "What fashion trend would you like to analyze?",
+      "startButton": "Start Analysis",
+      "chips": {
+        "casual": "Women's Casual",
+        "street": "Streetwear",
+        "sustainable": "Sustainable Fashion",
+        "luxury": "Luxury Formal"
+      },
+      "chipsData": {
+        "casual": "2025 S/S women's casual trends",
+        "street": "Minimal streetwear menswear",
+        "sustainable": "Sustainable fashion materials trend",
+        "luxury": "Luxury formalwear color trends"
+      },
+      "links": {
+        "newProject": "New Project",
+        "library": "Library",
+        "settings": "Settings"
+      },
+      "recentLabel": "Recent Generations",
+      "noRecent": "Recent generated images will appear here",
+      "noRecentCount": "No recent generations",
+      "recentCount": "{count} images",
+      "viewLibrary": "Go to Library"
+    },
+    "quickActions": {
+      "title": "What would you like to do?",
+      "subtitle": "Start frequently used features right away",
+      "newSession": "Start New Analysis",
+      "cards": {
+        "trend": {
+          "title": "Trend Analysis",
+          "desc": "Collect and analyze fashion trend data with AI",
+          "action": "Go to Projects"
+        },
+        "designs": {
+          "title": "Design Library",
+          "desc": "Manage generated fashion designs and model images",
+          "action": "Open Library"
+        },
+        "settings": {
+          "title": "System Settings",
+          "desc": "Configure API keys, crawlers, and environment",
+          "action": "Go to Settings"
+        }
+      }
+    },
+    "status": {
+      "title": "System Status",
+      "subtitle": "Check crawler and API connection status",
+      "viewDetails": "View Details",
+      "crawlers": "Crawlers",
+      "geminiApi": "Gemini API",
+      "imageGen": "Image Generation",
+      "checking": "Checking...",
+      "active": "Active",
+      "connected": "Connected",
+      "notConfigured": "Not Configured",
+      "error": "Error"
+    },
+    "recentProjects": {
+      "title": "Recent Projects",
+      "subtitle": "Check your recent projects",
+      "viewAll": "View All",
+      "empty": "No projects yet",
+      "createFirst": "Create First Project",
+      "sessions": "sessions",
+      "error": "Failed to load projects"
+    },
+    "recentImages": {
+      "title": "Recent Generated Images",
+      "subtitle": "Recently generated designs and model images",
+      "viewAll": "Go to Library",
+      "empty": "No generated images yet",
+      "error": "Failed to load images"
+    }
+  },
+  "common": {
+    "appSubtitle": "Fashion Trend Analysis & Image Generation System",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "cancel": "Cancel",
+    "create": "Create",
+    "add": "Add",
+    "confirm": "Confirm",
+    "save": "Save",
+    "download": "Download",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "settings": "Settings",
+    "language": "Language",
+    "languages": {
+      "ko": "Korean",
+      "en": "English",
+      "zhCn": "Chinese (Simplified)",
+      "zhTw": "Chinese (Traditional)"
+    },
+    "refresh": "Refresh",
+    "apply": "Apply",
+    "reset": "Reset",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "details": "Details",
+    "summary": "Summary",
+    "status": "Status",
+    "createdAt": "Created",
+    "all": "All",
+    "none": "None",
+    "noTitle": "Untitled",
+    "noDescription": "No description",
+    "unknownError": "Unknown error",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "retry": "Retry"
+  },
+  "navigation": {
+    "trendAnalysis": "Trend Analysis",
+    "imageGeneration": "Image Generation",
+    "blueprint": "Pattern Generation",
+    "crawler": "Data Collection"
+  },
+  "trendAnalysis": {
+    "title": "Fashion Trend Analysis",
+    "keywords": "Keywords",
+    "keywordsPlaceholder": "e.g., oversized, minimalist, vintage",
+    "keywordsHelp": "Enter multiple keywords separated by commas",
+    "timeRange": "Time Range",
+    "timeRanges": {
+      "1d": "Last 1 day",
+      "7d": "Last 7 days",
+      "30d": "Last 30 days"
+    },
+    "startAnalysis": "Start Trend Analysis",
+    "results": {
+      "noResults": "No analysis results",
+      "enterKeywords": "Enter keywords and start trend analysis"
+    },
+    "notifications": {
+      "enterKeywords": "Please enter at least one keyword.",
+      "analysisFailed": "Trend analysis failed: {error}",
+      "analysisComplete": "Trend analysis completed successfully."
+    }
+  },
+  "imageGeneration": {
+    "title": "Fashion Design Image Generation",
+    "designPrompt": {
+      "label": "Design Description",
+      "placeholder": "Describe the fashion design you want to generate in detail"
+    },
+    "garmentType": {
+      "label": "Garment Type",
+      "options": {
+        "dress": "Dress",
+        "shirt": "Shirt",
+        "pants": "Pants",
+        "skirt": "Skirt",
+        "jacket": "Jacket",
+        "coat": "Coat"
+      }
+    },
+    "style": {
+      "label": "Style",
+      "options": {
+        "modern": "Modern",
+        "minimal": "Minimal",
+        "vintage": "Vintage",
+        "casual": "Casual",
+        "formal": "Formal",
+        "street": "Street"
+      }
+    },
+    "colorScheme": {
+      "label": "Color Scheme (Optional)",
+      "placeholder": "e.g., pastel tone, monochrome"
+    },
+    "fabricType": {
+      "label": "Fabric Type (Optional)",
+      "placeholder": "e.g., cotton, silk, denim"
+    },
+    "quality": {
+      "label": "Quality",
+      "options": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "ultra": "Ultra"
+      }
+    },
+    "numVariations": {
+      "label": "Number of Variations"
+    },
+    "referenceImage": {
+      "label": "Reference Image (Optional)"
+    },
+    "generate": "Generate Design",
+    "results": {
+      "title": "Generated Designs",
+      "noResults": "No generated images",
+      "enterPrompt": "Enter design description and start generation"
+    },
+    "notifications": {
+      "enterPrompt": "Please enter a design description.",
+      "generationFailed": "Design generation failed: {error}",
+      "generationComplete": "Design generation completed successfully.",
+      "referenceImageUpload": "Reference image upload feature is under development."
+    }
+  },
+  "blueprint": {
+    "title": "Pattern Blueprint Generation",
+    "garmentType": {
+      "label": "Garment Type",
+      "options": {
+        "dress": "Dress",
+        "shirt": "Shirt",
+        "pants": "Pants",
+        "skirt": "Skirt"
+      }
+    },
+    "design": {
+      "label": "Design Description",
+      "placeholder": "Describe the design of the pattern to generate"
+    },
+    "sizeSystem": {
+      "label": "Size System",
+      "options": {
+        "KS": "KS (Korean)",
+        "GB": "GB (British)",
+        "ASTM": "ASTM (American)",
+        "ISO": "ISO (International)"
+      }
+    },
+    "size": {
+      "label": "Size",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "Include Sewing Instructions",
+    "includeSeamAllowance": "Include Seam Allowance (1.5cm)",
+    "generate": "Generate Pattern",
+    "tabs": {
+      "pieces": "Pattern Pieces",
+      "layout": "Layout",
+      "instructions": "Instructions",
+      "materials": "Material List"
+    },
+    "results": {
+      "noResults": "No generated patterns",
+      "enterDesign": "Enter design information and start pattern generation"
+    },
+    "materials": {
+      "fabric": "Fabric",
+      "other": "Other Materials"
+    },
+    "notifications": {
+      "enterDesign": "Please enter a design description.",
+      "generationFailed": "Pattern generation failed: {error}",
+      "generationComplete": "Pattern generation completed successfully."
+    }
+  },
+  "crawler": {
+    "title": "Fashion Data Collection",
+    "sources": {
+      "label": "Data Sources",
+      "fashion_news": "Fashion News",
+      "fashion_insta": "Fashion Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "Fashion News",
+        "fashion_insta": "Fashion Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "Collection Keywords",
+      "placeholder": "e.g., 2024 fashion trends, oversized"
+    },
+    "maxItems": {
+      "label": "Maximum Items"
+    },
+    "start": "Start Data Collection",
+    "status": {
+      "title": "Collection Status",
+      "status": "Status",
+      "progress": "Progress",
+      "processed": "Items Collected",
+      "error": "Error"
+    },
+    "results": {
+      "title": "Collected Data",
+      "source": "Source",
+      "noResults": "No collected data",
+      "selectSources": "Select data sources and start collection",
+      "moreItems": "... and {count} more items"
+    },
+    "notifications": {
+      "selectSources": "Please select at least one data source.",
+      "enterKeywords": "Please enter collection keywords.",
+      "startFailed": "Failed to start data collection: {error}",
+      "started": "Data collection has started.",
+      "completed": "Data collection completed successfully.",
+      "failed": "Data collection failed."
+    }
+  },
+  "crawlers": {
+    "categories": {
+      "fashion": "Fashion Platforms",
+      "community": "Communities",
+      "portal": "Portals/Blogs",
+      "media": "Media",
+      "news": "News/Media",
+      "search": "Search"
+    },
+    "names": {
+      "musinsa": "Musinsa",
+      "fashion_insta": "Instagram",
+      "pinterest": "Pinterest",
+      "dcinside": "DC Inside",
+      "theqoo": "Theqoo",
+      "fmkorea": "FMKorea",
+      "clien": "Clien",
+      "ruliweb": "Ruliweb",
+      "ppomppu": "Ppomppu",
+      "mlbpark": "MLB Park",
+      "blind": "Blind",
+      "etoland": "Etoland",
+      "inven": "Inven",
+      "naver_blog": "Naver Blog",
+      "naver_cafe": "Naver Cafe",
+      "daum_cafe": "Daum Cafe",
+      "youtube": "YouTube",
+      "fashion_news": "Fashion N",
+      "wgsn": "WGSN",
+      "natenews": "Nate News",
+      "searxng": "SearXNG"
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "Image Generation Models",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "Professional fashion image generation",
+        "capabilities": [
+          "fashion_design",
+          "model_fitting",
+          "upscale"
+        ]
+      },
+      "seedream": {
+        "name": "Seedream (Bytedance)",
+        "description": "Advanced fashion collection generation",
+        "capabilities": [
+          "fashion_collection",
+          "patterns",
+          "textures"
+        ]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "Technical fashion illustrations",
+        "capabilities": [
+          "sketch",
+          "flat_lay",
+          "fabric_simulation"
+        ]
+      }
+    },
+    "textGeneration": {
+      "title": "Text Generation Models",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "Google's latest multimodal model",
+        "capabilities": [
+          "text",
+          "multimodal",
+          "analysis"
+        ]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "Zhipu AI's powerful language model",
+        "capabilities": [
+          "text",
+          "embedding"
+        ]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "Korean Standard",
+      "GB": "British Standard",
+      "ASTM": "American Standard",
+      "ISO": "International Standard"
+    },
+    "measurements": {
+      "cm": "cm",
+      "mm": "mm",
+      "inch": "inch"
+    },
+    "time": {
+      "seconds": "seconds",
+      "minutes": "minutes",
+      "hours": "hours"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "apiKeys": "API Keys",
+      "system": "System",
+      "export": "Export/Import"
+    },
+    "apiKeys": {
+      "title": "API Key Settings",
+      "gemini": "Gemini API Key",
+      "glm": "GLM API Key",
+      "zimage": "Z-Image API Key",
+      "seedream": "Seedream API Key",
+      "nanoBanana": "Nano Banana API Key",
+      "placeholder": "Enter API key",
+      "save": "Save API Keys",
+      "test": "Test Connection",
+      "reset": "Reset"
+    },
+    "system": {
+      "title": "System Settings",
+      "maxConcurrent": "Maximum Concurrent Requests",
+      "timeout": "Request Timeout (seconds)",
+      "defaultLanguage": "Default Language",
+      "defaultQuality": "Default Quality",
+      "autoSave": "Auto-save Results",
+      "save": "Save Settings",
+      "reset": "Reset to Defaults"
+    },
+    "export": "Export Settings",
+    "import": "Import Settings",
+    "status": {
+      "online": "Connected",
+      "offline": "Disconnected",
+      "testing": "Testing...",
+      "configured": "API Configured",
+      "notConfigured": "API Not Configured"
+    },
+    "confirmations": {
+      "resetKeys": "Are you sure you want to reset all API keys?",
+      "resetSystem": "Reset system settings to defaults?"
+    },
+    "notifications": {
+      "saved": "Settings saved successfully.",
+      "reset": "Settings have been reset.",
+      "exported": "Settings exported successfully.",
+      "imported": "Settings imported successfully.",
+      "importFailed": "Failed to import settings.",
+      "decryptFailed": "Cannot decrypt settings file.",
+      "noApiKey": "No API key"
+    }
+  },
+  "entities": {
+    "project": "Project",
+    "session": "Session",
+    "crawler": "Crawler",
+    "analysis": "Analysis",
+    "design": "Design",
+    "modelImage": "Model Image",
+    "blueprint": "Blueprint",
+    "idea": "Idea",
+    "library": "Library",
+    "chatbot": "Chatbot"
+  },
+  "status": {
+    "draft": "Draft",
+    "created": "Created",
+    "running": "Running",
+    "analyzing": "Analyzing",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "active": "Active",
+    "unknown": "Unknown"
+  },
+  "filters": {
+    "gender": {
+      "label": "Gender",
+      "options": {
+        "": "All",
+        "female": "Female",
+        "male": "Male",
+        "unisex": "Unisex"
+      }
+    },
+    "age": {
+      "label": "Age Group",
+      "options": {
+        "": "All",
+        "10s": "10s",
+        "20s": "20s",
+        "30s": "30s",
+        "40s": "40s",
+        "50s_plus": "50+"
+      }
+    },
+    "season": {
+      "label": "Season",
+      "options": {
+        "": "All",
+        "spring": "Spring",
+        "summer": "Summer",
+        "fall": "Fall",
+        "winter": "Winter",
+        "ss": "Spring/Summer",
+        "fw": "Fall/Winter"
+      }
+    },
+    "category": {
+      "label": "Category",
+      "options": {
+        "": "All",
+        "casual": "Casual",
+        "formal": "Formal",
+        "sports": "Sports",
+        "outdoor": "Outdoor",
+        "top": "Tops",
+        "bottom": "Bottoms",
+        "dress": "Dress",
+        "outer": "Outerwear",
+        "accessory": "Accessories"
+      }
+    }
+  },
+  "pageTitles": {
+    "home": "Home - Fashion Trend AI Generation System",
+    "dashboard": "Dashboard - Fashion Trend AI Generation System",
+    "projects": "Project Management - Fashion Trend AI Generation System",
+    "newProject": "Create Project - Fashion Trend AI Generation System",
+    "projectDetail": "Project Details - Fashion Trend AI Generation System",
+    "newSession": "Create Session - Fashion Trend AI Generation System",
+    "sessionDetail": "Session Details - Fashion Trend AI Generation System",
+    "history": "Session Management - Fashion Trend AI Generation System",
+    "ideas": "Idea Management - Fashion Trend AI Generation System",
+    "chatbot": "AI Chatbot - Fashion Trend AI Generation System",
+    "library": "Library - Fashion Trend AI Generation System",
+    "settings": "Settings - Fashion Trend AI Generation System"
+  },
+  "dashboard": {
+    "panels": {
+      "projects": "Projects",
+      "sessions": "Sessions",
+      "crawlerStatus": "Crawler Status"
+    },
+    "actions": {
+      "add": "+ Add",
+      "newProject": "+ New Project",
+      "startAnalysis": "Start Analysis",
+      "reanalyze": "Re-run Analysis",
+      "running": "Analyzing...",
+      "starting": "Starting..."
+    },
+    "placeholders": {
+      "selectProject": "Select a project",
+      "selectSession": "Select a session",
+      "sessionHelp": "Select a project and session on the left to view results"
+    },
+    "progress": {
+      "preparing": "Preparing..."
+    },
+    "stats": {
+      "crawled": "Collected Data",
+      "keywords": "Extracted Keywords",
+      "designs": "Designs",
+      "models": "Model Images"
+    },
+    "inlineStats": {
+      "crawled": "Collected",
+      "keywords": "Keywords",
+      "designs": "Designs",
+      "models": "Models"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "data": "Collected Data",
+      "analysis": "Analysis Report",
+      "design": "Design Images",
+      "model": "Model Images",
+      "blueprint": "Blueprint"
+    },
+    "empty": {
+      "overview": "Session results will appear here",
+      "data": "Collected data will appear here",
+      "analysis": "Analysis results will appear here",
+      "designImages": "No design images available",
+      "modelImages": "No model images available",
+      "projects": "No projects",
+      "sessions": "No sessions",
+      "blueprints": "No blueprints available"
+    },
+    "modals": {
+      "project": {
+        "title": "Create Project",
+        "name": "Project Name",
+        "namePlaceholder": "e.g., 2025 S/S Collection",
+        "imageModelLabel": "Image Model",
+        "imageModelAuto": "Auto Select",
+        "imageModelSeedream": "Seedream (Cloud)",
+        "imageModelNano": "Nano Banana (Cloud)",
+        "imageModelZImage": "Z-Image (GPU)",
+        "gpuDetecting": "Checking GPU...",
+        "gpuAvailable": "GPU available{info}",
+        "gpuUnavailable": "GPU not available",
+        "gpuUnknown": "GPU status unavailable",
+        "description": "Description (optional)",
+        "descriptionPlaceholder": "Project description..."
+      },
+      "editProject": {
+        "title": "Edit Project"
+      },
+      "session": {
+        "title": "Create Session",
+        "name": "Session Name",
+        "namePlaceholder": "e.g., Casual womenswear analysis",
+        "description": "Description",
+        "descriptionPlaceholder": "Analysis goals...",
+        "crawlerSelect": "Select Crawlers"
+      },
+      "editSession": {
+        "title": "Edit Session"
+      }
+    },
+    "crawlerConfig": {
+      "title": "Collection Settings",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "maxPosts": "Max posts per crawler"
+    },
+    "labels": {
+      "sessionCount": "{count} sessions"
+    },
+    "summary": {
+      "title": "Session Summary",
+      "status": "Status",
+      "createdAt": "Created",
+      "gender": "Gender",
+      "season": "Season"
+    },
+    "overview": {
+      "keywordsTitle": "Crawl Keywords",
+      "keywordsEmpty": "No keywords available",
+      "crawlProgress": "Collection Progress",
+      "keywordProgress": "Keyword Progress",
+      "logsTitle": "Crawl Logs",
+      "logsHint": "Latest 200 entries",
+      "logsEmpty": "No logs available",
+      "logsLoadFailed": "Failed to load logs",
+      "errorTitle": "Error"
+    },
+    "crawlers": {
+      "active": "Active: {count}",
+      "total": "Total: {count}",
+      "searxngDisabled": "SearXNG not configured"
+    },
+    "messages": {
+      "runFailed": "Failed to start analysis",
+      "selectProject": "Please select a project first",
+      "projectNameRequired": "Enter a project name",
+      "sessionNameRequired": "Enter a session name",
+      "createFailed": "Create failed: {error}",
+      "projectCreateError": "Error creating project",
+      "sessionCreateError": "Error creating session",
+      "updateFailed": "Update failed: {error}",
+      "projectUpdateError": "Error updating project",
+      "confirmDeleteProject": "Delete project '{name}'? All related sessions will also be deleted.",
+      "deleteFailed": "Delete failed: {error}",
+      "projectDeleteError": "Error deleting project",
+      "sessionUpdateError": "Error updating session",
+      "confirmDeleteSession": "Delete session '{name}'?",
+      "sessionDeleteError": "Error deleting session",
+      "searxngConfigRequired": "SearXNG API URL is not set. Please configure it in Settings."
+    },
+    "report": {
+      "loading": "Loading report...",
+      "notFound": "No report available.",
+      "fetchFailed": "Failed to load report.",
+      "pending": "Report is available after analysis completes.",
+      "selectSession": "Select a session to view the report.",
+      "titleFallback": "Trend Analysis Report",
+      "empty": "No report content available.",
+      "unnamed": "Untitled",
+      "meta": {
+        "language": "Language"
+      },
+      "sections": {
+        "executiveSummary": "Executive Summary",
+        "targetAudience": "Target Audience",
+        "researchScope": "Research Scope",
+        "marketAnalysis": "Market Analysis",
+        "trendAnalysis": "Trend Analysis",
+        "competitorAnalysis": "Competitor Analysis",
+        "designProposals": "Design Proposals",
+        "recommendations": "Recommendations",
+        "conclusion": "Conclusion"
+      }
+    },
+    "tooltips": {
+      "editProject": "Edit project",
+      "deleteProject": "Delete project",
+      "editSession": "Edit session",
+      "deleteSession": "Delete session"
+    }
+  },
+  "projects": {
+    "title": "Project Management",
+    "subtitle": "Manage and track fashion analysis projects",
+    "actions": {
+      "new": "New Project",
+      "newStart": "Start New Project"
+    },
+    "filters": {
+      "searchPlaceholder": "Search projects...",
+      "statusAll": "All statuses",
+      "sortRecent": "Most recent",
+      "sortTitle": "Title"
+    },
+    "loading": "Loading projects...",
+    "empty": {
+      "title": "No projects",
+      "subtitle": "Start your first project."
+    },
+    "confirmDelete": "Delete this project?",
+    "messages": {
+      "deleteFailed": "Delete failed",
+      "deleteError": "Error during delete"
+    }
+  },
+  "newProject": {
+    "backToList": "← Project list",
+    "title": "Create Project",
+    "subtitle": "Enter project details",
+    "form": {
+      "titleLabel": "Project Title",
+      "titlePlaceholder": "e.g., 2025 SS minimal look analysis",
+      "descriptionLabel": "Project Description (optional)",
+      "descriptionPlaceholder": "Enter background and expected outcomes",
+      "promptLabel": "Goals / Instructions",
+      "promptPlaceholder": "e.g., Analyze functional needs for unisex casual line",
+      "promptHint": "Be specific about scope, exclusions, and expected outputs."
+    },
+    "actions": {
+      "create": "Create Project"
+    },
+    "messages": {
+      "required": "Please enter a project title and goals.",
+      "created": "Project created.",
+      "createFailed": "Project creation failed: {error}",
+      "createError": "An error occurred while creating the project."
+    }
+  },
+  "newSession": {
+    "backToProject": "← Back to project",
+    "title": "Create Analysis Session",
+    "subtitle": "Set conditions for trend analysis and design generation",
+    "sections": {
+      "sessionInfo": "Session Info",
+      "filters": "Fashion Analysis Filters",
+      "filtersHelp": "Select only what you need (all optional)",
+      "inputs": "Input Data (optional)",
+      "inputsHelp": "Text, files, and URLs will be included in analysis",
+      "pipelineOptions": "Pipeline Options"
+    },
+    "fields": {
+      "title": "Session Title",
+      "titlePlaceholder": "e.g., 2025 S/S street trends",
+      "description": "Session Description",
+      "descriptionPlaceholder": "Enter goals, exclusions, focus points",
+      "descriptionHint": "e.g., \"Unisex casual focus, practicality\", \"Exclude excessive luxury\"",
+      "userKeywords": "Custom Keywords (optional)",
+      "userKeywordsPlaceholder": "e.g., minimal, oversized, retro (comma-separated)"
+    },
+    "inputs": {
+      "textLabel": "Text Input",
+      "textPlaceholder": "Enter additional instructions or references",
+      "fileLabel": "File Upload",
+      "fileHelp": "Supported formats: PDF, images",
+      "urlLabel": "URL Input (multiple allowed)",
+      "addUrl": "+ Add URL",
+      "urlPlaceholder": "https://example.com/article"
+    },
+    "options": {
+      "autoStart": "Auto start analysis after session creation",
+      "generateImages": "Include image generation",
+      "generateBlueprints": "Include blueprint generation"
+    },
+    "crawlers": {
+      "title": "Select Crawlers",
+      "subtitle": "Choose crawlers for data collection",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "maxItems": "Items per source"
+    },
+    "actions": {
+      "create": "Create Session"
+    },
+    "messages": {
+      "minUrl": "At least one URL field is required.",
+      "required": "Enter a session title and description.",
+      "createFailed": "Session creation failed",
+      "created": "Session created.",
+      "createError": "Session creation error: {error}"
+    }
+  },
+  "projectDetail": {
+    "backToList": "← Project list",
+    "actions": {
+      "editDescription": "Edit description",
+      "newSession": "+ New Session"
+    },
+    "sessionsTitle": "Analysis Sessions",
+    "loading": "Loading sessions...",
+    "empty": {
+      "title": "No sessions yet",
+      "subtitle": "Create a session to start analysis.",
+      "action": "Create a session"
+    },
+    "labels": {
+      "progress": "Progress {percent}%"
+    },
+    "messages": {
+      "notFound": "Project not found",
+      "descriptionSaveFailed": "Failed to save description",
+      "confirmDeleteSession": "Delete this session?",
+      "deleteFailed": "Delete failed"
+    }
+  },
+  "history": {
+    "title": "Session Management",
+    "subtitle": "Review recent sessions and results",
+    "actions": {
+      "newSession": "New Session"
+    },
+    "filters": {
+      "projectAll": "All projects",
+      "statusAll": "All statuses",
+      "sortRecent": "Most recent",
+      "sortOldest": "Oldest first"
+    },
+    "loading": "Loading sessions...",
+    "empty": {
+      "title": "No sessions",
+      "subtitle": "Create a new session in a project.",
+      "action": "Go to projects"
+    },
+    "labels": {
+      "progress": "Progress {percent}%"
+    }
+  },
+  "ideas": {
+    "title": "Idea Management",
+    "subtitle": "Review design ideas generated from sessions",
+    "actions": {
+      "viewSessions": "View Sessions",
+      "openSession": "Open session"
+    },
+    "filters": {
+      "searchPlaceholder": "Search ideas...",
+      "statusAll": "All statuses",
+      "sortRecent": "Most recent",
+      "sortTitle": "Title"
+    },
+    "status": {
+      "generated": "Generated",
+      "selected": "Selected"
+    },
+    "loading": "Loading ideas...",
+    "empty": {
+      "title": "No ideas",
+      "subtitle": "Run a session to generate ideas.",
+      "action": "Go to projects"
+    },
+    "labels": {
+      "defaultTitle": "Idea",
+      "sessionPrefix": "Session {id}"
+    }
+  },
+  "chatbot": {
+    "sidebar": {
+      "title": "Chat Sessions",
+      "newSession": "New Session"
+    },
+    "header": {
+      "title": "AI Chatbot",
+      "subtitle": "Ask freely about fashion ideas"
+    },
+    "empty": {
+      "state": "Select or create a chat session"
+    },
+    "form": {
+      "placeholder": "Type a message",
+      "send": "Send"
+    },
+    "modal": {
+      "title": "Create Chat Session",
+      "projectLabel": "Select project",
+      "projectPlaceholder": "Select project",
+      "sessionTitleLabel": "Session title (optional)",
+      "sessionTitlePlaceholder": "e.g., Minimal look ideas"
+    },
+    "messages": {
+      "noSessions": "No sessions",
+      "selectProject": "Select a project",
+      "sessionCreateFailed": "Failed to create session",
+      "selectSession": "Select a chat session first",
+      "messageSendFailed": "Failed to send message",
+      "noMessages": "No messages."
+    },
+    "labels": {
+      "newChat": "New chat",
+      "chat": "Chat",
+      "me": "Me",
+      "ai": "AI"
+    }
+  },
+  "sessionDetail": {
+    "backToList": "← Sessions",
+    "actions": {
+      "startAnalysis": "Start analysis",
+      "running": "Analyzing...",
+      "clearLogs": "Clear logs"
+    },
+    "summary": {
+      "title": "Session Overview",
+      "loading": "Loading session details..."
+    },
+    "sections": {
+      "progress": "Progress",
+      "logs": "Execution Logs",
+      "trendSummary": "Trend Summary",
+      "designIdeas": "Design Ideas",
+      "generatedImages": "Generated Images",
+      "blueprintSummary": "Blueprint Summary"
+    },
+    "labels": {
+      "createdAt": "Created",
+      "description": "Description",
+      "filters": "Filters",
+      "crawlers": "Crawlers",
+      "keywords": "Keywords"
+    },
+    "status": {
+      "waiting": "Waiting"
+    },
+    "trends": {
+      "empty": "No analysis results yet."
+    },
+    "ideas": {
+      "item": "Idea {index}",
+      "empty": "No ideas."
+    },
+    "images": {
+      "empty": "No images."
+    },
+    "blueprints": {
+      "counts": "Sketch {sketch}, Layout {layout}, Pattern {pattern}",
+      "empty": "No blueprints yet."
+    },
+    "logs": {
+      "loadFailed": "Failed to load logs.",
+      "empty": "No logs.",
+      "cleared": "Logs cleared."
+    },
+    "messages": {
+      "notFound": "Session not found.",
+      "startFailed": "Failed to start analysis",
+      "confirmDelete": "Delete this session?",
+      "deleteFailed": "Delete failed"
+    }
+  },
+  "library": {
+    "title": "Image Library",
+    "filter": {
+      "project": "Project",
+      "session": "Session",
+      "type": "Image Type",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "sort": "Sort",
+      "apply": "Apply",
+      "reset": "Reset"
+    },
+    "stats": {
+      "total": "images",
+      "design": "Design",
+      "model": "Model",
+      "blueprint": "Blueprint"
+    },
+    "empty": {
+      "title": "No images",
+      "description": "Run analysis to generate images"
+    },
+    "modal": {
+      "type": "Type",
+      "session": "Session",
+      "project": "Project",
+      "created": "Created",
+      "prompt": "Prompt",
+      "download": "Download",
+      "close": "Close"
+    },
+    "types": {
+      "design": "Design",
+      "model": "Model",
+      "blueprint": "Blueprint"
+    },
+    "sort": {
+      "recent": "Newest",
+      "oldest": "Oldest",
+      "name": "Name"
+    },
+    "labels": {
+      "untitled": "Untitled"
+    }
+  },
+  "youtube": {
+    "channelsTitle": "YouTube Channels",
+    "manageTitle": "YouTube Channel Management",
+    "addChannel": "+ Add Channel",
+    "manageDescription": "Channels registered here can be selected when creating a session. Only checked channels are collected when using the YouTube crawler.",
+    "manageHint": "Manage channels in Settings",
+    "selectionHint": "Only checked channels are crawled. Enable the YouTube crawler to activate.",
+    "settingsTitle": "YouTube Settings",
+    "keywordCount": "Videos per keyword search",
+    "channelMax": "Max videos per channel",
+    "parallel": "Parallel runs (1–5)",
+    "parallelWarning": "⚠️ Errors may occur when set to 2 or more",
+    "enableStt": "Enable STT transcription",
+    "enableSttHint": "Transcribe audio to text (longer processing time)",
+    "loadFailed": "Failed to load channels",
+    "empty": "No registered channels",
+    "prompt": "Enter YouTube channel URL:\nExample: https://www.youtube.com/@channelname",
+    "invalidUrl": "Please enter a valid YouTube URL.",
+    "invalidFormat": "Check the channel URL format. (@handle or /channel/UC... format)",
+    "duplicate": "This channel is already registered.",
+    "added": "Channel registered: {name}",
+    "addFailed": "Failed to register channel: {error}",
+    "deleteConfirm": "Delete this channel?",
+    "deleteFailed": "Failed to delete channel: {error}"
+  },
+  "settingsPage": {
+    "subtitle": "Manage API keys and crawler settings",
+    "apiKeysTitle": "API Key Management",
+    "apiStatusLoading": "Loading status...",
+    "seedreamKey": "Seedream API Key (Bytedance)",
+    "modelSettingsTitle": "AI Model Settings",
+    "models": {
+      "geminiLabel": "Gemini model",
+      "geminiFlash": "gemini-2.5-flash (default)",
+      "geminiFlashLite": "gemini-2.5-flash-lite",
+      "geminiPro": "gemini-2.5-pro",
+      "glmLabel": "GLM model (fallback)",
+      "glm46": "glm-4.7 (default)",
+      "glm4Flash": "glm-4-flash",
+      "saved": "Model settings saved.",
+      "saveFailed": "Failed to save model settings",
+      "saveError": "An error occurred while saving model settings."
+    },
+    "crawlerSettingsTitle": "Crawler Settings",
+    "crawlerWorkers": "Concurrent workers",
+    "crawlerTimeout": "Crawler timeout (sec)",
+    "searxngUrlLabel": "SearXNG API URL",
+    "searxngUrlPlaceholder": "http://localhost:8888",
+    "searxngUrlHint": "Enter the SearXNG server base URL. This app uses port 8912, so run SearXNG on a different port.",
+    "crawlerStatusTitle": "Crawler Status",
+    "messages": {
+      "apiKeysSaved": "API keys saved.",
+      "saveFailed": "Save failed",
+      "saveError": "Error while saving",
+      "crawlerSaved": "Crawler settings saved."
+    },
+    "crawlerStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "empty": "No crawlers.",
+      "loadFailed": "Failed to load crawler status."
+    }
+  },
+  "pipeline": {
+    "steps": {
+      "input_analysis": "Input analysis",
+      "keyword_extraction": "Keyword extraction",
+      "crawling": "Data collection",
+      "trend_analysis": "Trend analysis",
+      "idea_generation": "Idea generation",
+      "report_generation": "Report generation",
+      "image_generation": "Image generation",
+      "blueprint_generation": "Blueprint generation",
+      "completed": "Completed",
+      "error": "Error"
+    }
+  },
+  "ui": {
+    "processing": "Processing...",
+    "generating": "Generating...",
+    "analyzing": "Analyzing...",
+    "collecting": "Collecting...",
+    "noTitle": "No title",
+    "noContent": "No content",
+    "unknown": "Unknown",
+    "link": "Link",
+    "image": "Image",
+    "model": "Model",
+    "generationTime": "Generation time",
+    "seconds": "seconds",
+    "hidden": {
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "modal": {
+      "close": "Close",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "empty": {
+      "noData": "No data available",
+      "noResults": "No results"
+    }
+  },
+  "errors": {
+    "serverError": "Cannot connect to server. Please check if the server is running.",
+    "networkError": "A network error has occurred.",
+    "unauthorized": "Authentication required.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource could not be found.",
+    "internalError": "An internal server error has occurred.",
+    "validationError": "Please check your input values.",
+    "rateLimit": "Too many requests. Please try again later."
+  },
+  "dateFormats": {
+    "short": "MM/DD/YYYY",
+    "long": "MMMM DD, YYYY",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "$",
+    "code": "USD"
+  }
+}

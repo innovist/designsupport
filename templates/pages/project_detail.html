@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.projectDetail{% endblock %}
+{% block title %}프로젝트 상세 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block content %}
+<div id="project-detail-app">
+    <header style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+            <div style="flex: 1;">
+                <a href="/projects" style="color: var(--text-secondary); font-size: var(--font-sm); text-decoration: none;" data-i18n="projectDetail.backToList">
+                    ← 프로젝트 목록
+                </a>
+                <h2 id="project-title" style="font-size: 1.5rem; font-weight: 700; margin: 0.5rem 0; color: var(--text-primary);" data-i18n="common.loading">프로젝트 로딩 중...</h2>
+                <div id="description-display" style="margin-top: 0.5rem;">
+                    <p id="project-description" style="font-size: var(--font-sm); color: var(--text-secondary); margin: 0 0 0.5rem;"></p>
+                    <button onclick="toggleEditDescription()" class="btn btn-sm btn-outline" style="font-size: var(--font-xs); padding: 4px 8px;" data-i18n="projectDetail.actions.editDescription">설명 편집</button>
+                </div>
+                <div id="description-edit" style="display: none; margin-top: 0.5rem;">
+                    <textarea id="description-input" style="width: 100%; min-height: 80px; margin-bottom: 0.5rem; resize: vertical;"></textarea>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="saveDescription()" class="btn btn-sm btn-primary" style="font-size: var(--font-xs); padding: 4px 12px;" data-i18n="common.save">저장</button>
+                        <button onclick="cancelEditDescription()" class="btn btn-sm btn-outline" style="font-size: var(--font-xs); padding: 4px 12px;" data-i18n="common.cancel">취소</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 6px; font-size: var(--font-xs); color: var(--text-muted);">
+                    <span><span data-i18n="common.createdAt">생성일</span>: <strong id="project-created"></strong></span>
+                    <span><span data-i18n="common.status">상태</span>: <strong id="project-status"></strong></span>
+                </div>
+            </div>
+            <a href="/projects/{{ project_id }}/new-session" class="btn btn-primary" style="padding: 8px 16px; font-size: var(--font-sm); text-decoration: none;" data-i18n="projectDetail.actions.newSession">+ 새 세션</a>
+        </div>
+    </header>
+
+    <section>
+        <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="projectDetail.sessionsTitle">분석 세션</h3>
+        <div id="sessions-container" class="grid">
+            <div class="card" style="text-align: center; padding: 2rem;">
+                <p style="color: var(--text-muted);" data-i18n="projectDetail.loading">세션 로딩 중...</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+const t = window.t;
+const projectId = {{ project_id }};
+let project = null;
+let sessions = [];
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+function getStatusText(status) {
+    const map = {
+        created: t('status.created'),
+        running: t('status.running'),
+        analyzing: t('status.analyzing'),
+        completed: t('status.completed'),
+        failed: t('status.failed'),
+        draft: t('status.draft'),
+        active: t('status.active')
+    };
+    return map[status] || t('status.unknown');
+}
+
+function formatDateShort(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString(window.i18n.getNumberLocale());
+}
+
+function renderProjectDetail() {
+    if (!project) return;
+    document.getElementById('project-title').textContent = project.title;
+    document.getElementById('project-description').textContent = project.description || t('common.noDescription');
+    document.getElementById('project-created').textContent = formatDateShort(project.created_at);
+    document.getElementById('project-status').textContent = getStatusText(project.status);
+}
+
+async function loadProjectDetail() {
+    const res = await fetch(`/api/v1/projects/${projectId}`);
+    if (!res.ok) {
+        alert(t('projectDetail.messages.notFound'));
+        window.location.href = '/projects';
+        return;
+    }
+    project = await res.json();
+    renderProjectDetail();
+}
+
+async function loadSessions() {
+    const res = await fetch(`/api/v1/sessions/?project_id=${projectId}&limit=100`);
+    if (res.ok) {
+        sessions = await res.json();
+        renderSessions();
+    }
+}
+
+function renderSessions() {
+    const container = document.getElementById('sessions-container');
+    if (!sessions || sessions.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('projectDetail.empty.title')}</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('projectDetail.empty.subtitle')}</p>
+                <a href="/projects/${projectId}/new-session" class="btn btn-primary">${t('projectDetail.empty.action')}</a>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = sessions.map(session => `
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                <span class="badge">${getStatusText(session.status)}</span>
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">${formatDateShort(session.created_at)}</span>
+            </div>
+            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">${escapeHtml(session.session_title || t('common.noTitle'))}</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 0.75rem;">${escapeHtml(session.description || t('common.noDescription'))}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">${t('projectDetail.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="/sessions/${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
+                    <button onclick="deleteSession(${session.id})" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.delete')}</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleEditDescription() {
+    document.getElementById('description-display').style.display = 'none';
+    document.getElementById('description-edit').style.display = 'block';
+    document.getElementById('description-input').value = project?.description || '';
+}
+
+function cancelEditDescription() {
+    document.getElementById('description-display').style.display = 'block';
+    document.getElementById('description-edit').style.display = 'none';
+}
+
+async function saveDescription() {
+    const description = document.getElementById('description-input').value.trim();
+    const res = await fetch(`/api/v1/projects/${projectId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description })
+    });
+
+    if (res.ok) {
+        project.description = description;
+        document.getElementById('project-description').textContent = description || t('common.noDescription');
+        cancelEditDescription();
+    } else {
+        alert(t('projectDetail.messages.descriptionSaveFailed'));
+    }
+}
+
+async function deleteSession(sessionId) {
+    if (!confirm(t('projectDetail.messages.confirmDeleteSession'))) return;
+    const res = await fetch(`/api/v1/sessions/${sessionId}`, { method: 'DELETE' });
+    if (res.ok) {
+        await loadSessions();
+    } else {
+        alert(t('projectDetail.messages.deleteFailed'));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadProjectDetail();
+    await loadSessions();
+});
+window.addEventListener('languageChanged', () => {
+    renderProjectDetail();
+    renderSessions();
+});
+</script>
+{% endblock %}

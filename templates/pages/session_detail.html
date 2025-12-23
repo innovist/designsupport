@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.sessionDetail{% endblock %}
+{% block title %}세션 상세 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block content %}
+<div id="session-detail-app">
+    <header style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div>
+                <a href="/history" style="color: var(--text-secondary); font-size: var(--font-sm); text-decoration: none;" data-i18n="sessionDetail.backToList">
+                    ← 세션 목록
+                </a>
+                <h2 id="session-title" style="font-size: 1.5rem; font-weight: 700; margin: 0.5rem 0 0; color: var(--text-primary);" data-i18n="common.loading">세션 로딩 중...</h2>
+                <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;">
+                    <span class="badge" id="session-status" data-i18n="common.loading">상태 확인 중</span>
+                    <span id="session-created" style="font-size: var(--font-xs); color: var(--text-muted);"></span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="refreshAll()" data-i18n="common.refresh">새로고침</button>
+                <button class="btn btn-primary" onclick="startAnalysis()" id="start-analysis-btn" data-i18n="sessionDetail.actions.startAnalysis">분석 시작</button>
+                <button class="btn btn-outline" onclick="deleteSession()" data-i18n="common.delete">삭제</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="card" style="margin-bottom: 1rem;">
+        <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.summary.title">세션 개요</h3>
+        <div id="session-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
+            <div style="color: var(--text-muted);" data-i18n="sessionDetail.summary.loading">세션 정보를 불러오는 중...</div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.sections.progress">진행 상태</h3>
+                <div style="margin-bottom: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: var(--font-xs); color: var(--text-muted);">
+                        <span id="current-step" data-i18n="sessionDetail.status.waiting">대기 중</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div style="width: 100%; height: 10px; background: var(--bg-secondary); border-radius: 5px; overflow: hidden; margin-top: 0.25rem;">
+                        <div id="progress-bar" style="height: 100%; background: var(--color-primary); width: 0%;"></div>
+                    </div>
+                </div>
+                <p id="error-message" style="font-size: var(--font-xs); color: var(--color-danger); display: none;"></p>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h3 style="font-size: var(--font-lg); font-weight: 600; margin: 0;" data-i18n="sessionDetail.sections.logs">실행 로그</h3>
+                    <button class="btn btn-sm btn-outline" onclick="clearLogs()" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" data-i18n="sessionDetail.actions.clearLogs">로그 비우기</button>
+                </div>
+                <div id="session-logs" style="background: #111827; color: #d1d5db; font-family: 'Courier New', monospace; font-size: 0.75rem; padding: 0.75rem; border-radius: 6px; min-height: 200px; max-height: 320px; overflow-y: auto;">
+                    <div style="color: #9ca3af;" data-i18n="common.loading">로그 로딩 중...</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.sections.trendSummary">트렌드 요약</h3>
+                <div id="trend-summary" style="font-size: var(--font-sm); color: var(--text-secondary);" data-i18n="sessionDetail.trends.empty">
+                    분석 결과가 아직 없습니다.
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.sections.designIdeas">디자인 아이디어</h3>
+                <div id="ideas-list" style="display: grid; gap: 0.5rem;">
+                    <div style="color: var(--text-muted); font-size: var(--font-sm);" data-i18n="sessionDetail.ideas.empty">아이디어 생성 전입니다.</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.sections.generatedImages">생성된 이미지</h3>
+                <div id="image-results" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem;">
+                    <div style="color: var(--text-muted); font-size: var(--font-sm);" data-i18n="sessionDetail.images.empty">이미지 생성 전입니다.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.75rem;" data-i18n="sessionDetail.sections.blueprintSummary">블루프린트 요약</h3>
+                <div id="blueprint-summary" style="font-size: var(--font-sm); color: var(--text-secondary);" data-i18n="sessionDetail.blueprints.empty">
+                    블루프린트 생성 전입니다.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const t = window.t;
+const sessionId = {{ session_id }};
+let polling = null;
+
+function formatDateTime(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleString(window.i18n.getNumberLocale());
+}
+
+function getStatusText(status) {
+    const statusMap = {
+        created: t('status.created'),
+        running: t('status.running'),
+        analyzing: t('status.analyzing'),
+        completed: t('status.completed'),
+        failed: t('status.failed'),
+        cancelled: t('status.cancelled'),
+        draft: t('status.draft'),
+        active: t('status.active')
+    };
+    return statusMap[status] || t('status.unknown');
+}
+
+function getTranslatedValue(key, fallback) {
+    const value = t(key);
+    return value === key ? fallback : value;
+}
+
+function getCrawlerLabelById(crawlerId) {
+    return getTranslatedValue(`crawlers.names.${crawlerId}`, crawlerId);
+}
+
+function getLogStepLabel(step) {
+    if (!step) return t('common.info');
+    const translated = t(`pipeline.steps.${step}`);
+    return translated === `pipeline.steps.${step}` ? step : translated;
+}
+
+async function loadSession() {
+    const res = await fetch(`/api/v1/sessions/${sessionId}`);
+    if (!res.ok) {
+        alert(t('sessionDetail.messages.notFound'));
+        window.location.href = '/history';
+        return;
+    }
+    const session = await res.json();
+
+    document.getElementById('session-title').textContent = session.session_title || t('common.noTitle');
+    document.getElementById('session-status').textContent = getStatusText(session.status);
+    document.getElementById('session-created').textContent = session.created_at
+        ? `${t('sessionDetail.labels.createdAt')}: ${formatDateTime(session.created_at)}`
+        : '';
+
+    const summary = document.getElementById('session-summary');
+    summary.innerHTML = `
+        <div><strong>${t('sessionDetail.labels.description')}:</strong> ${escapeHtml(session.description || t('common.none'))}</div>
+        <div><strong>${t('sessionDetail.labels.filters')}:</strong> ${escapeHtml(formatFilters(session.filters))}</div>
+        <div><strong>${t('sessionDetail.labels.crawlers')}:</strong> ${escapeHtml(formatCrawlers(session.crawler_config))}</div>
+        <div><strong>${t('sessionDetail.labels.keywords')}:</strong> ${escapeHtml((session.user_keywords || []).join(', ') || t('common.none'))}</div>
+    `;
+
+    updateProgress(session);
+}
+
+function formatFilters(filters) {
+    if (!filters) return t('common.all');
+    const parts = [];
+    if (filters.gender) {
+        parts.push(`${t('filters.gender.label')} ${t(`filters.gender.options.${filters.gender}`)}`);
+    }
+    if (filters.age_group) {
+        parts.push(`${t('filters.age.label')} ${t(`filters.age.options.${filters.age_group}`)}`);
+    }
+    if (filters.season) {
+        parts.push(`${t('filters.season.label')} ${t(`filters.season.options.${filters.season}`)}`);
+    }
+    if (filters.category) {
+        parts.push(`${t('filters.category.label')} ${t(`filters.category.options.${filters.category}`)}`);
+    }
+    return parts.length ? parts.join(' / ') : t('common.all');
+}
+
+function formatCrawlers(config) {
+    if (!config || !config.crawlers || config.crawlers.length === 0) return t('common.none');
+    return config.crawlers.map(getCrawlerLabelById).join(', ');
+}
+
+function getImageUrl(img) {
+    if (img.url) return img.url;
+    if (img.image_base64) return `data:image/jpeg;base64,${img.image_base64}`;
+    return '';
+}
+
+function getImageLabel(img) {
+    if (img.type === 'model') {
+        return t('entities.modelImage');
+    }
+    return t('entities.design');
+}
+
+function updateProgress(session) {
+    const percent = session.progress_percent || 0;
+    document.getElementById('progress-percent').textContent = `${percent.toFixed(0)}%`;
+    document.getElementById('progress-bar').style.width = `${percent}%`;
+    if (session.current_step) {
+        document.getElementById('current-step').textContent = t(`pipeline.steps.${session.current_step}`);
+    } else {
+        document.getElementById('current-step').textContent = t('sessionDetail.status.waiting');
+    }
+
+    const errorBox = document.getElementById('error-message');
+    if (session.error_message) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = session.error_message;
+    } else {
+        errorBox.style.display = 'none';
+    }
+
+    const startBtn = document.getElementById('start-analysis-btn');
+    startBtn.disabled = session.status === 'running' || session.status === 'analyzing';
+    startBtn.textContent = startBtn.disabled ? t('sessionDetail.actions.running') : t('sessionDetail.actions.startAnalysis');
+}
+
+async function loadResults() {
+    const res = await fetch(`/api/v1/sessions/${sessionId}/results`);
+    if (!res.ok) return;
+    const data = await res.json();
+
+    const trendSummary = document.getElementById('trend-summary');
+    if (data.summary) {
+        trendSummary.textContent = data.summary;
+    } else if (data.trends && data.trends.length > 0) {
+        trendSummary.textContent = data.trends.map(t => t.trend_name || t.title || '').filter(Boolean).join(', ');
+    } else {
+        trendSummary.textContent = t('sessionDetail.trends.empty');
+    }
+
+    const ideasList = document.getElementById('ideas-list');
+    if (data.design_ideas && data.design_ideas.length > 0) {
+        ideasList.innerHTML = data.design_ideas.map((idea, index) => `
+            <div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px;">
+                <div style="font-weight: 600; font-size: var(--font-sm);">${t('sessionDetail.ideas.item', { index: index + 1 })}</div>
+                <div style="font-size: var(--font-xs); color: var(--text-secondary);">${escapeHtml(idea.concept_name || idea.concept || idea.title || '')}</div>
+            </div>
+        `).join('');
+    } else {
+        ideasList.innerHTML = `<div style="color: var(--text-muted); font-size: var(--font-sm);">${t('sessionDetail.ideas.empty')}</div>`;
+    }
+
+    const imageResults = document.getElementById('image-results');
+    if (data.generated_images && data.generated_images.length > 0) {
+        imageResults.innerHTML = data.generated_images.map(img => `
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden;">
+                <img src="${getImageUrl(img)}" alt="${getImageLabel(img)}" style="width: 100%; height: 120px; object-fit: cover;">
+            </div>
+        `).join('');
+    } else {
+        imageResults.innerHTML = `<div style="color: var(--text-muted); font-size: var(--font-sm);">${t('sessionDetail.images.empty')}</div>`;
+    }
+
+    const blueprintSummary = document.getElementById('blueprint-summary');
+    if (data.blueprints && data.blueprints.length > 0) {
+        const counts = { sketch: 0, layout: 0, pattern: 0 };
+        data.blueprints.forEach(bp => {
+            if (bp.type && counts[bp.type] !== undefined) {
+                counts[bp.type] += 1;
+            }
+        });
+        blueprintSummary.innerHTML = `
+            <div style="margin-bottom: 0.5rem;">
+                ${t('sessionDetail.blueprints.counts', {
+                    sketch: counts.sketch,
+                    layout: counts.layout,
+                    pattern: counts.pattern
+                })}
+            </div>
+        `;
+    } else {
+        blueprintSummary.textContent = t('sessionDetail.blueprints.empty');
+    }
+}
+
+async function loadLogs() {
+    const res = await fetch(`/api/v1/sessions/${sessionId}/logs?limit=100`);
+    const container = document.getElementById('session-logs');
+    if (!res.ok) {
+        container.innerHTML = `<div style="color:#9ca3af;">${t('sessionDetail.logs.loadFailed')}</div>`;
+        return;
+    }
+    const data = await res.json();
+    const logs = data.logs || [];
+    if (logs.length === 0) {
+        container.innerHTML = `<div style="color:#9ca3af;">${t('sessionDetail.logs.empty')}</div>`;
+        return;
+    }
+    container.innerHTML = logs.map(log => `
+        <div>[${log.timestamp || ''}] ${escapeHtml(getLogStepLabel(log.step))}: ${escapeHtml(log.message || '')}</div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+async function startAnalysis() {
+    const res = await fetch(`/api/v1/sessions/${sessionId}/run-analysis`, { method: 'POST' });
+    if (!res.ok) {
+        const error = await res.json();
+        alert(error.detail || t('sessionDetail.messages.startFailed'));
+        return;
+    }
+    refreshAll();
+}
+
+async function refreshAll() {
+    await loadSession();
+    await loadResults();
+    await loadLogs();
+}
+
+function clearLogs() {
+    document.getElementById('session-logs').innerHTML = `<div style="color:#9ca3af;">${t('sessionDetail.logs.cleared')}</div>`;
+}
+
+async function deleteSession() {
+    if (!confirm(t('sessionDetail.messages.confirmDelete'))) return;
+    const res = await fetch(`/api/v1/sessions/${sessionId}`, { method: 'DELETE' });
+    if (res.ok) {
+        window.location.href = '/history';
+    } else {
+        alert(t('sessionDetail.messages.deleteFailed'));
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+async function pollStatus() {
+    const res = await fetch(`/api/v1/sessions/${sessionId}`);
+    if (res.ok) {
+        const session = await res.json();
+        updateProgress(session);
+        if (session.status === 'running' || session.status === 'analyzing') {
+            await loadLogs();
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await refreshAll();
+    polling = setInterval(pollStatus, 3000);
+});
+window.addEventListener('languageChanged', () => refreshAll());
+</script>
+{% endblock %}

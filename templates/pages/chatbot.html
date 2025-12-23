@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.chatbot{% endblock %}
+{% block title %}AI 챗봇 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; height: calc(100vh - 8rem);">
+    <div class="card" style="padding: 1rem; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary);" data-i18n="chatbot.sidebar.title">대화 세션</h3>
+            <button onclick="showNewSessionModal()" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: var(--font-sm);" data-i18n="chatbot.sidebar.newSession">새 세션</button>
+        </div>
+        <div id="sessions-list" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+    </div>
+
+    <div class="card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+        <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: var(--font-xl); font-weight: 600; color: var(--text-primary);" data-i18n="chatbot.header.title">AI 챗봇</h2>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-top: 0.25rem;" id="session-title" data-i18n="chatbot.header.subtitle">
+                패션 아이디어를 자유롭게 질문하세요
+            </p>
+        </div>
+
+        <div id="messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <span aria-hidden="true">🤖</span>
+                <span data-i18n="chatbot.empty.state">대화 세션을 선택하거나 새로 생성하세요</span>
+            </div>
+        </div>
+
+        <div style="padding: 1rem; border-top: 1px solid var(--border-color);">
+            <form id="chat-form" style="display: flex; gap: 0.5rem;">
+                <input type="text" id="message-input" placeholder="메시지를 입력하세요" data-i18n-placeholder="chatbot.form.placeholder" style="flex: 1;">
+                <button type="submit" id="send-btn" class="btn btn-primary" data-i18n="chatbot.form.send">전송</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="new-session-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="card" style="width: 480px; max-width: 90%; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;" data-i18n="chatbot.modal.title">새 챗봇 세션 생성</h3>
+        <div style="margin-bottom: 0.75rem;">
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem;" data-i18n="chatbot.modal.projectLabel">프로젝트 선택</label>
+            <select id="modal-project-id" style="width: 100%;"></select>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem;" data-i18n="chatbot.modal.sessionTitleLabel">세션 제목 (선택)</label>
+            <input type="text" id="modal-session-title" placeholder="예: 미니멀 룩 아이디어 질의" data-i18n-placeholder="chatbot.modal.sessionTitlePlaceholder" style="width: 100%;">
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <button onclick="hideNewSessionModal()" class="btn btn-outline" data-i18n="common.cancel">취소</button>
+            <button onclick="createNewSession()" class="btn btn-primary" data-i18n="common.create">생성</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.message { padding: 0.75rem; border-radius: 10px; max-width: 80%; }
+.message.user { background: var(--color-primary-light); align-self: flex-end; }
+.message.assistant { background: var(--bg-secondary); align-self: flex-start; }
+.session-item { padding: 0.5rem; border-radius: 6px; cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border-color); }
+.session-item.active { border-color: var(--color-primary); background: var(--color-primary-light); }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const t = window.t;
+let currentSession = null;
+let sessions = [];
+let projects = [];
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+async function loadProjects() {
+    const res = await fetch('/api/v1/projects/?limit=100');
+    if (!res.ok) return;
+    projects = await res.json();
+    const select = document.getElementById('modal-project-id');
+    select.innerHTML = `<option value="">${t('chatbot.modal.projectPlaceholder')}</option>` +
+        projects.map(p => `<option value="${p.id}">${escapeHtml(p.title)}</option>`).join('');
+}
+
+async function loadSessions() {
+    const res = await fetch('/api/v1/chat/sessions');
+    if (!res.ok) return;
+    sessions = await res.json();
+    renderSessions();
+}
+
+function renderSessions() {
+    const container = document.getElementById('sessions-list');
+    if (!sessions || sessions.length === 0) {
+        container.innerHTML = `<div style="text-align:center; font-size: var(--font-sm); color: var(--text-muted);">${t('chatbot.messages.noSessions')}</div>`;
+        return;
+    }
+    container.innerHTML = sessions.map(session => `
+        <div class="session-item ${session.id === currentSession ? 'active' : ''}" onclick="loadSession(${session.id})">
+            <div style="font-size: var(--font-sm); font-weight: 600;">${escapeHtml(session.title || t('chatbot.labels.newChat'))}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${new Date(session.created_at).toLocaleDateString(window.i18n.getNumberLocale())}</div>
+        </div>
+    `).join('');
+}
+
+function showNewSessionModal() {
+    document.getElementById('new-session-modal').style.display = 'flex';
+}
+
+function hideNewSessionModal() {
+    document.getElementById('new-session-modal').style.display = 'none';
+    document.getElementById('modal-project-id').value = '';
+    document.getElementById('modal-session-title').value = '';
+}
+
+async function createNewSession() {
+    const projectId = document.getElementById('modal-project-id').value;
+    if (!projectId) {
+        alert(t('chatbot.messages.selectProject'));
+        return;
+    }
+    const title = document.getElementById('modal-session-title').value.trim();
+
+    const res = await fetch('/api/v1/chat/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_id: parseInt(projectId, 10), title: title || null })
+    });
+
+    if (res.ok) {
+        const session = await res.json();
+        currentSession = session.id;
+        await loadSessions();
+        await loadSession(session.id);
+        hideNewSessionModal();
+    } else {
+        const error = await res.json();
+        alert(error.detail || t('chatbot.messages.sessionCreateFailed'));
+    }
+}
+
+async function loadSession(sessionId) {
+    const res = await fetch(`/api/v1/chat/sessions/${sessionId}/messages`);
+    if (!res.ok) return;
+    const data = await res.json();
+    currentSession = sessionId;
+    document.getElementById('session-title').textContent = sessions.find(s => s.id === sessionId)?.title || t('chatbot.labels.chat');
+    renderMessages(data || []);
+    renderSessions();
+}
+
+function renderMessages(messages) {
+    const container = document.getElementById('messages-container');
+    if (!messages || messages.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color: var(--text-muted);">${t('chatbot.messages.noMessages')}</div>`;
+        return;
+    }
+    container.innerHTML = messages.map(msg => `
+        <div class="message ${msg.role}">
+            <strong style="display:block; font-size: 0.75rem; margin-bottom: 0.25rem;">${msg.role === 'user' ? t('chatbot.labels.me') : t('chatbot.labels.ai')}</strong>
+            <p style="margin:0; font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(msg.message || msg.content || '')}</p>
+        </div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessage(message) {
+    if (!currentSession) {
+        alert(t('chatbot.messages.selectSession'));
+        return;
+    }
+    const res = await fetch(`/api/v1/chat/sessions/${currentSession}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+    });
+
+    if (res.ok) {
+        const data = await res.json();
+        await loadSession(currentSession);
+        return data;
+    }
+
+    const error = await res.json();
+    alert(error.detail || t('chatbot.messages.messageSendFailed'));
+}
+
+document.getElementById('chat-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('message-input');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+    await sendMessage(message);
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadProjects();
+    await loadSessions();
+});
+window.addEventListener('languageChanged', () => {
+    renderSessions();
+    const current = sessions.find(s => s.id === currentSession);
+    if (!current) {
+        document.getElementById('session-title').textContent = t('chatbot.header.subtitle');
+    }
+});
+</script>
+{% endblock %}

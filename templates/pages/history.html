@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.history{% endblock %}
+{% block title %}세션 관리 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block content %}
+<header style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="history.title">세션 관리</h2>
+            <p style="font-size: 1rem; color: var(--text-secondary);" data-i18n="history.subtitle">최근 분석 세션을 확인하고 결과를 추적하세요</p>
+        </div>
+        <a href="/projects" class="btn btn-primary" data-i18n="history.actions.newSession">새 세션</a>
+    </div>
+</header>
+
+<section class="card" style="margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+        <select id="project-filter">
+            <option value="" data-i18n="history.filters.projectAll">전체 프로젝트</option>
+        </select>
+        <select id="status-filter">
+            <option value="" data-i18n="history.filters.statusAll">모든 상태</option>
+            <option value="created" data-i18n="status.created">생성됨</option>
+            <option value="running" data-i18n="status.running">진행 중</option>
+            <option value="completed" data-i18n="status.completed">완료</option>
+            <option value="failed" data-i18n="status.failed">실패</option>
+        </select>
+        <select id="sort-filter">
+            <option value="created_desc" data-i18n="history.filters.sortRecent">최신순</option>
+            <option value="created_asc" data-i18n="history.filters.sortOldest">오래된순</option>
+        </select>
+    </div>
+</section>
+
+<div id="sessions-container" class="grid">
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-muted);" data-i18n="history.loading">세션 로딩 중...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const t = window.t;
+let projects = [];
+let sessions = [];
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+function getStatusText(status) {
+    const map = {
+        created: t('status.created'),
+        running: t('status.running'),
+        analyzing: t('status.analyzing'),
+        completed: t('status.completed'),
+        failed: t('status.failed'),
+        cancelled: t('status.cancelled')
+    };
+    return map[status] || t('status.unknown');
+}
+
+function formatDate(dateStr) {
+    const locale = window.i18n.getNumberLocale();
+    return dateStr ? new Date(dateStr).toLocaleDateString(locale) : '';
+}
+
+async function loadProjects() {
+    try {
+        const res = await fetch('/api/v1/projects/');
+        if (res.ok) {
+            projects = await res.json();
+            renderProjectFilter();
+        }
+    } catch (error) {
+        console.error('Projects load error:', error);
+    }
+}
+
+function renderProjectFilter() {
+    const select = document.getElementById('project-filter');
+    select.innerHTML = `<option value="">${t('history.filters.projectAll')}</option>`;
+    projects.forEach(project => {
+        select.innerHTML += `<option value="${project.id}">${escapeHtml(project.title)}</option>`;
+    });
+}
+
+async function loadSessions() {
+    const projectId = document.getElementById('project-filter').value;
+    const status = document.getElementById('status-filter').value;
+    const sort = document.getElementById('sort-filter').value;
+
+    const params = new URLSearchParams();
+    if (projectId) params.append('project_id', projectId);
+    if (status) params.append('status', status);
+    params.append('limit', '100');
+
+    try {
+        const res = await fetch(`/api/v1/sessions/?${params.toString()}`);
+        if (res.ok) {
+            sessions = await res.json();
+            sortSessions(sort);
+            renderSessions();
+        }
+    } catch (error) {
+        console.error('세션 로드 실패:', error);
+        renderSessions();
+    }
+}
+
+function sortSessions(sort) {
+    sessions.sort((a, b) => {
+        const aDate = new Date(a.created_at || 0).getTime();
+        const bDate = new Date(b.created_at || 0).getTime();
+        return sort === 'created_asc' ? aDate - bDate : bDate - aDate;
+    });
+}
+
+function renderSessions() {
+    const container = document.getElementById('sessions-container');
+    if (!sessions || sessions.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('history.empty.title')}</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('history.empty.subtitle')}</p>
+                <a href="/projects" class="btn btn-primary">${t('history.empty.action')}</a>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = sessions.map(session => `
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                <span class="badge">${getStatusText(session.status)}</span>
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">${formatDate(session.created_at)}</span>
+            </div>
+            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">${escapeHtml(session.session_title || t('common.noTitle'))}</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 0.75rem;">${escapeHtml(session.description || t('common.noDescription'))}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">${t('history.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
+                <a href="/sessions/${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
+            </div>
+        </div>
+    `).join('');
+}
+
+['project-filter', 'status-filter', 'sort-filter'].forEach(id => {
+    document.addEventListener('change', (e) => {
+        if (e.target && e.target.id === id) {
+            loadSessions();
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadProjects();
+    await loadSessions();
+});
+window.addEventListener('languageChanged', () => {
+    renderProjectFilter();
+    renderSessions();
+});
+</script>
+{% endblock %}

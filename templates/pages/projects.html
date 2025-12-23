@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title_key %}pageTitles.projects{% endblock %}
+{% block title %}프로젝트 관리 - 패션 트렌드 AI 생성 시스템{% endblock %}
+
+{% block content %}
+<header style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="projects.title">프로젝트 관리</h2>
+            <p style="font-size: 1rem; color: var(--text-secondary);" data-i18n="projects.subtitle">패션 분석 프로젝트를 관리하고 추적합니다</p>
+        </div>
+        <a href="/projects/new" class="btn btn-primary" data-i18n="projects.actions.new">새 프로젝트</a>
+    </div>
+</header>
+
+<!-- 검색 및 필터 -->
+<section class="card" style="margin-bottom: 2rem;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+        <input type="text" id="search-projects" placeholder="프로젝트 검색..." data-i18n-placeholder="projects.filters.searchPlaceholder">
+        <select id="filter-status">
+            <option value="" data-i18n="projects.filters.statusAll">모든 상태</option>
+            <option value="created" data-i18n="status.created">생성됨</option>
+            <option value="running" data-i18n="status.running">진행 중</option>
+            <option value="completed" data-i18n="status.completed">완료</option>
+        </select>
+        <select id="sort-by">
+            <option value="recent" data-i18n="projects.filters.sortRecent">최신순</option>
+            <option value="title" data-i18n="projects.filters.sortTitle">제목순</option>
+        </select>
+    </div>
+</section>
+
+<!-- 프로젝트 목록 -->
+<div id="projects-container" class="grid">
+    <!-- 로딩 중 -->
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-muted);" data-i18n="projects.loading">프로젝트 로딩 중...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const t = window.t;
+let projects = [];
+async function loadProjects() {
+    try {
+        const res = await fetch('/api/v1/projects/');
+        if (res.ok) {
+            projects = await res.json();
+            renderProjects(projects || []);
+        }
+    } catch (error) {
+        console.error('Projects load error:', error);
+    }
+}
+
+function renderProjects(projects) {
+    const container = document.getElementById('projects-container');
+
+    if (projects.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('projects.empty.title')}</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('projects.empty.subtitle')}</p>
+                <a href="/projects/new" class="btn btn-primary">${t('projects.actions.newStart')}</a>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = projects.map(project => `
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-md);">
+                <span class="badge">${getStatusText(project.status)}</span>
+                <span style="font-size: var(--font-sm); color: var(--text-muted);">${formatDate(project.created_at)}</span>
+            </div>
+            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${escapeHtml(project.title)}</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-md); line-height: 1.6;">${escapeHtml(project.description || t('common.noDescription'))}</p>
+
+            <div style="display: flex; gap: var(--spacing-sm);">
+                <a href="/projects/${project.id}" class="btn btn-primary" style="flex: 1; text-align: center;">${t('common.open')}</a>
+                <button onclick="deleteProject(${project.id})" class="btn btn-outline" style="padding: 0.75rem 1rem;">${t('common.delete')}</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getStatusText(status) {
+    const statusMap = {
+        'created': t('status.created'),
+        'running': t('status.running'),
+        'analyzing': t('status.analyzing'),
+        'completed': t('status.completed'),
+        'failed': t('status.failed'),
+        'draft': t('status.draft'),
+        'active': t('status.active')
+    };
+    return statusMap[status] || t('status.unknown');
+}
+
+function formatDate(dateStr) {
+    const locale = window.i18n.getNumberLocale();
+    return new Date(dateStr).toLocaleDateString(locale);
+}
+
+async function deleteProject(id) {
+    if (!confirm(t('projects.confirmDelete'))) return;
+
+    try {
+        const res = await fetch(`/api/v1/projects/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            loadProjects();
+        } else {
+            alert(t('projects.messages.deleteFailed'));
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert(t('projects.messages.deleteError'));
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+document.addEventListener('DOMContentLoaded', loadProjects);
+window.addEventListener('languageChanged', () => renderProjects(projects || []));
+</script>
+{% endblock %}

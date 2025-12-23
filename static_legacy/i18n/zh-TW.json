@@ -1,0 +1,373 @@
+{
+  "common": {
+    "appSubtitle": "時尚趨勢分析與圖像生成系統",
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "warning": "警告",
+    "cancel": "取消",
+    "confirm": "確認",
+    "save": "儲存",
+    "download": "下載",
+    "delete": "刪除",
+    "edit": "編輯",
+    "search": "搜尋",
+    "filter": "篩選",
+    "settings": "設定",
+    "language": "語言",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "關閉",
+    "open": "打開",
+    "yes": "是",
+    "no": "否",
+    "ok": "確定",
+    "retry": "重試"
+  },
+  "navigation": {
+    "trendAnalysis": "趨勢分析",
+    "imageGeneration": "圖像生成",
+    "blueprint": "圖案生成",
+    "crawler": "資料收集"
+  },
+  "trendAnalysis": {
+    "title": "時尚趨勢分析",
+    "keywords": "關鍵詞",
+    "keywordsPlaceholder": "例如：oversized、極簡、復古",
+    "keywordsHelp": "用逗號分隔多個關鍵詞",
+    "timeRange": "分析範圍",
+    "timeRanges": {
+      "1d": "最近1天",
+      "7d": "最近7天",
+      "30d": "最近30天"
+    },
+    "startAnalysis": "開始趨勢分析",
+    "results": {
+      "noResults": "無分析結果",
+      "enterKeywords": "輸入關鍵詞並開始趨勢分析"
+    },
+    "notifications": {
+      "enterKeywords": "請至少輸入一個關鍵詞。",
+      "analysisFailed": "趨勢分析失敗：{error}",
+      "analysisComplete": "趨勢分析成功完成。"
+    }
+  },
+  "imageGeneration": {
+    "title": "時尚設計圖像生成",
+    "designPrompt": {
+      "label": "設計描述",
+      "placeholder": "詳細描述您想要生成的時尚設計"
+    },
+    "garmentType": {
+      "label": "服裝類型",
+      "options": {
+        "dress": "連衣裙",
+        "shirt": "襯衫",
+        "pants": "褲子",
+        "skirt": "裙子",
+        "jacket": "夾克",
+        "coat": "外套"
+      }
+    },
+    "style": {
+      "label": "風格",
+      "options": {
+        "modern": "現代",
+        "minimal": "極簡",
+        "vintage": "復古",
+        "casual": "休閒",
+        "formal": "正式",
+        "street": "街頭"
+      }
+    },
+    "colorScheme": {
+      "label": "配色方案（可選）",
+      "placeholder": "例如：粉彩色調、單色"
+    },
+    "fabricType": {
+      "label": "面料類型（可選）",
+      "placeholder": "例如：棉、絲、牛仔布"
+    },
+    "quality": {
+      "label": "品質",
+      "options": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "ultra": "極高"
+      }
+    },
+    "numVariations": {
+      "label": "變體數量"
+    },
+    "referenceImage": {
+      "label": "參考圖像（可選）"
+    },
+    "generate": "生成設計",
+    "results": {
+      "title": "生成的設計",
+      "noResults": "無生成的圖像",
+      "enterPrompt": "輸入設計描述並開始生成"
+    },
+    "notifications": {
+      "enterPrompt": "請輸入設計描述。",
+      "generationFailed": "設計生成失敗：{error}",
+      "generationComplete": "設計生成成功完成。",
+      "referenceImageUpload": "參考圖像上傳功能正在開發中。"
+    }
+  },
+  "blueprint": {
+    "title": "圖案樣板生成",
+    "garmentType": {
+      "label": "服裝類型",
+      "options": {
+        "dress": "連衣裙",
+        "shirt": "襯衫",
+        "pants": "褲子",
+        "skirt": "裙子"
+      }
+    },
+    "design": {
+      "label": "設計描述",
+      "placeholder": "描述要生成的圖案設計"
+    },
+    "sizeSystem": {
+      "label": "尺寸標準",
+      "options": {
+        "KS": "KS（韓國）",
+        "GB": "GB（英國）",
+        "ASTM": "ASTM（美國）",
+        "ISO": "ISO（國際）"
+      }
+    },
+    "size": {
+      "label": "尺寸",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "包含縫製說明",
+    "includeSeamAllowance": "包含縫份（1.5cm）",
+    "generate": "生成圖案",
+    "tabs": {
+      "pieces": "圖案片段",
+      "layout": "佈局",
+      "instructions": "說明",
+      "materials": "材料清單"
+    },
+    "results": {
+      "noResults": "無生成的圖案",
+      "enterDesign": "輸入設計資訊並開始圖案生成"
+    },
+    "materials": {
+      "fabric": "面料",
+      "other": "其他材料"
+    },
+    "notifications": {
+      "enterDesign": "請輸入設計描述。",
+      "generationFailed": "圖案生成失敗：{error}",
+      "generationComplete": "圖案生成成功完成。"
+    }
+  },
+  "crawler": {
+    "title": "時尚資料收集",
+    "sources": {
+      "label": "資料源",
+      "fashion_news": "時尚新聞",
+      "fashion_insta": "時尚Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "時尚新聞",
+        "fashion_insta": "時尚Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "收集關鍵詞",
+      "placeholder": "例如：2024時尚趨勢、oversized"
+    },
+    "maxItems": {
+      "label": "最大收集量"
+    },
+    "start": "開始資料收集",
+    "status": {
+      "title": "收集狀態",
+      "status": "狀態",
+      "progress": "進度",
+      "processed": "已收集項目",
+      "error": "錯誤"
+    },
+    "results": {
+      "title": "收集的資料",
+      "source": "來源",
+      "noResults": "無收集的資料",
+      "selectSources": "選擇資料源並開始收集",
+      "moreItems": "...以及其他{count}個項目"
+    },
+    "notifications": {
+      "selectSources": "請至少選擇一個資料源。",
+      "enterKeywords": "請輸入收集關鍵詞。",
+      "startFailed": "資料收集啟動失敗：{error}",
+      "started": "資料收集已啟動。",
+      "completed": "資料收集成功完成。",
+      "failed": "資料收集失敗。"
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "圖像生成模型",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "專業時尚圖像生成",
+        "capabilities": ["fashion_design", "model_fitting", "upscale"]
+      },
+      "seedream": {
+        "name": "Seedream（字節跳動）",
+        "description": "高級時尚系列生成",
+        "capabilities": ["fashion_collection", "patterns", "textures"]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "技術時尚插圖",
+        "capabilities": ["sketch", "flat_lay", "fabric_simulation"]
+      }
+    },
+    "textGeneration": {
+      "title": "文本生成模型",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "谷歌最新的多模態模型",
+        "capabilities": ["text", "multimodal", "analysis"]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "智譜AI強大的語言模型",
+        "capabilities": ["text", "embedding"]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "韓國標準",
+      "GB": "英國標準",
+      "ASTM": "美國標準",
+      "ISO": "國際標準"
+    },
+    "measurements": {
+      "cm": "公分",
+      "mm": "公釐",
+      "inch": "英寸"
+    },
+    "time": {
+      "seconds": "秒",
+      "minutes": "分鐘",
+      "hours": "小時"
+    }
+  },
+  "errors": {
+    "serverError": "無法連接到伺服器。請檢查伺服器是否正在運行。",
+    "networkError": "發生網路錯誤。",
+    "unauthorized": "需要身份驗證。",
+    "forbidden": "訪問被拒絕。",
+    "notFound": "找不到請求的資源。",
+    "internalError": "發生內部伺服器錯誤。",
+    "validationError": "請檢查您的輸入值。",
+    "rateLimit": "請求過於頻繁。請稍後再試。"
+  },
+  "dateFormats": {
+    "short": "YYYY.MM.DD",
+    "long": "YYYY年MM月DD日",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "NT$",
+    "code": "TWD"
+  },
+  "settings": {
+    "title": "設定",
+    "tabs": {
+      "apiKeys": "API金鑰",
+      "system": "系統",
+      "export": "匯出/匯入"
+    },
+    "apiKeys": {
+      "title": "API金鑰設定",
+      "gemini": "Gemini API金鑰",
+      "glm": "GLM API金鑰",
+      "zimage": "Z-Image API金鑰",
+      "seedream": "Seedream API金鑰",
+      "nanoBanana": "Nano Banana API金鑰",
+      "placeholder": "請輸入API金鑰",
+      "save": "儲存API金鑰",
+      "test": "連線測試",
+      "reset": "重設"
+    },
+    "system": {
+      "title": "系統設定",
+      "maxConcurrent": "最大並行請求數",
+      "timeout": "請求逾時（秒）",
+      "defaultLanguage": "預設語言",
+      "defaultQuality": "預設品質",
+      "autoSave": "自動儲存結果",
+      "save": "儲存設定",
+      "reset": "恢復預設設定"
+    },
+    "export": "匯出設定",
+    "import": "匯入設定",
+    "status": {
+      "online": "已連線",
+      "offline": "連線中斷",
+      "testing": "測試中...",
+      "configured": "API已設定",
+      "notConfigured": "API未設定"
+    },
+    "confirmations": {
+      "resetKeys": "確定要重設所有API金鑰嗎？",
+      "resetSystem": "將系統設定恢復為預設值？"
+    },
+    "notifications": {
+      "saved": "設定已儲存。",
+      "reset": "設定已重設。",
+      "exported": "設定已匯出。",
+      "imported": "設定已匯入。",
+      "importFailed": "設定匯入失敗。",
+      "decryptFailed": "無法解密設定檔案。",
+      "noApiKey": "無API金鑰"
+    }
+  },
+  "ui": {
+    "processing": "處理中...",
+    "generating": "生成中...",
+    "analyzing": "分析中...",
+    "collecting": "收集中...",
+    "noTitle": "無標題",
+    "noContent": "無內容",
+    "unknown": "未知",
+    "link": "連結",
+    "image": "圖片",
+    "model": "模型",
+    "generationTime": "生成時間",
+    "seconds": "秒",
+    "hidden": {
+      "showMore": "顯示更多",
+      "showLess": "收合"
+    },
+    "modal": {
+      "close": "關閉",
+      "confirm": "確認",
+      "cancel": "取消"
+    },
+    "empty": {
+      "noData": "暫無資料",
+      "noResults": "暫無結果"
+    }
+  }
+}

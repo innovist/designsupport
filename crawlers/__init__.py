@@ -1,0 +1,3 @@
+"""
+Fashion AI Generator Crawlers
+"""

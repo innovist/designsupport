@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title_key %}pageTitles.library{% endblock %}
+{% block title %}라이브러리 - 패션 트렌드 AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/pages/library.css">
+{% endblock %}
+
+{% block content %}
+<div class="library-container">
+    <!-- Header -->
+    <div class="library-header">
+        <h1 class="library-title" data-i18n="library.title">이미지 라이브러리</h1>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="filters-row">
+            <div class="filter-group">
+                <label data-i18n="library.filter.project">프로젝트</label>
+                <select id="filter-project">
+                    <option value="" data-i18n="common.all">전체</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label data-i18n="library.filter.session">세션</label>
+                <select id="filter-session">
+                    <option value="" data-i18n="common.all">전체</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label data-i18n="library.filter.type">이미지 타입</label>
+                <select id="filter-type">
+                    <option value="" data-i18n="common.all">전체</option>
+                    <option value="design" data-i18n="library.types.design">의상 디자인</option>
+                    <option value="model" data-i18n="library.types.model">모델 착장</option>
+                    <option value="blueprint" data-i18n="library.types.blueprint">블루프린트</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label data-i18n="library.filter.dateFrom">시작일</label>
+                <input type="date" id="filter-date-from">
+            </div>
+            <div class="filter-group">
+                <label data-i18n="library.filter.dateTo">종료일</label>
+                <input type="date" id="filter-date-to">
+            </div>
+            <div class="filter-group">
+                <label data-i18n="library.filter.sort">정렬</label>
+                <select id="filter-sort">
+                    <option value="created_at_desc" data-i18n="library.sort.recent">최신순</option>
+                    <option value="created_at_asc" data-i18n="library.sort.oldest">오래된순</option>
+                    <option value="name_asc" data-i18n="library.sort.name">이름순</option>
+                </select>
+            </div>
+            <button class="filter-btn primary" onclick="applyFilters()" data-i18n="library.filter.apply">적용</button>
+            <button class="filter-btn secondary" onclick="resetFilters()" data-i18n="library.filter.reset">초기화</button>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <span class="stat-item"><strong id="total-count">0</strong> <span data-i18n="library.stats.total">개 이미지</span></span>
+        <span class="stat-item"><strong id="design-count">0</strong> <span data-i18n="library.stats.design">의상 디자인</span></span>
+        <span class="stat-item"><strong id="model-count">0</strong> <span data-i18n="library.stats.model">모델 착장</span></span>
+        <span class="stat-item"><strong id="blueprint-count">0</strong> <span data-i18n="library.stats.blueprint">블루프린트</span></span>
+    </div>
+
+    <!-- Image Grid -->
+    <div id="image-grid" class="image-grid">
+        <!-- Images will be loaded here -->
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="empty-state" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21,15 16,10 5,21"></polyline>
+        </svg>
+        <h3 data-i18n="library.empty.title">이미지가 없습니다</h3>
+        <p data-i18n="library.empty.description">분석을 실행하여 이미지를 생성하세요</p>
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination" style="display: none;">
+        <button onclick="goToPage(currentPage - 1)" id="prev-btn" disabled data-i18n="common.previous">이전</button>
+        <span id="page-info"></span>
+        <button onclick="goToPage(currentPage + 1)" id="next-btn" data-i18n="common.next">다음</button>
+    </div>
+</div>
+
+<!-- Image Detail Modal -->
+<div id="image-modal" class="modal-overlay">
+    <button class="modal-close" onclick="closeModal()" data-i18n-aria-label="common.close">&times;</button>
+    <div class="image-modal">
+        <div class="modal-image-section">
+            <img id="modal-image" src="" alt="">
+        </div>
+        <div class="modal-info-section">
+            <h3 id="modal-title" class="modal-title"></h3>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.type">타입</label>
+                <span id="modal-type"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.session">세션</label>
+                <span id="modal-session"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.project">프로젝트</label>
+                <span id="modal-project"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.created">생성일</label>
+                <span id="modal-created"></span>
+            </div>
+            <div class="modal-detail">
+                <label data-i18n="library.modal.prompt">프롬프트</label>
+                <span id="modal-prompt" style="font-size: 12px; line-height: 1.5;"></span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn primary" onclick="downloadImage()" data-i18n="library.modal.download">다운로드</button>
+                <button class="modal-btn secondary" onclick="closeModal()" data-i18n="library.modal.close">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/pages/library.js"></script>
+{% endblock %}

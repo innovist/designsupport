@@ -1,0 +1,21 @@
+<!-- 세션 수정 모달 -->
+<div id="edit-session-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="panel-section" style="width: 400px; max-width: 90vw;">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;" data-i18n="dashboard.modals.editSession.title">세션 수정</h3>
+        <form id="edit-session-form">
+            <input type="hidden" id="edit-session-id">
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.session.name">세션 이름</label>
+                <input type="text" id="edit-session-title" class="form-input" required style="width: 100%;">
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.session.description">설명</label>
+                <textarea id="edit-session-desc" class="form-input" rows="3" style="width: 100%;"></textarea>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeEditSessionModal()" data-i18n="common.cancel">취소</button>
+                <button type="submit" class="btn btn-primary" data-i18n="common.save">저장</button>
+            </div>
+        </form>
+    </div>
+</div>

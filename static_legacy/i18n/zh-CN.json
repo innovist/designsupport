@@ -1,0 +1,373 @@
+{
+  "common": {
+    "appSubtitle": "时尚趋势分析与图像生成系统",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "download": "下载",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "filter": "筛选",
+    "settings": "设置",
+    "language": "语言",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "关闭",
+    "open": "打开",
+    "yes": "是",
+    "no": "否",
+    "ok": "确定",
+    "retry": "重试"
+  },
+  "navigation": {
+    "trendAnalysis": "趋势分析",
+    "imageGeneration": "图像生成",
+    "blueprint": "图案生成",
+    "crawler": "数据收集"
+  },
+  "trendAnalysis": {
+    "title": "时尚趋势分析",
+    "keywords": "关键词",
+    "keywordsPlaceholder": "例如：oversized、极简主义、复古",
+    "keywordsHelp": "用逗号分隔多个关键词",
+    "timeRange": "分析范围",
+    "timeRanges": {
+      "1d": "最近1天",
+      "7d": "最近7天",
+      "30d": "最近30天"
+    },
+    "startAnalysis": "开始趋势分析",
+    "results": {
+      "noResults": "无分析结果",
+      "enterKeywords": "输入关键词并开始趋势分析"
+    },
+    "notifications": {
+      "enterKeywords": "请至少输入一个关键词。",
+      "analysisFailed": "趋势分析失败：{error}",
+      "analysisComplete": "趋势分析成功完成。"
+    }
+  },
+  "imageGeneration": {
+    "title": "时尚设计图像生成",
+    "designPrompt": {
+      "label": "设计描述",
+      "placeholder": "详细描述您想要生成的时尚设计"
+    },
+    "garmentType": {
+      "label": "服装类型",
+      "options": {
+        "dress": "连衣裙",
+        "shirt": "衬衫",
+        "pants": "裤子",
+        "skirt": "裙子",
+        "jacket": "夹克",
+        "coat": "外套"
+      }
+    },
+    "style": {
+      "label": "风格",
+      "options": {
+        "modern": "现代",
+        "minimal": "极简",
+        "vintage": "复古",
+        "casual": "休闲",
+        "formal": "正式",
+        "street": "街头"
+      }
+    },
+    "colorScheme": {
+      "label": "配色方案（可选）",
+      "placeholder": "例如：粉彩色调、单色"
+    },
+    "fabricType": {
+      "label": "面料类型（可选）",
+      "placeholder": "例如：棉、丝、牛仔布"
+    },
+    "quality": {
+      "label": "质量",
+      "options": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "ultra": "极高"
+      }
+    },
+    "numVariations": {
+      "label": "变体数量"
+    },
+    "referenceImage": {
+      "label": "参考图像（可选）"
+    },
+    "generate": "生成设计",
+    "results": {
+      "title": "生成的设计",
+      "noResults": "无生成的图像",
+      "enterPrompt": "输入设计描述并开始生成"
+    },
+    "notifications": {
+      "enterPrompt": "请输入设计描述。",
+      "generationFailed": "设计生成失败：{error}",
+      "generationComplete": "设计生成成功完成。",
+      "referenceImageUpload": "参考图像上传功能正在开发中。"
+    }
+  },
+  "blueprint": {
+    "title": "图案样板生成",
+    "garmentType": {
+      "label": "服装类型",
+      "options": {
+        "dress": "连衣裙",
+        "shirt": "衬衫",
+        "pants": "裤子",
+        "skirt": "裙子"
+      }
+    },
+    "design": {
+      "label": "设计描述",
+      "placeholder": "描述要生成的图案设计"
+    },
+    "sizeSystem": {
+      "label": "尺寸标准",
+      "options": {
+        "KS": "KS（韩国）",
+        "GB": "GB（英国）",
+        "ASTM": "ASTM（美国）",
+        "ISO": "ISO（国际）"
+      }
+    },
+    "size": {
+      "label": "尺寸",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "包含缝制说明",
+    "includeSeamAllowance": "包含缝份（1.5cm）",
+    "generate": "生成图案",
+    "tabs": {
+      "pieces": "图案片段",
+      "layout": "布局",
+      "instructions": "说明",
+      "materials": "材料清单"
+    },
+    "results": {
+      "noResults": "无生成的图案",
+      "enterDesign": "输入设计信息并开始图案生成"
+    },
+    "materials": {
+      "fabric": "面料",
+      "other": "其他材料"
+    },
+    "notifications": {
+      "enterDesign": "请输入设计描述。",
+      "generationFailed": "图案生成失败：{error}",
+      "generationComplete": "图案生成成功完成。"
+    }
+  },
+  "crawler": {
+    "title": "时尚数据收集",
+    "sources": {
+      "label": "数据源",
+      "fashion_news": "时尚新闻",
+      "fashion_insta": "时尚Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "时尚新闻",
+        "fashion_insta": "时尚Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "收集关键词",
+      "placeholder": "例如：2024时尚趋势、oversized"
+    },
+    "maxItems": {
+      "label": "最大收集量"
+    },
+    "start": "开始数据收集",
+    "status": {
+      "title": "收集状态",
+      "status": "状态",
+      "progress": "进度",
+      "processed": "已收集项目",
+      "error": "错误"
+    },
+    "results": {
+      "title": "收集的数据",
+      "source": "来源",
+      "noResults": "无收集的数据",
+      "selectSources": "选择数据源并开始收集",
+      "moreItems": "...以及其他{count}个项目"
+    },
+    "notifications": {
+      "selectSources": "请至少选择一个数据源。",
+      "enterKeywords": "请输入收集关键词。",
+      "startFailed": "数据收集启动失败：{error}",
+      "started": "数据收集已启动。",
+      "completed": "数据收集成功完成。",
+      "failed": "数据收集失败。"
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "图像生成模型",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "专业时尚图像生成",
+        "capabilities": ["fashion_design", "model_fitting", "upscale"]
+      },
+      "seedream": {
+        "name": "Seedream（字节跳动）",
+        "description": "高级时尚系列生成",
+        "capabilities": ["fashion_collection", "patterns", "textures"]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "技术时尚插画",
+        "capabilities": ["sketch", "flat_lay", "fabric_simulation"]
+      }
+    },
+    "textGeneration": {
+      "title": "文本生成模型",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "谷歌最新的多模态模型",
+        "capabilities": ["text", "multimodal", "analysis"]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "智谱AI强大的语言模型",
+        "capabilities": ["text", "embedding"]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "韩国标准",
+      "GB": "英国标准",
+      "ASTM": "美国标准",
+      "ISO": "国际标准"
+    },
+    "measurements": {
+      "cm": "厘米",
+      "mm": "毫米",
+      "inch": "英寸"
+    },
+    "time": {
+      "seconds": "秒",
+      "minutes": "分钟",
+      "hours": "小时"
+    }
+  },
+  "errors": {
+    "serverError": "无法连接到服务器。请检查服务器是否正在运行。",
+    "networkError": "发生网络错误。",
+    "unauthorized": "需要身份验证。",
+    "forbidden": "访问被拒绝。",
+    "notFound": "找不到请求的资源。",
+    "internalError": "发生内部服务器错误。",
+    "validationError": "请检查您的输入值。",
+    "rateLimit": "请求过于频繁。请稍后再试。"
+  },
+  "dateFormats": {
+    "short": "YYYY.MM.DD",
+    "long": "YYYY年MM月DD日",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "¥",
+    "code": "CNY"
+  },
+  "settings": {
+    "title": "设置",
+    "tabs": {
+      "apiKeys": "API密钥",
+      "system": "系统",
+      "export": "导出/导入"
+    },
+    "apiKeys": {
+      "title": "API密钥设置",
+      "gemini": "Gemini API密钥",
+      "glm": "GLM API密钥",
+      "zimage": "Z-Image API密钥",
+      "seedream": "Seedream API密钥",
+      "nanoBanana": "Nano Banana API密钥",
+      "placeholder": "请输入API密钥",
+      "save": "保存API密钥",
+      "test": "连接测试",
+      "reset": "重置"
+    },
+    "system": {
+      "title": "系统设置",
+      "maxConcurrent": "最大并发请求数",
+      "timeout": "请求超时（秒）",
+      "defaultLanguage": "默认语言",
+      "defaultQuality": "默认质量",
+      "autoSave": "自动保存结果",
+      "save": "保存设置",
+      "reset": "恢复默认设置"
+    },
+    "export": "导出设置",
+    "import": "导入设置",
+    "status": {
+      "online": "已连接",
+      "offline": "断开连接",
+      "testing": "测试中...",
+      "configured": "API已配置",
+      "notConfigured": "API未配置"
+    },
+    "confirmations": {
+      "resetKeys": "确定要重置所有API密钥吗？",
+      "resetSystem": "将系统设置恢复为默认值？"
+    },
+    "notifications": {
+      "saved": "设置已保存。",
+      "reset": "设置已重置。",
+      "exported": "设置已导出。",
+      "imported": "设置已导入。",
+      "importFailed": "设置导入失败。",
+      "decryptFailed": "无法解密设置文件。",
+      "noApiKey": "无API密钥"
+    }
+  },
+  "ui": {
+    "processing": "处理中...",
+    "generating": "生成中...",
+    "analyzing": "分析中...",
+    "collecting": "收集中...",
+    "noTitle": "无标题",
+    "noContent": "无内容",
+    "unknown": "未知",
+    "link": "链接",
+    "image": "图片",
+    "model": "模型",
+    "generationTime": "生成时间",
+    "seconds": "秒",
+    "hidden": {
+      "showMore": "显示更多",
+      "showLess": "收起"
+    },
+    "modal": {
+      "close": "关闭",
+      "confirm": "确认",
+      "cancel": "取消"
+    },
+    "empty": {
+      "noData": "暂无数据",
+      "noResults": "暂无结果"
+    }
+  }
+}

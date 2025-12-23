@@ -1,0 +1,1180 @@
+{
+  "nav": {
+    "title": "時尚趨勢AI",
+    "home": "首頁",
+    "projects": "專案",
+    "dashboard": "儀表板",
+    "library": "圖庫",
+    "sessions": "會話管理",
+    "settings": "設定",
+    "newSession": "新會話",
+    "viewAll": "查看全部"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Fashion Trend AI",
+      "title": "分析時尚趨勢並生成新設計",
+      "description": "自動收集並分析最新時尚趨勢，生成 AI 設計圖像與版型。",
+      "searchPlaceholder": "想分析哪種時尚趨勢？",
+      "startButton": "開始分析",
+      "chips": {
+        "casual": "女性休閒",
+        "street": "街頭風",
+        "sustainable": "永續時尚",
+        "luxury": "奢華正裝"
+      },
+      "chipsData": {
+        "casual": "2025 S/S 女裝休閒趨勢",
+        "street": "極簡街頭男裝",
+        "sustainable": "永續時尚材質趨勢",
+        "luxury": "奢華正裝配色趨勢"
+      },
+      "links": {
+        "newProject": "新專案",
+        "library": "圖庫",
+        "settings": "設定"
+      },
+      "recentLabel": "最近生成結果",
+      "noRecent": "最近生成的圖片將顯示在這裡",
+      "noRecentCount": "暫無最近生成",
+      "recentCount": "{count} 張圖片",
+      "viewLibrary": "前往圖庫"
+    },
+    "quickActions": {
+      "title": "想做什麼？",
+      "subtitle": "快速開始常用功能",
+      "newSession": "開始新分析",
+      "cards": {
+        "trend": {
+          "title": "趨勢分析",
+          "desc": "蒐集並分析時尚趨勢資料",
+          "action": "前往專案"
+        },
+        "designs": {
+          "title": "設計圖庫",
+          "desc": "管理生成的服裝設計與穿搭圖像",
+          "action": "開啟圖庫"
+        },
+        "settings": {
+          "title": "系統設定",
+          "desc": "設定 API 金鑰、爬蟲與環境",
+          "action": "前往設定"
+        }
+      }
+    },
+    "status": {
+      "title": "系統狀態",
+      "subtitle": "查看爬蟲與 API 連線狀態",
+      "viewDetails": "查看詳情",
+      "crawlers": "爬蟲",
+      "geminiApi": "Gemini API",
+      "imageGen": "圖像生成",
+      "checking": "檢查中...",
+      "active": "啟用",
+      "connected": "已連線",
+      "notConfigured": "未設定",
+      "error": "錯誤"
+    },
+    "recentProjects": {
+      "title": "最近專案",
+      "subtitle": "查看最近的專案",
+      "viewAll": "查看全部",
+      "empty": "尚無專案",
+      "createFirst": "建立第一個專案",
+      "sessions": "會話",
+      "error": "載入專案失敗"
+    },
+    "recentImages": {
+      "title": "最近生成圖像",
+      "subtitle": "最近生成的設計與穿搭圖像",
+      "viewAll": "前往圖庫",
+      "empty": "尚無生成圖像",
+      "error": "載入圖像失敗"
+    }
+  },
+  "common": {
+    "appSubtitle": "時尚趨勢分析與圖像生成系統",
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "warning": "警告",
+    "info": "資訊",
+    "cancel": "取消",
+    "create": "建立",
+    "add": "新增",
+    "confirm": "確認",
+    "save": "儲存",
+    "download": "下載",
+    "delete": "刪除",
+    "edit": "編輯",
+    "search": "搜尋",
+    "filter": "篩選",
+    "settings": "設定",
+    "language": "語言",
+    "languages": {
+      "ko": "韓語",
+      "en": "英語",
+      "zhCn": "中文(简体)",
+      "zhTw": "中文(繁體)"
+    },
+    "refresh": "重新整理",
+    "apply": "套用",
+    "reset": "重設",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "關閉",
+    "open": "開啟",
+    "details": "詳情",
+    "summary": "概覽",
+    "status": "狀態",
+    "createdAt": "建立時間",
+    "all": "全部",
+    "none": "無",
+    "noTitle": "無標題",
+    "noDescription": "無說明",
+    "unknownError": "未知錯誤",
+    "yes": "是",
+    "no": "否",
+    "ok": "確定",
+    "retry": "重試"
+  },
+  "navigation": {
+    "trendAnalysis": "趨勢分析",
+    "imageGeneration": "圖像生成",
+    "blueprint": "圖案生成",
+    "crawler": "資料收集"
+  },
+  "trendAnalysis": {
+    "title": "時尚趨勢分析",
+    "keywords": "關鍵詞",
+    "keywordsPlaceholder": "例如：oversized、極簡、復古",
+    "keywordsHelp": "用逗號分隔多個關鍵詞",
+    "timeRange": "分析範圍",
+    "timeRanges": {
+      "1d": "最近1天",
+      "7d": "最近7天",
+      "30d": "最近30天"
+    },
+    "startAnalysis": "開始趨勢分析",
+    "results": {
+      "noResults": "無分析結果",
+      "enterKeywords": "輸入關鍵詞並開始趨勢分析"
+    },
+    "notifications": {
+      "enterKeywords": "請至少輸入一個關鍵詞。",
+      "analysisFailed": "趨勢分析失敗：{error}",
+      "analysisComplete": "趨勢分析成功完成。"
+    }
+  },
+  "imageGeneration": {
+    "title": "時尚設計圖像生成",
+    "designPrompt": {
+      "label": "設計描述",
+      "placeholder": "詳細描述您想要生成的時尚設計"
+    },
+    "garmentType": {
+      "label": "服裝類型",
+      "options": {
+        "dress": "連衣裙",
+        "shirt": "襯衫",
+        "pants": "褲子",
+        "skirt": "裙子",
+        "jacket": "夾克",
+        "coat": "外套"
+      }
+    },
+    "style": {
+      "label": "風格",
+      "options": {
+        "modern": "現代",
+        "minimal": "極簡",
+        "vintage": "復古",
+        "casual": "休閒",
+        "formal": "正式",
+        "street": "街頭"
+      }
+    },
+    "colorScheme": {
+      "label": "配色方案（可選）",
+      "placeholder": "例如：粉彩色調、單色"
+    },
+    "fabricType": {
+      "label": "面料類型（可選）",
+      "placeholder": "例如：棉、絲、牛仔布"
+    },
+    "quality": {
+      "label": "品質",
+      "options": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "ultra": "極高"
+      }
+    },
+    "numVariations": {
+      "label": "變體數量"
+    },
+    "referenceImage": {
+      "label": "參考圖像（可選）"
+    },
+    "generate": "生成設計",
+    "results": {
+      "title": "生成的設計",
+      "noResults": "無生成的圖像",
+      "enterPrompt": "輸入設計描述並開始生成"
+    },
+    "notifications": {
+      "enterPrompt": "請輸入設計描述。",
+      "generationFailed": "設計生成失敗：{error}",
+      "generationComplete": "設計生成成功完成。",
+      "referenceImageUpload": "參考圖像上傳功能正在開發中。"
+    }
+  },
+  "blueprint": {
+    "title": "圖案樣板生成",
+    "garmentType": {
+      "label": "服裝類型",
+      "options": {
+        "dress": "連衣裙",
+        "shirt": "襯衫",
+        "pants": "褲子",
+        "skirt": "裙子"
+      }
+    },
+    "design": {
+      "label": "設計描述",
+      "placeholder": "描述要生成的圖案設計"
+    },
+    "sizeSystem": {
+      "label": "尺寸標準",
+      "options": {
+        "KS": "KS（韓國）",
+        "GB": "GB（英國）",
+        "ASTM": "ASTM（美國）",
+        "ISO": "ISO（國際）"
+      }
+    },
+    "size": {
+      "label": "尺寸",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "包含縫製說明",
+    "includeSeamAllowance": "包含縫份（1.5cm）",
+    "generate": "生成圖案",
+    "tabs": {
+      "pieces": "圖案片段",
+      "layout": "佈局",
+      "instructions": "說明",
+      "materials": "材料清單"
+    },
+    "results": {
+      "noResults": "無生成的圖案",
+      "enterDesign": "輸入設計資訊並開始圖案生成"
+    },
+    "materials": {
+      "fabric": "面料",
+      "other": "其他材料"
+    },
+    "notifications": {
+      "enterDesign": "請輸入設計描述。",
+      "generationFailed": "圖案生成失敗：{error}",
+      "generationComplete": "圖案生成成功完成。"
+    }
+  },
+  "crawler": {
+    "title": "時尚資料收集",
+    "sources": {
+      "label": "資料源",
+      "fashion_news": "時尚新聞",
+      "fashion_insta": "時尚Instagram",
+      "musinsa": "Musinsa",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "時尚新聞",
+        "fashion_insta": "時尚Instagram",
+        "musinsa": "Musinsa",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "收集關鍵詞",
+      "placeholder": "例如：2024時尚趨勢、oversized"
+    },
+    "maxItems": {
+      "label": "最大收集量"
+    },
+    "start": "開始資料收集",
+    "status": {
+      "title": "收集狀態",
+      "status": "狀態",
+      "progress": "進度",
+      "processed": "已收集項目",
+      "error": "錯誤"
+    },
+    "results": {
+      "title": "收集的資料",
+      "source": "來源",
+      "noResults": "無收集的資料",
+      "selectSources": "選擇資料源並開始收集",
+      "moreItems": "...以及其他{count}個項目"
+    },
+    "notifications": {
+      "selectSources": "請至少選擇一個資料源。",
+      "enterKeywords": "請輸入收集關鍵詞。",
+      "startFailed": "資料收集啟動失敗：{error}",
+      "started": "資料收集已啟動。",
+      "completed": "資料收集成功完成。",
+      "failed": "資料收集失敗。"
+    }
+  },
+  "crawlers": {
+    "categories": {
+      "fashion": "時尚平台",
+      "community": "社群",
+      "portal": "入口網站/部落格",
+      "media": "媒體",
+      "news": "新聞/媒體",
+      "search": "搜尋"
+    },
+    "names": {
+      "musinsa": "Musinsa",
+      "fashion_insta": "Instagram",
+      "pinterest": "Pinterest",
+      "dcinside": "DC Inside",
+      "theqoo": "Theqoo",
+      "fmkorea": "FMKorea",
+      "clien": "Clien",
+      "ruliweb": "Ruliweb",
+      "ppomppu": "Ppomppu",
+      "mlbpark": "MLB Park",
+      "blind": "Blind",
+      "etoland": "Etoland",
+      "inven": "Inven",
+      "naver_blog": "Naver 部落格",
+      "naver_cafe": "Naver Cafe",
+      "daum_cafe": "Daum Cafe",
+      "youtube": "YouTube",
+      "fashion_news": "Fashion N",
+      "wgsn": "WGSN",
+      "natenews": "Nate News",
+      "searxng": "SearXNG"
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "圖像生成模型",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "專業時尚圖像生成",
+        "capabilities": [
+          "fashion_design",
+          "model_fitting",
+          "upscale"
+        ]
+      },
+      "seedream": {
+        "name": "Seedream（字節跳動）",
+        "description": "高級時尚系列生成",
+        "capabilities": [
+          "fashion_collection",
+          "patterns",
+          "textures"
+        ]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "技術時尚插圖",
+        "capabilities": [
+          "sketch",
+          "flat_lay",
+          "fabric_simulation"
+        ]
+      }
+    },
+    "textGeneration": {
+      "title": "文本生成模型",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "谷歌最新的多模態模型",
+        "capabilities": [
+          "text",
+          "multimodal",
+          "analysis"
+        ]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "智譜AI強大的語言模型",
+        "capabilities": [
+          "text",
+          "embedding"
+        ]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "韓國標準",
+      "GB": "英國標準",
+      "ASTM": "美國標準",
+      "ISO": "國際標準"
+    },
+    "measurements": {
+      "cm": "公分",
+      "mm": "公釐",
+      "inch": "英寸"
+    },
+    "time": {
+      "seconds": "秒",
+      "minutes": "分鐘",
+      "hours": "小時"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "tabs": {
+      "apiKeys": "API金鑰",
+      "system": "系統",
+      "export": "匯出/匯入"
+    },
+    "apiKeys": {
+      "title": "API金鑰設定",
+      "gemini": "Gemini API金鑰",
+      "glm": "GLM API金鑰",
+      "zimage": "Z-Image API金鑰",
+      "seedream": "Seedream API金鑰",
+      "nanoBanana": "Nano Banana API金鑰",
+      "placeholder": "請輸入API金鑰",
+      "save": "儲存API金鑰",
+      "test": "連線測試",
+      "reset": "重設"
+    },
+    "system": {
+      "title": "系統設定",
+      "maxConcurrent": "最大並行請求數",
+      "timeout": "請求逾時（秒）",
+      "defaultLanguage": "預設語言",
+      "defaultQuality": "預設品質",
+      "autoSave": "自動儲存結果",
+      "save": "儲存設定",
+      "reset": "恢復預設設定"
+    },
+    "export": "匯出設定",
+    "import": "匯入設定",
+    "status": {
+      "online": "已連線",
+      "offline": "連線中斷",
+      "testing": "測試中...",
+      "configured": "API已設定",
+      "notConfigured": "API未設定"
+    },
+    "confirmations": {
+      "resetKeys": "確定要重設所有API金鑰嗎？",
+      "resetSystem": "將系統設定恢復為預設值？"
+    },
+    "notifications": {
+      "saved": "設定已儲存。",
+      "reset": "設定已重設。",
+      "exported": "設定已匯出。",
+      "imported": "設定已匯入。",
+      "importFailed": "設定匯入失敗。",
+      "decryptFailed": "無法解密設定檔案。",
+      "noApiKey": "無API金鑰"
+    }
+  },
+  "entities": {
+    "project": "專案",
+    "session": "會話",
+    "crawler": "爬蟲",
+    "analysis": "分析",
+    "design": "服裝設計",
+    "modelImage": "模特穿搭",
+    "blueprint": "藍圖",
+    "idea": "創意",
+    "library": "圖庫",
+    "chatbot": "聊天機器人"
+  },
+  "status": {
+    "draft": "草稿",
+    "created": "已建立",
+    "running": "執行中",
+    "analyzing": "分析中",
+    "completed": "已完成",
+    "failed": "失敗",
+    "cancelled": "已取消",
+    "active": "啟用",
+    "unknown": "未知"
+  },
+  "filters": {
+    "gender": {
+      "label": "性別",
+      "options": {
+        "": "全部",
+        "female": "女性",
+        "male": "男性",
+        "unisex": "中性"
+      }
+    },
+    "age": {
+      "label": "年齡層",
+      "options": {
+        "": "全部",
+        "10s": "10代",
+        "20s": "20代",
+        "30s": "30代",
+        "40s": "40代",
+        "50s_plus": "50+"
+      }
+    },
+    "season": {
+      "label": "季節",
+      "options": {
+        "": "全部",
+        "spring": "春",
+        "summer": "夏",
+        "fall": "秋",
+        "winter": "冬",
+        "ss": "春/夏",
+        "fw": "秋/冬"
+      }
+    },
+    "category": {
+      "label": "類別",
+      "options": {
+        "": "全部",
+        "casual": "休閒",
+        "formal": "正式",
+        "sports": "運動",
+        "outdoor": "戶外",
+        "top": "上衣",
+        "bottom": "下裝",
+        "dress": "洋裝",
+        "outer": "外套",
+        "accessory": "配飾"
+      }
+    }
+  },
+  "pageTitles": {
+    "home": "首頁 - 時尚趨勢AI生成系統",
+    "dashboard": "儀表板 - 時尚趨勢AI生成系統",
+    "projects": "專案管理 - 時尚趨勢AI生成系統",
+    "newProject": "建立專案 - 時尚趨勢AI生成系統",
+    "projectDetail": "專案詳情 - 時尚趨勢AI生成系統",
+    "newSession": "建立會話 - 時尚趨勢AI生成系統",
+    "sessionDetail": "會話詳情 - 時尚趨勢AI生成系統",
+    "history": "會話管理 - 時尚趨勢AI生成系統",
+    "ideas": "創意管理 - 時尚趨勢AI生成系統",
+    "chatbot": "AI 聊天機器人 - 時尚趨勢AI生成系統",
+    "library": "圖庫 - 時尚趨勢AI生成系統",
+    "settings": "設定 - 時尚趨勢AI生成系統"
+  },
+  "dashboard": {
+    "panels": {
+      "projects": "專案",
+      "sessions": "會話",
+      "crawlerStatus": "爬蟲狀態"
+    },
+    "actions": {
+      "add": "+ 新增",
+      "newProject": "+ 新專案",
+      "startAnalysis": "開始分析",
+      "reanalyze": "重新分析",
+      "running": "分析中...",
+      "starting": "正在啟動..."
+    },
+    "placeholders": {
+      "selectProject": "請選擇專案",
+      "selectSession": "請選擇會話",
+      "sessionHelp": "請在左側選擇專案與會話以查看結果"
+    },
+    "progress": {
+      "preparing": "準備中..."
+    },
+    "stats": {
+      "crawled": "收集資料",
+      "keywords": "提取關鍵詞",
+      "designs": "服裝設計",
+      "models": "模特穿搭"
+    },
+    "inlineStats": {
+      "crawled": "收集",
+      "keywords": "關鍵詞",
+      "designs": "設計",
+      "models": "穿搭"
+    },
+    "tabs": {
+      "overview": "概覽",
+      "data": "收集資料",
+      "analysis": "分析報告",
+      "design": "服裝圖像",
+      "model": "穿搭圖像",
+      "blueprint": "藍圖"
+    },
+    "empty": {
+      "overview": "會話結果將顯示於此",
+      "data": "收集資料將顯示於此",
+      "analysis": "分析結果將顯示於此",
+      "designImages": "尚無服裝圖像",
+      "modelImages": "尚無穿搭圖像",
+      "projects": "尚無專案",
+      "sessions": "尚無會話",
+      "blueprints": "暫無藍圖"
+    },
+    "modals": {
+      "project": {
+        "title": "建立專案",
+        "name": "專案名稱",
+        "namePlaceholder": "例如：2025 S/S 系列",
+        "imageModelLabel": "圖像模型",
+        "imageModelAuto": "自動選擇",
+        "imageModelSeedream": "Seedream（雲端）",
+        "imageModelNano": "Nano Banana（雲端）",
+        "imageModelZImage": "Z-Image（GPU）",
+        "gpuDetecting": "正在偵測 GPU...",
+        "gpuAvailable": "GPU 可用{info}",
+        "gpuUnavailable": "GPU 不可用",
+        "gpuUnknown": "GPU 狀態不可用",
+        "description": "描述（可選）",
+        "descriptionPlaceholder": "專案描述..."
+      },
+      "session": {
+        "title": "建立會話",
+        "name": "會話名稱",
+        "namePlaceholder": "例如：休閒女裝分析",
+        "description": "說明",
+        "descriptionPlaceholder": "分析目標...",
+        "crawlerSelect": "選擇爬蟲"
+      },
+      "editProject": {
+        "title": "編輯專案"
+      },
+      "editSession": {
+        "title": "編輯會話"
+      }
+    },
+    "crawlerConfig": {
+      "title": "收集設定",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "maxPosts": "每個爬蟲最大貼文數"
+    },
+    "labels": {
+      "sessionCount": "{count} 個會話"
+    },
+    "summary": {
+      "title": "會話概覽",
+      "status": "狀態",
+      "createdAt": "建立時間",
+      "gender": "性別",
+      "season": "季節"
+    },
+    "overview": {
+      "keywordsTitle": "收集關鍵詞",
+      "keywordsEmpty": "暫無關鍵詞",
+      "crawlProgress": "收集進度",
+      "keywordProgress": "關鍵詞進度",
+      "logsTitle": "收集日誌",
+      "logsHint": "最新 200 筆",
+      "logsEmpty": "暫無日誌",
+      "logsLoadFailed": "日誌載入失敗",
+      "errorTitle": "錯誤"
+    },
+    "crawlers": {
+      "active": "已啟用：{count}",
+      "total": "總計：{count}",
+      "searxngDisabled": "SearXNG 未設定"
+    },
+    "messages": {
+      "runFailed": "啟動分析失敗",
+      "selectProject": "請先選擇專案",
+      "projectNameRequired": "請輸入專案名稱",
+      "sessionNameRequired": "請輸入會話名稱",
+      "createFailed": "建立失敗：{error}",
+      "projectCreateError": "建立專案時出錯",
+      "sessionCreateError": "建立會話時出錯",
+      "updateFailed": "更新失敗：{error}",
+      "projectUpdateError": "更新專案時出錯",
+      "confirmDeleteProject": "刪除專案「{name}」？相關會話將一併刪除。",
+      "deleteFailed": "刪除失敗：{error}",
+      "projectDeleteError": "刪除專案時出錯",
+      "sessionUpdateError": "更新會話時出錯",
+      "confirmDeleteSession": "刪除會話「{name}」？",
+      "sessionDeleteError": "刪除會話時出錯",
+      "searxngConfigRequired": "尚未設定 SearXNG API URL，請在設定中填寫。"
+    },
+    "report": {
+      "loading": "正在載入報告...",
+      "notFound": "尚無報告。",
+      "fetchFailed": "報告載入失敗",
+      "pending": "分析完成後可查看報告。",
+      "selectSession": "請選擇會話以查看報告。",
+      "titleFallback": "趨勢分析報告",
+      "empty": "報告內容為空。",
+      "unnamed": "未命名",
+      "meta": {
+        "language": "語言"
+      },
+      "sections": {
+        "executiveSummary": "執行摘要",
+        "targetAudience": "目標受眾",
+        "researchScope": "研究範圍",
+        "marketAnalysis": "市場分析",
+        "trendAnalysis": "趨勢分析",
+        "competitorAnalysis": "競爭者分析",
+        "designProposals": "設計提案",
+        "recommendations": "建議",
+        "conclusion": "結論"
+      }
+    },
+    "tooltips": {
+      "editProject": "編輯專案",
+      "deleteProject": "刪除專案",
+      "editSession": "編輯會話",
+      "deleteSession": "刪除會話"
+    }
+  },
+  "projects": {
+    "title": "專案管理",
+    "subtitle": "管理並追蹤時尚分析專案",
+    "actions": {
+      "new": "新專案",
+      "newStart": "開始新專案"
+    },
+    "filters": {
+      "searchPlaceholder": "搜尋專案...",
+      "statusAll": "所有狀態",
+      "sortRecent": "最新",
+      "sortTitle": "按標題"
+    },
+    "loading": "載入專案中...",
+    "empty": {
+      "title": "尚無專案",
+      "subtitle": "開始你的第一個專案。"
+    },
+    "confirmDelete": "確定刪除此專案？",
+    "messages": {
+      "deleteFailed": "刪除失敗",
+      "deleteError": "刪除時出錯"
+    }
+  },
+  "newProject": {
+    "backToList": "← 專案列表",
+    "title": "建立專案",
+    "subtitle": "填寫專案資訊",
+    "form": {
+      "titleLabel": "專案標題",
+      "titlePlaceholder": "例如：2025 SS 極簡風格分析",
+      "descriptionLabel": "專案說明（可選）",
+      "descriptionPlaceholder": "填寫背景與預期結果",
+      "promptLabel": "目標/指示",
+      "promptPlaceholder": "例如：分析中性休閒線的功能性需求",
+      "promptHint": "請具體說明範圍、排除項和預期結果。"
+    },
+    "actions": {
+      "create": "建立專案"
+    },
+    "messages": {
+      "required": "請輸入專案標題與分析目標。",
+      "created": "專案已建立",
+      "createFailed": "專案建立失敗：{error}",
+      "createError": "建立專案時發生錯誤"
+    }
+  },
+  "newSession": {
+    "backToProject": "← 返回專案",
+    "title": "建立分析會話",
+    "subtitle": "設定趨勢分析與設計生成條件",
+    "sections": {
+      "sessionInfo": "會話資訊",
+      "filters": "時尚分析條件",
+      "filtersHelp": "按需選擇（均為可選）",
+      "inputs": "輸入資料（可選）",
+      "inputsHelp": "文字、檔案、URL 會參與分析",
+      "pipelineOptions": "流程選項"
+    },
+    "fields": {
+      "title": "會話標題",
+      "titlePlaceholder": "例如：2025 春夏街頭趨勢",
+      "description": "會話說明",
+      "descriptionPlaceholder": "輸入目標、排除項、關注點",
+      "descriptionHint": "例如：「偏中性休閒，強調實用性」，「排除過度奢華」",
+      "userKeywords": "自訂關鍵詞（可選）",
+      "userKeywordsPlaceholder": "例如：極簡、廓形、復古（逗號分隔）"
+    },
+    "inputs": {
+      "textLabel": "文字輸入",
+      "textPlaceholder": "輸入補充說明或參考內容",
+      "fileLabel": "檔案上傳",
+      "fileHelp": "支援格式：PDF、圖片",
+      "urlLabel": "URL 輸入（可多個）",
+      "addUrl": "+ 新增 URL",
+      "urlPlaceholder": "https://example.com/article"
+    },
+    "options": {
+      "autoStart": "建立後自動開始分析",
+      "generateImages": "包含圖像生成",
+      "generateBlueprints": "包含藍圖生成"
+    },
+    "crawlers": {
+      "title": "選擇爬蟲",
+      "subtitle": "選擇用於資料收集的爬蟲",
+      "selectAll": "全選",
+      "deselectAll": "全不選",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "maxItems": "文章數"
+    },
+    "actions": {
+      "create": "建立會話"
+    },
+    "messages": {
+      "minUrl": "至少需要 1 個 URL 輸入框。",
+      "required": "請輸入會話標題與說明。",
+      "createFailed": "會話建立失敗",
+      "created": "會話已建立。",
+      "createError": "建立會話時發生錯誤：{error}"
+    }
+  },
+  "projectDetail": {
+    "backToList": "← 專案列表",
+    "actions": {
+      "editDescription": "編輯說明",
+      "newSession": "+ 新會話"
+    },
+    "sessionsTitle": "分析會話",
+    "loading": "載入會話中...",
+    "empty": {
+      "title": "尚無會話",
+      "subtitle": "建立會話以開始分析。",
+      "action": "建立會話"
+    },
+    "labels": {
+      "progress": "進度 {percent}%"
+    },
+    "messages": {
+      "notFound": "未找到專案",
+      "descriptionSaveFailed": "保存說明失敗",
+      "confirmDeleteSession": "確定刪除此會話？",
+      "deleteFailed": "刪除失敗"
+    }
+  },
+  "history": {
+    "title": "會話管理",
+    "subtitle": "查看近期會話與結果",
+    "actions": {
+      "newSession": "新會話"
+    },
+    "filters": {
+      "projectAll": "全部專案",
+      "statusAll": "所有狀態",
+      "sortRecent": "最新",
+      "sortOldest": "最早"
+    },
+    "loading": "載入會話中...",
+    "empty": {
+      "title": "尚無會話",
+      "subtitle": "請在專案中建立新會話。",
+      "action": "前往專案"
+    },
+    "labels": {
+      "progress": "進度 {percent}%"
+    }
+  },
+  "ideas": {
+    "title": "創意管理",
+    "subtitle": "查看會話生成的設計創意",
+    "actions": {
+      "viewSessions": "查看會話",
+      "openSession": "打開會話"
+    },
+    "filters": {
+      "searchPlaceholder": "搜尋創意...",
+      "statusAll": "所有狀態",
+      "sortRecent": "最新",
+      "sortTitle": "按標題"
+    },
+    "status": {
+      "generated": "已生成",
+      "selected": "已選擇"
+    },
+    "loading": "載入創意中...",
+    "empty": {
+      "title": "尚無創意",
+      "subtitle": "執行會話以生成創意。",
+      "action": "前往專案"
+    },
+    "labels": {
+      "defaultTitle": "創意",
+      "sessionPrefix": "會話 {id}"
+    }
+  },
+  "chatbot": {
+    "sidebar": {
+      "title": "對話會話",
+      "newSession": "新會話"
+    },
+    "header": {
+      "title": "AI 聊天機器人",
+      "subtitle": "自由提問時尚創意"
+    },
+    "empty": {
+      "state": "請選擇或建立對話會話"
+    },
+    "form": {
+      "placeholder": "輸入訊息",
+      "send": "送出"
+    },
+    "modal": {
+      "title": "建立聊天會話",
+      "projectLabel": "選擇專案",
+      "projectPlaceholder": "選擇專案",
+      "sessionTitleLabel": "會話標題（可選）",
+      "sessionTitlePlaceholder": "例如：極簡風格創意"
+    },
+    "messages": {
+      "noSessions": "尚無會話",
+      "selectProject": "請選擇專案",
+      "sessionCreateFailed": "建立會話失敗",
+      "selectSession": "請先選擇對話會話",
+      "messageSendFailed": "訊息送出失敗",
+      "noMessages": "暫無訊息。"
+    },
+    "labels": {
+      "newChat": "新對話",
+      "chat": "對話",
+      "me": "我",
+      "ai": "AI"
+    }
+  },
+  "sessionDetail": {
+    "backToList": "← 會話列表",
+    "actions": {
+      "startAnalysis": "開始分析",
+      "running": "分析中...",
+      "clearLogs": "清空日誌"
+    },
+    "summary": {
+      "title": "會話概覽",
+      "loading": "正在載入會話資訊..."
+    },
+    "sections": {
+      "progress": "進度",
+      "logs": "執行日誌",
+      "trendSummary": "趨勢概覽",
+      "designIdeas": "設計創意",
+      "generatedImages": "生成圖像",
+      "blueprintSummary": "藍圖概覽"
+    },
+    "labels": {
+      "createdAt": "建立",
+      "description": "說明",
+      "filters": "篩選",
+      "crawlers": "爬蟲",
+      "keywords": "關鍵詞"
+    },
+    "status": {
+      "waiting": "等待中"
+    },
+    "trends": {
+      "empty": "暫無分析結果。"
+    },
+    "ideas": {
+      "item": "創意 {index}",
+      "empty": "暫無創意。"
+    },
+    "images": {
+      "empty": "暫無圖像。"
+    },
+    "blueprints": {
+      "counts": "草圖 {sketch}，版型 {layout}，紙樣 {pattern}",
+      "empty": "尚無藍圖。"
+    },
+    "logs": {
+      "loadFailed": "日誌載入失敗。",
+      "empty": "暫無日誌。",
+      "cleared": "日誌已清空。"
+    },
+    "messages": {
+      "notFound": "未找到會話。",
+      "startFailed": "啟動分析失敗",
+      "confirmDelete": "確定刪除此會話？",
+      "deleteFailed": "刪除失敗"
+    }
+  },
+  "library": {
+    "title": "圖庫",
+    "filter": {
+      "project": "專案",
+      "session": "會話",
+      "type": "圖像類型",
+      "dateFrom": "開始日期",
+      "dateTo": "結束日期",
+      "sort": "排序",
+      "apply": "套用",
+      "reset": "重設"
+    },
+    "stats": {
+      "total": "張圖像",
+      "design": "服裝設計",
+      "model": "模特穿搭",
+      "blueprint": "藍圖"
+    },
+    "empty": {
+      "title": "尚無圖像",
+      "description": "執行分析以生成圖像"
+    },
+    "modal": {
+      "type": "類型",
+      "session": "會話",
+      "project": "專案",
+      "created": "建立時間",
+      "prompt": "提示詞",
+      "download": "下載",
+      "close": "關閉"
+    },
+    "types": {
+      "design": "設計",
+      "model": "穿搭",
+      "blueprint": "藍圖"
+    },
+    "sort": {
+      "recent": "最新",
+      "oldest": "最早",
+      "name": "名稱"
+    },
+    "labels": {
+      "untitled": "無標題"
+    }
+  },
+  "youtube": {
+    "channelsTitle": "YouTube 頻道",
+    "manageTitle": "YouTube 頻道管理",
+    "addChannel": "+ 新增頻道",
+    "manageDescription": "此處新增的頻道可在建立會話時選擇。使用 YouTube 爬蟲時僅收集勾選的頻道。",
+    "manageHint": "在設定頁管理頻道",
+    "selectionHint": "僅收集勾選的頻道。需選擇 YouTube 爬蟲後生效。",
+    "settingsTitle": "YouTube 設定",
+    "keywordCount": "關鍵詞搜尋影片數",
+    "channelMax": "每個頻道最大影片數",
+    "parallel": "平行數（1–5）",
+    "parallelWarning": "⚠️ 設為 2 以上可能出錯",
+    "enableStt": "啟用 STT 語音轉寫",
+    "enableSttHint": "將音訊轉寫為文字（處理時間較長）",
+    "loadFailed": "頻道載入失敗",
+    "empty": "尚無已註冊頻道",
+    "prompt": "請輸入 YouTube 頻道 URL：\n範例: https://www.youtube.com/@channelname",
+    "invalidUrl": "請輸入有效的 YouTube URL。",
+    "invalidFormat": "請檢查頻道 URL 格式（@handle 或 /channel/UC...）。",
+    "duplicate": "此頻道已註冊。",
+    "added": "頻道已註冊：{name}",
+    "addFailed": "頻道註冊失敗：{error}",
+    "deleteConfirm": "確定刪除此頻道？",
+    "deleteFailed": "頻道刪除失敗：{error}"
+  },
+  "settingsPage": {
+    "subtitle": "管理 API 金鑰與爬蟲設定",
+    "apiKeysTitle": "API 金鑰管理",
+    "apiStatusLoading": "狀態載入中...",
+    "seedreamKey": "Seedream API 金鑰（字節跳動）",
+    "modelSettingsTitle": "AI 模型設定",
+    "models": {
+      "geminiLabel": "Gemini 模型",
+      "geminiFlash": "gemini-2.5-flash（預設）",
+      "geminiFlashLite": "gemini-2.5-flash-lite",
+      "geminiPro": "gemini-2.5-pro",
+      "glmLabel": "GLM 模型（備援）",
+      "glm46": "glm-4.7（預設）",
+      "glm4Flash": "glm-4-flash",
+      "saved": "模型設定已儲存。",
+      "saveFailed": "模型設定儲存失敗",
+      "saveError": "儲存模型設定時出錯。"
+    },
+    "crawlerSettingsTitle": "爬蟲設定",
+    "crawlerWorkers": "並發數量",
+    "crawlerTimeout": "爬取逾時（秒）",
+    "searxngUrlLabel": "SearXNG API 位址",
+    "searxngUrlPlaceholder": "http://localhost:8888",
+    "searxngUrlHint": "請輸入 SearXNG 伺服器位址。本應用使用 8912 埠，請在其他埠執行 SearXNG。",
+    "crawlerStatusTitle": "爬蟲狀態",
+    "messages": {
+      "apiKeysSaved": "API 金鑰已儲存。",
+      "saveFailed": "儲存失敗",
+      "saveError": "儲存時出錯",
+      "crawlerSaved": "爬蟲設定已儲存。"
+    },
+    "crawlerStatus": {
+      "active": "啟用",
+      "inactive": "停用",
+      "empty": "暫無爬蟲。",
+      "loadFailed": "無法載入爬蟲狀態。"
+    }
+  },
+  "pipeline": {
+    "steps": {
+      "input_analysis": "輸入分析",
+      "keyword_extraction": "關鍵詞提取",
+      "crawling": "資料收集",
+      "trend_analysis": "趨勢分析",
+      "idea_generation": "創意生成",
+      "report_generation": "報告生成",
+      "image_generation": "圖像生成",
+      "blueprint_generation": "藍圖生成",
+      "completed": "完成",
+      "error": "錯誤"
+    }
+  },
+  "ui": {
+    "processing": "處理中...",
+    "generating": "生成中...",
+    "analyzing": "分析中...",
+    "collecting": "收集中...",
+    "noTitle": "無標題",
+    "noContent": "無內容",
+    "unknown": "未知",
+    "link": "連結",
+    "image": "圖片",
+    "model": "模型",
+    "generationTime": "生成時間",
+    "seconds": "秒",
+    "hidden": {
+      "showMore": "顯示更多",
+      "showLess": "收合"
+    },
+    "modal": {
+      "close": "關閉",
+      "confirm": "確認",
+      "cancel": "取消"
+    },
+    "empty": {
+      "noData": "暫無資料",
+      "noResults": "暫無結果"
+    }
+  },
+  "errors": {
+    "serverError": "無法連接到伺服器。請檢查伺服器是否正在運行。",
+    "networkError": "發生網路錯誤。",
+    "unauthorized": "需要身份驗證。",
+    "forbidden": "訪問被拒絕。",
+    "notFound": "找不到請求的資源。",
+    "internalError": "發生內部伺服器錯誤。",
+    "validationError": "請檢查您的輸入值。",
+    "rateLimit": "請求過於頻繁。請稍後再試。"
+  },
+  "dateFormats": {
+    "short": "YYYY.MM.DD",
+    "long": "YYYY年MM月DD日",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "NT$",
+    "code": "TWD"
+  }
+}

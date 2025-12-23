@@ -1,0 +1,373 @@
+{
+  "common": {
+    "appSubtitle": "패션 트렌드 분석 및 이미지 생성 시스템",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "warning": "경고",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "download": "다운로드",
+    "delete": "삭제",
+    "edit": "편집",
+    "search": "검색",
+    "filter": "필터",
+    "settings": "설정",
+    "language": "언어",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "close": "닫기",
+    "open": "열기",
+    "yes": "예",
+    "no": "아니오",
+    "ok": "확인",
+    "retry": "재시도"
+  },
+  "navigation": {
+    "trendAnalysis": "트렌드 분석",
+    "imageGeneration": "이미지 생성",
+    "blueprint": "패턴 생성",
+    "crawler": "데이터 수집"
+  },
+  "trendAnalysis": {
+    "title": "패션 트렌드 분석",
+    "keywords": "키워드",
+    "keywordsPlaceholder": "예: 오버사이즈, 미니멀, 빈티지",
+    "keywordsHelp": "쉼표로 여러 키워드를 입력하세요",
+    "timeRange": "분석 기간",
+    "timeRanges": {
+      "1d": "최근 1일",
+      "7d": "최근 7일",
+      "30d": "최근 30일"
+    },
+    "startAnalysis": "트렌드 분석 시작",
+    "results": {
+      "noResults": "분석 결과가 없습니다",
+      "enterKeywords": "키워드를 입력하고 트렌드 분석을 시작하세요"
+    },
+    "notifications": {
+      "enterKeywords": "최소 하나의 키워드를 입력하세요.",
+      "analysisFailed": "트렌드 분석 실패: {error}",
+      "analysisComplete": "트렌드 분석이 완료되었습니다."
+    }
+  },
+  "imageGeneration": {
+    "title": "패션 디자인 이미지 생성",
+    "designPrompt": {
+      "label": "디자인 설명",
+      "placeholder": "생성하고 싶은 패션 디자인을 자세히 설명하세요"
+    },
+    "garmentType": {
+      "label": "의류 종류",
+      "options": {
+        "dress": "드레스",
+        "shirt": "셔츠",
+        "pants": "바지",
+        "skirt": "스커트",
+        "jacket": "자켓",
+        "coat": "코트"
+      }
+    },
+    "style": {
+      "label": "스타일",
+      "options": {
+        "modern": "모던",
+        "minimal": "미니멀",
+        "vintage": "빈티지",
+        "casual": "캐주얼",
+        "formal": "포멀",
+        "street": "스트릿"
+      }
+    },
+    "colorScheme": {
+      "label": "색상 구성 (선택사항)",
+      "placeholder": "예: 파스텔 톤, 모노크롬"
+    },
+    "fabricType": {
+      "label": "소재 (선택사항)",
+      "placeholder": "예: 코튼, 실크, 데님"
+    },
+    "quality": {
+      "label": "품질",
+      "options": {
+        "low": "낮음",
+        "medium": "보통",
+        "high": "높음",
+        "ultra": "최고"
+      }
+    },
+    "numVariations": {
+      "label": "변형 개수"
+    },
+    "referenceImage": {
+      "label": "참조 이미지 (선택사항)"
+    },
+    "generate": "디자인 생성",
+    "results": {
+      "title": "생성된 디자인",
+      "noResults": "생성된 이미지가 없습니다",
+      "enterPrompt": "디자인 설명을 입력하고 생성을 시작하세요"
+    },
+    "notifications": {
+      "enterPrompt": "디자인 설명을 입력하세요.",
+      "generationFailed": "디자인 생성 실패: {error}",
+      "generationComplete": "디자인 생성이 완료되었습니다.",
+      "referenceImageUpload": "참조 이미지 업로드 기능은 아직 구현 중입니다."
+    }
+  },
+  "blueprint": {
+    "title": "패턴 블루프린트 생성",
+    "garmentType": {
+      "label": "의류 종류",
+      "options": {
+        "dress": "드레스",
+        "shirt": "셔츠",
+        "pants": "바지",
+        "skirt": "스커트"
+      }
+    },
+    "design": {
+      "label": "디자인 설명",
+      "placeholder": "생성할 패턴의 디자인을 설명하세요"
+    },
+    "sizeSystem": {
+      "label": "치수 시스템",
+      "options": {
+        "KS": "KS (한국)",
+        "GB": "GB (영국)",
+        "ASTM": "ASTM (미국)",
+        "ISO": "ISO (국제)"
+      }
+    },
+    "size": {
+      "label": "사이즈",
+      "options": {
+        "S": "S",
+        "M": "M",
+        "L": "L",
+        "XL": "XL"
+      }
+    },
+    "includeInstructions": "제작 지시문 포함",
+    "includeSeamAllowance": "시접 여유 (1.5cm)",
+    "generate": "패턴 생성",
+    "tabs": {
+      "pieces": "패턴 조각",
+      "layout": "레이아웃",
+      "instructions": "지시문",
+      "materials": "재료 목록"
+    },
+    "results": {
+      "noResults": "생성된 패턴이 없습니다",
+      "enterDesign": "디자인 정보를 입력하고 패턴 생성을 시작하세요"
+    },
+    "materials": {
+      "fabric": "원단",
+      "other": "기타 재료"
+    },
+    "notifications": {
+      "enterDesign": "디자인 설명을 입력하세요.",
+      "generationFailed": "패턴 생성 실패: {error}",
+      "generationComplete": "패턴 생성이 완료되었습니다."
+    }
+  },
+  "crawler": {
+    "title": "패션 데이터 수집",
+    "sources": {
+      "label": "데이터 소스",
+      "fashion_news": "패션 뉴스",
+      "fashion_insta": "패션 인스타그램",
+      "musinsa": "무신사",
+      "wgsn": "WGSN",
+      "pinterest": "Pinterest",
+      "options": {
+        "fashion_news": "패션 뉴스",
+        "fashion_insta": "패션 인스타그램",
+        "musinsa": "무신사",
+        "wgsn": "WGSN",
+        "pinterest": "Pinterest"
+      }
+    },
+    "keywords": {
+      "label": "수집 키워드",
+      "placeholder": "예: 2024 패션 트렌드, 오버핏"
+    },
+    "maxItems": {
+      "label": "최대 수집량"
+    },
+    "start": "데이터 수집 시작",
+    "status": {
+      "title": "수집 상태",
+      "status": "상태",
+      "progress": "진행률",
+      "processed": "수집된 항목",
+      "error": "오류"
+    },
+    "results": {
+      "title": "수집된 데이터",
+      "source": "출처",
+      "noResults": "수집된 데이터가 없습니다",
+      "selectSources": "데이터 소스를 선택하고 수집을 시작하세요",
+      "moreItems": "... 그 외 {count}개 항목"
+    },
+    "notifications": {
+      "selectSources": "최소 하나의 데이터 소스를 선택하세요.",
+      "enterKeywords": "수집할 키워드를 입력하세요.",
+      "startFailed": "데이터 수집 시작 실패: {error}",
+      "started": "데이터 수집을 시작했습니다.",
+      "completed": "데이터 수집이 완료되었습니다.",
+      "failed": "데이터 수집에 실패했습니다."
+    }
+  },
+  "models": {
+    "imageGeneration": {
+      "title": "이미지 생성 모델",
+      "zimage": {
+        "name": "Z-Image",
+        "description": "Professional fashion image generation",
+        "capabilities": ["fashion_design", "model_fitting", "upscale"]
+      },
+      "seedream": {
+        "name": "Seedream (Bytedance)",
+        "description": "Advanced fashion collection generation",
+        "capabilities": ["fashion_collection", "patterns", "textures"]
+      },
+      "nano_banana": {
+        "name": "Nano Banana",
+        "description": "Technical fashion illustrations",
+        "capabilities": ["sketch", "flat_lay", "fabric_simulation"]
+      }
+    },
+    "textGeneration": {
+      "title": "텍스트 생성 모델",
+      "gemini": {
+        "name": "Gemini 2.5 Flash",
+        "description": "Google's latest multimodal model",
+        "capabilities": ["text", "multimodal", "analysis"]
+      },
+      "glm": {
+        "name": "GLM-4.7",
+        "description": "Zhipu AI's powerful language model",
+        "capabilities": ["text", "embedding"]
+      }
+    }
+  },
+  "units": {
+    "sizeSystems": {
+      "KS": "한국규격",
+      "GB": "영국규격",
+      "ASTM": "미국규격",
+      "ISO": "국제규격"
+    },
+    "measurements": {
+      "cm": "cm",
+      "mm": "mm",
+      "inch": "inch"
+    },
+    "time": {
+      "seconds": "초",
+      "minutes": "분",
+      "hours": "시간"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "tabs": {
+      "apiKeys": "API 키",
+      "system": "시스템",
+      "export": "내보내기/가져오기"
+    },
+    "apiKeys": {
+      "title": "API 키 설정",
+      "gemini": "Gemini API 키",
+      "glm": "GLM API 키",
+      "zimage": "Z-Image API 키",
+      "seedream": "Seedream API 키",
+      "nanoBanana": "Nano Banana API 키",
+      "placeholder": "API 키를 입력하세요",
+      "save": "API 키 저장",
+      "test": "연결 테스트",
+      "reset": "초기화"
+    },
+    "system": {
+      "title": "시스템 설정",
+      "maxConcurrent": "최대 동시 요청 수",
+      "timeout": "요청 시간 초과 (초)",
+      "defaultLanguage": "기본 언어",
+      "defaultQuality": "기본 품질",
+      "autoSave": "결과 자동 저장",
+      "save": "설정 저장",
+      "reset": "기본값으로 재설정"
+    },
+    "export": "설정 내보내기",
+    "import": "설정 가져오기",
+    "status": {
+      "online": "연결됨",
+      "offline": "연결 끊김",
+      "testing": "테스트 중...",
+      "configured": "API 설정 완료",
+      "notConfigured": "API 미설정"
+    },
+    "confirmations": {
+      "resetKeys": "모든 API 키를 초기화하시겠습니까?",
+      "resetSystem": "시스템 설정을 기본값으로 되돌리시겠습니까?"
+    },
+    "notifications": {
+      "saved": "설정이 저장되었습니다.",
+      "reset": "설정이 초기화되었습니다.",
+      "exported": "설정이 내보내기되었습니다.",
+      "imported": "설정이 가져오기되었습니다.",
+      "importFailed": "설정 가져오기에 실패했습니다.",
+      "decryptFailed": "설정 파일을 해독할 수 없습니다.",
+      "noApiKey": "API 키 없음"
+    }
+  },
+  "ui": {
+    "processing": "처리 중...",
+    "generating": "생성 중...",
+    "analyzing": "분석 중...",
+    "collecting": "수집 중...",
+    "noTitle": "제목 없음",
+    "noContent": "내용 없음",
+    "unknown": "알 수 없음",
+    "link": "링크",
+    "image": "이미지",
+    "model": "모델",
+    "generationTime": "생성 시간",
+    "seconds": "초",
+    "hidden": {
+      "showMore": "더 보기",
+      "showLess": "접기"
+    },
+    "modal": {
+      "close": "닫기",
+      "confirm": "확인",
+      "cancel": "취소"
+    },
+    "empty": {
+      "noData": "데이터가 없습니다",
+      "noResults": "결과가 없습니다"
+    }
+  },
+  "errors": {
+    "serverError": "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.",
+    "networkError": "네트워크 오류가 발생했습니다.",
+    "unauthorized": "인증이 필요합니다.",
+    "forbidden": "접근 권한이 없습니다.",
+    "notFound": "요청한 리소스를 찾을 수 없습니다.",
+    "internalError": "내부 서버 오류가 발생했습니다.",
+    "validationError": "입력값을 확인해주세요.",
+    "rateLimit": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요."
+  },
+  "dateFormats": {
+    "short": "YYYY.MM.DD",
+    "long": "YYYY년 MM월 DD일",
+    "time": "YYYY-MM-DD HH:mm:ss"
+  },
+  "currency": {
+    "symbol": "₩",
+    "code": "KRW"
+  }
+}
