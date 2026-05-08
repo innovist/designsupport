@@ -1,0 +1,11 @@
+{
+  "domain": "fashion",
+  "label": "Fashion Design",
+  "brief_schema": {
+    "required_fields": ["season", "target_demographic", "item_category", "silhouette_direction"],
+    "optional_fields": ["material_preference", "color_palette", "cultural_context"]
+  },
+  "evaluation_axes": ["season_relevance", "target_fit", "silhouette", "material", "pattern", "styling", "cultural_context"],
+  "spec_template_uri": "templates/specs/fashion.md",
+  "generation_outputs": ["moodboard", "look_sketch", "wearing_image", "pattern_direction"]
+}

@@ -2,6 +2,9 @@
 Crawl step utilities for the pipeline
 """
 
+# @MX:NOTE: [AUTO] Crawl utilities - helper functions for crawler configuration and progress tracking
+# Provides filter formatting, crawl planning, and progress computation for the pipeline
+
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
@@ -18,20 +21,39 @@ FILTER_VALUE_MAP = {
         "spring": "봄",
         "summer": "여름",
         "fall": "가을",
-        "winter": "겨울",
-        "ss": "봄/여름",
-        "fw": "가을/겨울"
+        "winter": "겨울"
+    },
+    "age": {
+        "toddler": "유아(0-5세)",
+        "child": "아동(6-12세)",
+        "teen": "청소년(13-19세)",
+        "20s": "20대",
+        "30s": "30대",
+        "40s": "40대",
+        "50s_plus": "50대+"
     },
     "category": {
+        # 스타일
         "casual": "캐주얼",
         "formal": "포멀",
         "sports": "스포츠",
         "outdoor": "아웃도어",
+        "street": "스트릿",
+        "minimal": "미니멀",
+        "vintage": "빈티지",
+        "romantic": "로맨틱",
+        "ethnic": "에스닉",
+        "avantgarde": "아방가르드",
+        "genderless": "젠더리스",
+        # 의류 종류
         "top": "상의",
         "bottom": "하의",
         "dress": "원피스",
         "outer": "아우터",
-        "accessory": "액세서리"
+        "underwear": "내의",
+        "sleepwear": "수면복",
+        "swimwear": "수영복",
+        "activewear": "액티브웨어"
     }
 }
 
@@ -47,7 +69,7 @@ def format_filters(filters: Dict[str, Any]) -> str:
             return ", ".join([label_map.get(v, str(v)) for v in value if v is not None])
         return label_map.get(value, str(value))
     parts = []
-    for key, label in (("gender", "gender"), ("season", "season"), ("category", "category")):
+    for key, label in (("gender", "gender"), ("age", "age"), ("season", "season"), ("category", "category")):
         text = to_text(key, filters.get(key))
         if text:
             parts.append(f"{label}: {text}")

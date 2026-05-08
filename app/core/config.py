@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 from functools import lru_cache
 from typing import List, Optional
 try:
@@ -6,6 +7,16 @@ try:
 except ImportError:
     from pydantic import BaseSettings
 from pydantic import BaseModel, Field, field_validator
+
+
+def get_local_now() -> datetime:
+    """
+    시스템 로컬 시간대의 현재 시간 반환 (UTC 보정 포함)
+
+    Returns:
+        로컬 시간대의 현재 datetime (naive, timezone info 없음)
+    """
+    return datetime.now(timezone.utc).astimezone().replace(tzinfo=None)
 
 
 class Settings(BaseSettings):
@@ -217,6 +228,8 @@ def get_settings() -> Settings:
 settings = get_settings()
 
 
+# @MX:ANCHOR: [AUTO] Global configuration accessor used throughout the application
+# @MX:REASON: Referenced from 6+ locations as the primary settings singleton
 def get_config() -> Settings:
     """레거시 호환: get_settings alias"""
     return get_settings()

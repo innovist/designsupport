@@ -38,6 +38,8 @@ async def list_sessions(
     return serialized[:limit]
 
 
+# @MX:ANCHOR: [AUTO] Session creation API endpoint - session lifecycle entry point
+# @MX:REASON: API boundary called from 5+ locations as the primary session creation interface
 @router.post("/", response_model=SessionResponse)
 async def create_session(
     session_data: SessionCreate,

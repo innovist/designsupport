@@ -1,3 +1,5 @@
+// @MX:NOTE: [AUTO] Report display module handling analysis results, design images, and blueprint rendering
+// @MX:REASON: Manages tab switching, image galleries, and multi-language report caching
 // Report and tab handlers
 (function() {
 const reportState = window.dashboardState;
@@ -200,6 +202,8 @@ function parseReportJson(value) {
     }
 }
 
+// @MX:WARN: [AUTO] Async report loading with race condition - rapid language changes may cause stale cache
+// @MX:REASON: Multiple concurrent requests can overwrite cache inconsistently if user switches languages quickly
 async function loadReportForCurrentSession(force) {
     const session = reportState.currentSessionData;
     if (!session) {

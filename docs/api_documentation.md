@@ -1,19 +1,23 @@
-# Fashion AI Generator - API Documentation
-**Version:** 1.0.0
-**Base URL:** `https://api.fashion-ai.com`
-**Documentation:** `https://api.fashion-ai.com/docs`
+# Design Support System - API Documentation
+**Version:** 2.0.0
+**Base URL:** `https://api.design-support.com`
 
 ---
 
 ## 1. 개요
 
-Fashion AI Generator는 AI 기반 패션 트렌드 분석 및 이미지 생성을 위한 RESTful API를 제공합니다. 모든 API 요청은 JSON 형식으로 처리되며, OAuth 2.0 기반 인증을 지원합니다.
+Design Support System은 근거 기반 디자인 창작 지원을 위한 RESTful API를 제공합니다. 목적 구조화, 트렌드 근거 조사, 컨셉 결정, 레퍼런스 추상화, 시각화, 스펙 문서화 파이프라인을 지원합니다.
 
 ### 1.1. 주요 기능
-- **트렌드 분석**: 패션 트렌드 데이터 수집 및 AI 기반 분석
-- **이미지 생성**: 텍스트/이미지 기반 패션 디자인 생성
-- **패턴 생성**: 디자인을 실제 제작용 패턴 도면으로 변환
-- **데이터 수집**: 다양한 패션 소스에서 데이터 크롤링
+- **프로젝트/세션 관리**: 디자인 프로젝트와 세션의 전체 수명 주기 관리
+- **브리프 구조화**: 자연어 목적을 구조화된 디자인 브리프로 변환
+- **트렌드 조사**: 출처 기반 트렌드 근거 수집과 인사이트 생성
+- **컨셉 관리**: 컨셉 후보 생성, 평가, 결정 기록
+- **레퍼런스 검색**: 웹/이미지/문서 기반 레퍼런스 검색과 분석
+- **사용자 스케치**: 스케치 업로드, AI 해석, 구체화
+- **추상화 엔진**: 레퍼런스를 디자인 문법(형태/구조/재질/상징)으로 변환
+- **이미지 생성**: 추상화 규칙 기반 스케치/변형 이미지 생성
+- **스펙 문서**: 모든 결정 근거를 포함한 스펙 문서 생성
 
 ### 1.2. 인증
 ```http
@@ -32,13 +36,10 @@ Authorization: Bearer {access_token}
 ```json
 {
   "success": true,
-  "data": {
-    // 실제 데이터
-  },
+  "data": {},
   "metadata": {
-    "timestamp": "2025-12-21T12:00:00Z",
-    "request_id": "req_123456789",
-    "version": "1.0.0"
+    "timestamp": "2026-05-07T12:00:00Z",
+    "request_id": "req_123456789"
   }
 }
 ```
@@ -50,14 +51,7 @@ Authorization: Bearer {access_token}
   "error": {
     "code": "VALIDATION_ERROR",
     "message": "Invalid input parameters",
-    "details": {
-      "field": "prompt",
-      "reason": "Must be at least 10 characters"
-    }
-  },
-  "metadata": {
-    "timestamp": "2025-12-21T12:00:00Z",
-    "request_id": "req_123456789"
+    "details": {}
   }
 }
 ```
@@ -76,417 +70,323 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 3. 트렌드 분석 API
+## 3. 프로젝트 API
 
-### 3.1. 트렌드 분석 시작
-**POST** `/api/v1/analysis/analyze-trends`
+### 3.1. 프로젝트 생성
+**POST** `/api/v1/projects/`
 
-패션 트렌드를 분석합니다.
-
-#### 요청
 ```json
 {
-  "keywords": ["오버사이즈", "미니멀리즘"],
-  "time_range": "7d",
-  "sources": ["fashion_news", "instagram", "musinsa"],
-  "options": {
-    "include_sentiment": true,
-    "include_visuals": true,
-    "depth": "deep"
-  }
+  "name": "2026 S/S 여성복 컬렉션",
+  "domain": "fashion",
+  "description": "지속가능성을 주제로 한 봄여름 컬렉션",
+  "workspace_id": "ws_123456"
 }
 ```
 
-#### 파라미터
+### 3.2. 프로젝트 목록
+**GET** `/api/v1/projects/?workspace_id={id}&status={status}`
+
+### 3.3. 프로젝트 상세
+**GET** `/api/v1/projects/{project_id}/`
+
+---
+
+## 4. 세션 API
+
+### 4.1. 세션 생성
+**POST** `/api/v1/sessions/`
+
+```json
+{
+  "project_id": "proj_123456",
+  "mode": "collaborative",
+  "purpose": "2026 S/S 여성복 컬렉션의 핵심 무드와 룩 방향 탐색"
+}
+```
+
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
-| keywords | array[string] | O | 분석할 키워드 목록 (최대 10개) |
-| time_range | string | X | 분석 기간 (1d, 7d, 30d) 기본값: 7d |
-| sources | array[string] | X | 데이터 소스 (기본값: 모든 소스) |
-| options | object | X | 추가 옵션 |
+| project_id | string | O | 프로젝트 ID |
+| mode | string | O | collaborative / auto |
+| purpose | string | O | 디자인 목적 (자연어) |
 
-#### 응답
+### 4.2. 세션 상태 조회
+**GET** `/api/v1/sessions/{session_id}/`
+
 ```json
 {
   "success": true,
   "data": {
-    "trend_id": "trend_123456",
-    "keywords": ["오버사이즈", "미니멀리즘"],
-    "analysis_period": {
-      "start": "2025-12-14T00:00:00Z",
-      "end": "2025-12-21T00:00:00Z"
+    "session_id": "sess_123456",
+    "mode": "collaborative",
+    "current_stage": "concepting",
+    "progress": {
+      "brief": "completed",
+      "trend_research": "completed",
+      "concept_candidates": "in_progress",
+      "reference_search": "pending",
+      "abstraction": "pending",
+      "generation": "pending",
+      "spec_document": "pending"
     },
-    "trend_score": 87.5,
-    "growth_rate": 12.3,
-    "sentiment": {
-      "positive": 65,
-      "neutral": 25,
-      "negative": 10
+    "created_at": "2026-05-07T10:00:00Z"
+  }
+}
+```
+
+---
+
+## 5. 브리프 API
+
+### 5.1. 브리프 생성
+**POST** `/api/v1/sessions/{session_id}/brief/`
+
+```json
+{
+  "purpose": "휴대폰 거치대를 자연물 컨셉으로 디자인",
+  "domain": "industrial",
+  "target": "직장인, 프리미엄 사용자",
+  "context": "사무실 책상 위 오브젝트",
+  "constraints": ["자연적인 느낌", "책상 위 오브젝트처럼"]
+}
+```
+
+### 5.2. 추가 질문 생성
+**GET** `/api/v1/sessions/{session_id}/brief/questions/`
+
+AI가 브리프의 누락 필드를 분석해 질문을 생성합니다.
+
+### 5.3. 추가 질문 답변
+**POST** `/api/v1/sessions/{session_id}/brief/answers/`
+
+```json
+{
+  "answers": [
+    {"question_id": "q_001", "answer": "사무실"},
+    {"question_id": "q_002", "answer": "세라믹, 3D 프린팅"},
+    {"question_id": "q_003", "answer": "세로 거치, 충전 케이블 통과"}
+  ]
+}
+```
+
+---
+
+## 6. 사용자 스케치 API
+
+### 6.1. 스케치 업로드
+**POST** `/api/v1/sessions/{session_id}/sketches/`
+
+(multipart/form-data)
+
+```
+file: [스케치 파일]
+sketch_type: rough | structure | style | mixed
+description: "휴대폰 거치대 러프 스케치 - 삼각형 실루엣"
+```
+
+원본 파일은 불변 저장되며, 분석 결과는 별도로 생성됩니다.
+
+### 6.2. 스케치 분석 조회
+**GET** `/api/v1/sessions/{session_id}/sketches/{sketch_id}/analysis/`
+
+```json
+{
+  "success": true,
+  "data": {
+    "sketch_id": "sketch_001",
+    "analysis": {
+      "intent": "삼각형 실루엣의 휴대폰 거치대",
+      "form_elements": ["삼각형 실루엣", "경사면", "받침 각도"],
+      "structure": "후면 지지대 경사 구조",
+      "unclear_points": ["정확한 받침 각도", "케이블 통과 방식"],
+      "refinement_directions": [
+        "능선 라인을 후면 지지대로 구체화",
+        "산맥 중첩을 단차로 변형"
+      ]
     },
-    "related_keywords": [
-      {"keyword": "루즈핏", "score": 0.85},
-      {"keyword": "편안한패션", "score": 0.72}
-    ],
-    "visual_trends": {
-      "colors": ["black", "beige", "white"],
-      "patterns": ["solid", "minimal"],
-      "silhouettes": ["oversized", "relaxed"]
-    },
+    "status": "pending_user_confirmation"
+  }
+}
+```
+
+### 6.3. 스케치 분석 승인
+**POST** `/api/v1/sessions/{session_id}/sketches/{sketch_id}/confirm/`
+
+---
+
+## 7. 트렌드 조사 API
+
+### 7.1. 트렌드 조사 시작
+**POST** `/api/v1/sessions/{session_id}/trend-research/`
+
+```json
+{
+  "domain": "industrial",
+  "keywords": ["자연물 오브젝트", "산 컨셉 제품", "미니멀 거치대"],
+  "sources": ["core77", "dezeen", "behance"]
+}
+```
+
+모든 결과는 출처 URL, 발행일, 수집일과 함께 저장됩니다.
+
+### 7.2. 트렌드 인사이트 조회
+**GET** `/api/v1/sessions/{session_id}/trend-research/insights/`
+
+```json
+{
+  "success": true,
+  "data": {
     "insights": [
-      "최근 7일간 오버사이즈 스타일 관련 게시물 23% 증가",
-      "20-30대 여성층에서 가장 높은 반응률 기록"
-    ]
-  }
-}
-```
-
-### 3.2. 이미지 분석
-**POST** `/api/v1/analysis/analyze-image`
-
-패션 이미지를 분석하여 스타일 정보를 추출합니다.
-
-#### 요청 (multipart/form-data)
-```
-image: [파일]
-options: {
-  "extract_colors": true,
-  "identify_garments": true,
-  "style_classification": true
-}
-```
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "style_category": "casual",
-    "color_palette": [
-      {"color": "#000000", "name": "black", "ratio": 0.45},
-      {"color": "#FFFFFF", "name": "white", "ratio": 0.30}
-    ],
-    "garments": [
-      {"type": "t-shirt", "color": "black", "material": "cotton"},
-      {"type": "jeans", "color": "blue", "material": "denim"}
-    ],
-    "overall_aesthetic": "minimalist casual",
-    "similar_styles": ["streetwear", "athleisure"]
-  }
-}
-```
-
----
-
-## 4. 이미지 생성 API
-
-### 4.1. 패션 디자인 생성
-**POST** `/api/v1/generation/fashion-design`
-
-텍스트 설명을 기반으로 패션 디자인 이미지를 생성합니다.
-
-#### 요청
-```json
-{
-  "prompt": "미니멀한 A라인 원피스, 흰색, 린넨 소재",
-  "style": "modern",
-  "garment_type": "dress",
-  "color_scheme": ["white"],
-  "fabric_type": "linen",
-  "num_variations": 3,
-  "width": 1024,
-  "height": 1024,
-  "quality": "high",
-  "model_preference": "zimage",
-  "reference_image_url": "https://example.com/ref.jpg"
-}
-```
-
-#### 파라미터
-| 파라미터 | 타입 | 필수 | 설명 |
-|---------|------|------|------|
-| prompt | string | O | 디자인 설명 (최소 10자, 최대 500자) |
-| style | string | X | 스타일 (modern, classic, avantgarde) |
-| garment_type | string | X | 의류 타입 |
-| num_variations | integer | X | 생성할 변형 수 (1-5) |
-| quality | string | X | 품질 (standard, high, ultra) |
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "generation_id": "gen_123456",
-    "images": [
       {
-        "url": "https://cdn.fashion-ai.com/gen/123456_1.jpg",
-        "base64": "data:image/jpeg;base64,...",
-        "metadata": {
-          "width": 1024,
-          "height": 1024,
-          "file_size": 245760
-        }
-      }
-    ],
-    "variations": [
-      // 추가 변형 이미지들
-    ],
-    "model_used": "zimage",
-    "generation_time": 45.2,
-    "parameters_used": {
-      "prompt_hash": "abc123",
-      "seed": 456789
-    }
-  }
-}
-```
-
-### 4.2. 컬렉션 생성
-**POST** `/api/v1/generation/collection`
-
-통합된 테마로 패션 컬렉션을 생성합니다.
-
-#### 요청
-```json
-{
-  "theme": "서머 비치웨어 2025",
-  "garments": ["dress", "top", "bottom", "swimwear"],
-  "style": "resort",
-  "color_palette": ["aqua", "coral", "sand"],
-  "num_sets": 5
-}
-```
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "collection_id": "col_123456",
-    "theme": "서머 비치웨어 2025",
-    "sets": [
-      {
-        "set_id": "set_001",
-        "garments": [
+        "id": "insight_001",
+        "summary": "자연물 형태를 차용한 데스크 오브젝트 트렌드 확산",
+        "keywords": ["바이오필릭 디자인", "자연물 오브젝트"],
+        "evidence": [
           {
-            "type": "dress",
-            "images": ["url1", "url2"],
-            "description": "플로럴 맥시 드레스"
+            "source": "Core77",
+            "url": "https://...",
+            "published_at": "2026-04-15",
+            "quote": "..."
           }
-        ]
+        ],
+        "confidence": 0.85,
+        "freshness_score": 0.92
       }
     ]
   }
 }
 ```
 
-### 4.3. 기술적 스케치 생성
-**POST** `/api/v1/generation/technical-sketch`
+---
 
-디자인을 기술적 도면으로 변환합니다.
+## 8. 컨셉 API
 
-#### 요청
+### 8.1. 컨셉 후보 생성
+**POST** `/api/v1/sessions/{session_id}/concepts/generate/`
+
 ```json
 {
-  "design_description": "심플한 셔츠 블라우스",
-  "garment_type": "blouse",
-  "include_measurements": true,
-  "output_format": "line_drawing"
+  "count": 4,
+  "based_on": "brief_and_trends"
+}
+```
+
+### 8.2. 컨셉 후보 목록
+**GET** `/api/v1/sessions/{session_id}/concepts/`
+
+```json
+{
+  "success": true,
+  "data": {
+    "concepts": [
+      {
+        "id": "concept_001",
+        "name": "산",
+        "description": "안정감, 자연, 능선, 높이",
+        "score": 0.88,
+        "evidence": ["바이오필릭 트렌드 근거", "지지 구조 연관성"],
+        "risks": ["장식적으로 흐를 위험"],
+        "status": "pending"
+      }
+    ]
+  }
+}
+```
+
+### 8.3. 컨셉 결정
+**POST** `/api/v1/sessions/{session_id}/concepts/{concept_id}/decide/`
+
+```json
+{
+  "decision": "adopted",
+  "reason": "지지 구조와 잘 연결되고 바이오필릭 트렌드와 부합"
+}
+```
+
+decision: adopted | deferred | rejected | explore_more
+
+---
+
+## 9. 레퍼런스 API
+
+### 9.1. 레퍼런스 검색
+**POST** `/api/v1/sessions/{session_id}/references/search/`
+
+```json
+{
+  "query": "산 능선 제품 오브젝트",
+  "categories": ["Nature", "Product", "Architecture"],
+  "max_results": 30
+}
+```
+
+### 9.2. 레퍼런스 저장
+**POST** `/api/v1/sessions/{session_id}/references/`
+
+```json
+{
+  "url": "https://...",
+  "title": "산을 형상화한 데스크 오브젝트",
+  "category": "Product",
+  "source_type": "web"
+}
+```
+
+### 9.3. 레퍼런스 분석
+**GET** `/api/v1/sessions/{session_id}/references/{ref_id}/analysis/`
+
+```json
+{
+  "success": true,
+  "data": {
+    "relevance_score": 0.82,
+    "form_grammar": "삼각 실루엣, 경사 라인",
+    "structure_grammar": "경사 지지, 레이어 중첩",
+    "material_grammar": "무광 표면, 자연 소재",
+    "symbolism": "안정감, 고요함, 자연",
+    "copyright_risk": "low",
+    "abstraction_potential": "high"
+  }
 }
 ```
 
 ---
 
-## 5. 패턴 생성 API
+## 10. 추상화 API
 
-### 5.1. 패턴 블루프린트 생성
-**POST** `/api/v1/blueprint/generate`
+### 10.1. 추상화 규칙 생성
+**POST** `/api/v1/sessions/{session_id}/abstraction/generate/`
 
-디자인을 실제 제작용 패턴으로 변환합니다.
-
-#### 요청
 ```json
 {
-  "garment_type": "blouse",
-  "design_description": "기본 셔츠 블라우스",
-  "size_system": "KS",
-  "size": "M",
-  "measurements": {
-    "bust": 84,
-    "waist": 68,
-    "hip": 92
-  },
-  "include_instructions": true,
-  "include_seam_allowance": true,
-  "seam_allowance_width": 1.5,
-  "output_format": "image"
+  "reference_ids": ["ref_001", "ref_002"],
+  "sketch_id": "sketch_001",
+  "axes": ["form", "structure", "surface", "meaning"]
 }
 ```
 
-#### 응답
+### 10.2. 추상화 규칙 조회
+**GET** `/api/v1/sessions/{session_id}/abstraction/`
+
 ```json
 {
   "success": true,
   "data": {
-    "blueprint_id": "bp_123456",
-    "pattern_pieces": [
+    "rules": [
       {
-        "name": "Front_Bodice",
-        "image": "data:image/png;base64,...",
-        "width": 500,
-        "height": 600,
-        "piece_count": 1,
-        "instructions": [
-          "시접 1.5cm 추가",
-          "다트 7cm 깊이로 마킹"
-        ]
+        "id": "rule_001",
+        "axis": "form",
+        "observation": "삼각 실루엣, 능선 라인",
+        "application": "후면 지지대의 경사 실루엣",
+        "source_refs": ["ref_001", "ref_003"]
       },
       {
-        "name": "Back_Bodice",
-        "image": "data:image/png;base64,...",
-        "width": 500,
-        "height": 650,
-        "piece_count": 1
-      }
-    ],
-    "layout_diagram": "data:image/png;base64,...",
-    "instructions": {
-      "cutting": "1. 시접 포함하여 재단...",
-      "sewing": "1. 어깨솔기缝合...",
-      "finishing": "1. 가단자 처리..."
-    },
-    "material_requirements": {
-      "fabric": "1.5m x 1.4m",
-      "thread": "200m",
-      "buttons": "7개 (直径 1.5cm)",
-      "interfacing": "0.5m"
-    }
-  }
-}
-```
-
-### 5.2. PDF 내보내기
-**GET** `/api/v1/blueprint/export/{blueprint_id}`
-
-생성된 패턴을 PDF로 다운로드합니다.
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "download_url": "https://cdn.fashion-ai.com/patterns/bp_123456.pdf",
-    "expires_at": "2025-12-28T12:00:00Z"
-  }
-}
-```
-
----
-
-## 6. 데이터 수집 API
-
-### 6.1. 크롤링 시작
-**POST** `/api/v1/crawler/start`
-
-패션 데이터 수집을 시작합니다.
-
-#### 요청
-```json
-{
-  "sources": ["fashion_news", "instagram", "musinsa"],
-  "keywords": ["2025 S/S", "패션 트렌드"],
-  "max_items": 500,
-  "filters": {
-    "date_range": {
-      "start": "2025-12-01",
-      "end": "2025-12-21"
-    },
-    "language": ["ko", "en"],
-    "min_engagement": 100
-  }
-}
-```
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "job_id": "job_123456",
-    "status": "started",
-    "estimated_duration": 1800,
-    "sources_count": 3,
-    "keywords_count": 2
-  }
-}
-```
-
-### 6.2. 크롤링 상태 조회
-**GET** `/api/v1/crawler/status/{job_id}`
-
-크롤링 작업 상태를 조회합니다.
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "job_id": "job_123456",
-    "status": "running",
-    "progress": {
-      "total": 1000,
-      "completed": 456,
-      "percentage": 45.6
-    },
-    "sources": {
-      "fashion_news": {"status": "completed", "items": 250},
-      "instagram": {"status": "running", "items": 180},
-      "musinsa": {"status": "pending", "items": 0}
-    },
-    "start_time": "2025-12-21T10:00:00Z",
-    "estimated_completion": "2025-12-21T10:30:00Z"
-  }
-}
-```
-
-### 6.3. 크롤링 결과 조회
-**GET** `/api/v1/crawler/results/{job_id}`
-
-크롤링 결과 데이터를 조회합니다.
-
-#### 쿼리 파라미터
-- `page`: 페이지 번호 (기본값: 1)
-- `limit`: 페이지 당 항목 수 (기본값: 50)
-- `format`: 응답 형식 (json, csv)
-
-#### 응답
-```json
-{
-  "success": true,
-  "data": {
-    "job_id": "job_123456",
-    "total_items": 892,
-    "page": 1,
-    "total_pages": 18,
-    "items": [
-      {
-        "id": "item_001",
-        "source": "instagram",
-        "url": "https://instagram.com/p/123",
-        "content": {
-          "text": "2025년 봄 패션 트렌드...",
-          "images": ["url1", "url2"],
-          "hashtags": ["fashion", "trend2025"],
-          "engagement": {
-            "likes": 1523,
-            "comments": 89,
-            "shares": 45
-          }
-        },
-        "metadata": {
-          "author": "fashion_influencer",
-          "publish_date": "2025-12-20T15:30:00Z",
-          "language": "ko"
-        }
+        "id": "rule_002",
+        "axis": "structure",
+        "observation": "하중을 받는 경사면",
+        "application": "휴대폰 무게를 받는 받침 각도",
+        "source_refs": ["ref_001"]
       }
     ]
   }
@@ -495,71 +395,42 @@ options: {
 
 ---
 
-## 7. 모델 정보 API
+## 11. 이미지 생성 API
 
-### 7.1. 이미지 생성 모델 목록
-**GET** `/api/v1/models/image-generation`
+### 11.1. 스케치/변형 이미지 생성
+**POST** `/api/v1/sessions/{session_id}/generation/generate/`
 
-사용 가능한 이미지 생성 모델 목록을 조회합니다.
-
-#### 응답
 ```json
 {
-  "success": true,
-  "data": {
-    "models": [
-      {
-        "name": "zimage",
-        "display_name": "Z-Image",
-        "provider": "Z-AI Lab",
-        "capabilities": [
-          "fashion_design",
-          "model_fitting",
-          "upscale",
-          "style_transfer"
-        ],
-        "supported_formats": ["jpeg", "png"],
-        "max_resolution": "2048x2048",
-        "pricing": {
-          "standard": 0.01,
-          "high": 0.02,
-          "ultra": 0.05
-        },
-        "status": "available",
-        "version": "2.1.0"
-      }
-    ]
-  }
+  "type": "abstraction_sketch",
+  "abstraction_rule_ids": ["rule_001", "rule_002"],
+  "sketch_id": "sketch_001",
+  "variations": 3,
+  "model_policy": "image_generation"
 }
 ```
 
-### 7.2. 텍스트 생성 모델 목록
-**GET** `/api/v1/models/text-generation`
+type: abstraction_sketch | refinement | variation | domain_application
 
-사용 가능한 텍스트 생성 모델 목록을 조회합니다.
+모든 생성은 최소 1개 이상의 브리프, 컨셉, 추상화 규칙과 연결되어야 합니다.
 
-#### 응답
+### 11.2. 생성 결과 조회
+**GET** `/api/v1/sessions/{session_id}/generation/`
+
 ```json
 {
   "success": true,
   "data": {
-    "models": [
+    "designs": [
       {
-        "name": "gemini-2.5-flash",
-        "display_name": "Gemini 2.5 Flash",
-        "provider": "Google",
-        "capabilities": [
-          "text",
-          "multimodal",
-          "analysis",
-          "translation"
-        ],
-        "max_tokens": 8192,
-        "languages": ["ko", "en", "zh-CN", "zh-TW", "ja"],
-        "pricing": {
-          "input": 0.0001,
-          "output": 0.0004
-        }
+        "id": "design_001",
+        "type": "abstraction_sketch",
+        "image_url": "https://...",
+        "linked_rules": ["rule_001", "rule_002"],
+        "linked_sketch": "sketch_001",
+        "linked_concept": "concept_001",
+        "model_used": "gemini-2.5-flash",
+        "created_at": "2026-05-07T14:00:00Z"
       }
     ]
   }
@@ -568,133 +439,97 @@ options: {
 
 ---
 
-## 8. WebSocket API (실시간 통신)
+## 12. 스펙 문서 API
 
-### 8.1. 생성 진행률 구독
-**WS** `/ws/progress/{generation_id}`
+### 12.1. 스펙 문서 생성
+**POST** `/api/v1/sessions/{session_id}/spec/`
 
-이미지/패턴 생성 진행률을 실시간으로 수신합니다.
-
-#### 메시지 형식
 ```json
 {
-  "type": "progress_update",
+  "include_sections": [
+    "brief", "trend_evidence", "concept_candidates",
+    "concept_decision", "user_sketches", "reference_board",
+    "abstraction_rules", "designs", "final_comparison",
+    "domain_spec", "sources_and_licenses"
+  ]
+}
+```
+
+### 12.2. 스펙 문서 조회
+**GET** `/api/v1/sessions/{session_id}/spec/`
+
+### 12.3. 스펙 문서 버전 관리
+**GET** `/api/v1/sessions/{session_id}/spec/versions/`
+
+### 12.4. 스펙 문서 승인
+**POST** `/api/v1/sessions/{session_id}/spec/{version}/approve/`
+
+---
+
+## 13. 관리자 API
+
+### 13.1. 트렌드 출처 관리
+- **GET** `/api/v1/admin/trend-sources/`
+- **POST** `/api/v1/admin/trend-sources/`
+- **PATCH** `/api/v1/admin/trend-sources/{source_id}/`
+
+### 13.2. 모델 카탈로그 관리
+- **GET** `/api/v1/admin/model-providers/`
+- **POST** `/api/v1/admin/model-providers/`
+- **GET** `/api/v1/admin/model-catalog/`
+- **POST** `/api/v1/admin/feature-model-policies/`
+
+### 13.3. 감사 로그
+- **GET** `/api/v1/admin/audit-logs/?user={id}&action={type}&from={date}&to={date}`
+
+---
+
+## 14. Decision Log
+
+모든 컨셉 선택, 레퍼런스 승인/제외, 변형안 선택은 Decision Log에 자동 기록됩니다.
+
+**GET** `/api/v1/sessions/{session_id}/decisions/`
+
+```json
+{
+  "success": true,
   "data": {
-    "generation_id": "gen_123456",
-    "status": "processing",
-    "progress": 65,
-    "stage": "optimizing_prompt",
-    "estimated_remaining": 45,
-    "preview_url": "https://cdn.fashion-ai.com/previews/123.jpg"
+    "decisions": [
+      {
+        "id": "dec_001",
+        "stage": "concept",
+        "decision_type": "adopted",
+        "target_id": "concept_001",
+        "decided_by": "user",
+        "reason": "지지 구조와 잘 연결",
+        "evidence": ["insight_001", "insight_003"],
+        "alternatives": ["concept_002", "concept_003"],
+        "created_at": "2026-05-07T11:30:00Z"
+      }
+    ]
   }
 }
 ```
 
 ---
 
-## 9. 제한 사항
-
-### 9.1. 요청 제한
-- **분당 요청**: 100회
-- **일일 요청**: 10,000회
-- **동시 요청**: 10개
-- **파일 업로드**: 최대 100MB
-
-### 9.2. 생성 제한
-- **일일 이미지 생성**: 1,000개
-- **동시 생성**: 5개
-- **최대 해상도**: 2048x2048
-- **최대 비디오 길이**: 60초
-
-### 9.3. 데이터 보관
-- **생성 결과**: 30일
-- **크롤링 데이터**: 90일
-- **사용자 데이터**: 365일
-
----
-
-## 10. 에러 코드
+## 15. 에러 코드
 
 | 코드 | 의미 | 해결 방법 |
 |------|------|----------|
 | AUTH_001 | 잘못된 API 키 | 유효한 API 키 사용 |
 | AUTH_002 | 만료된 토큰 | 토큰 갱신 |
+| AUTH_003 | 워크스페이스 권한 없음 | 권한 확인 |
 | RATE_001 | 요청 초과 | 요청 간격 조정 |
+| SESSION_001 | 세션 없음 | 세션 ID 확인 |
+| CONCEPT_001 | 컨셉 후보 없음 | 브리프/트렌드 확인 |
+| REF_001 | 레퍼런스 출처 없음 | URL 확인 |
+| REF_002 | 라이선스 위험 | 추상화 전용으로 처리 |
 | GEN_001 | 생성 실패 | 파라미터 확인 후 재시도 |
-| GEN_002 | 모델 사용 불가 | 다른 모델 선택 |
-| VAL_001 | 유효하지 않은 입력 | 입력값 검증 |
-| SYS_001 | 시스템 오류 | 잠시 후 재시도 |
+| GEN_002 | 모델 사용 불가 | 관리자 모델 정책 확인 |
+| SKETCH_001 | 스케치 분석 실패 | 파일 형식 확인 |
+| SPEC_001 | 스펙 생성 불가 | 필수 단계 완료 여부 확인 |
 
 ---
 
-## 11. SDK 및 라이브러리
-
-### 11.1. Python SDK
-```python
-pip install fashion-ai-sdk
-
-from fashion_ai import FashionAIClient
-
-client = FashionAIClient(api_key="your_key")
-
-# 트렌드 분석
-trends = client.analyze_trends(
-    keywords=["오버사이즈"],
-    time_range="7d"
-)
-
-# 이미지 생성
-images = client.generate_design(
-    prompt="미니멀 원피스",
-    num_variations=3
-)
-```
-
-### 11.2. JavaScript SDK
-```javascript
-npm install fashion-ai-js
-
-import { FashionAI } from 'fashion-ai-js';
-
-const client = new FashionAI('your_api_key');
-
-// 패턴 생성
-const pattern = await client.generatePattern({
-  garment_type: 'dress',
-  size: 'M'
-});
-```
-
-### 11.3. cURL 예제
-```bash
-# 이미지 생성
-curl -X POST https://api.fashion-ai.com/api/v1/generation/fashion-design \
-  -H "Authorization: Bearer YOUR_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "미니멀한 블랙 드레스",
-    "num_variations": 2
-  }'
-```
-
----
-
-## 12. 지원 및 문의
-
-- **기술 문서**: https://docs.fashion-ai.com
-- **API 참조**: https://api.fashion-ai.com/docs
-- **지원 이메일**: api-support@fashion-ai.com
-- **상태 페이지**: https://status.fashion-ai.com
-- **GitHub**: https://github.com/fashion-ai/api-sdk
-
----
-
-## 13. 변경 로그
-
-### v1.0.0 (2025-12-21)
-- 초기 API 릴리스
-- 트렌드 분석 API 추가
-- 이미지 생성 API 추가
-- 패턴 생성 API 추가
-- 다국어 지원 (한국어, 영어, 중국어 간체/번체)
-- WebSocket 실시간 통신 지원
+*본 문서는 시스템 변경사항에 따라 지속적으로 업데이트됩니다.*

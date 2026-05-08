@@ -9,7 +9,7 @@ from fastapi import APIRouter
 from app.core.config import get_settings
 from app.core import settings_storage
 from app.utils.system_detector import detect_gpu_availability
-from .settings_shared import SettingsUpdate, _build_api_status, _apply_api_key
+from .settings_shared import SettingsUpdate, AIResearchConfig, _build_api_status, _apply_api_key
 
 router = APIRouter()
 
@@ -22,7 +22,8 @@ def _get_api_status() -> Dict[str, bool]:
         "gemini": bool(api_keys.get("gemini")),
         "glm": bool(api_keys.get("glm")),
         "seedream": bool(api_keys.get("seedream")),
-        "nano_banana": bool(api_keys.get("nano_banana"))
+        "nano_banana": bool(api_keys.get("nano_banana")),
+        "perplexity": bool(api_keys.get("perplexity"))
     }
 
 
@@ -107,4 +108,40 @@ async def update_settings(payload: SettingsUpdate) -> Dict[str, Any]:
         "status": _get_api_status(),
         "config": settings_storage.get_config(),
         "models": stored.get("models", {})
+    }
+
+
+@router.get("/ai-research")
+async def get_ai_research_settings() -> Dict[str, Any]:
+    """AI 조사 설정 조회"""
+    from app.services.ai_research_service import get_ai_research_config
+    config = get_ai_research_config()
+    return {
+        "success": True,
+        "config": config
+    }
+
+
+@router.post("/ai-research")
+async def save_ai_research_settings(payload: AIResearchConfig) -> Dict[str, Any]:
+    """AI 조사 설정 저장"""
+    from app.services.ai_research_service import save_ai_research_config
+
+    config_dict = {
+        "enabled": payload.enabled,
+        "models": payload.models or {
+            "gemini_search": False,
+            "perplexity": False,
+            "glm_research": False
+        },
+        "perplexity_model": payload.perplexity_model or "sonar",
+        "research_depth": payload.research_depth or "standard"
+    }
+
+    success = save_ai_research_config(config_dict)
+    settings_storage.clear_settings_cache()
+
+    return {
+        "success": success,
+        "config": config_dict
     }

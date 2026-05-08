@@ -30,7 +30,7 @@ class SessionCreate(BaseModel):
     crawler_config: Optional[CrawlerConfig] = None
     auto_start: bool = True
     generate_images: bool = True
-    generate_blueprints: bool = False
+    generate_blueprints: bool = True
     blueprint_size_system: str = "KS"
     blueprint_size: str = "M"
 

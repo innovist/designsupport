@@ -128,7 +128,7 @@ async function createNewSession() {
     const res = await fetch('/api/v1/chat/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_id: parseInt(projectId, 10), title: title || null })
+        body: JSON.stringify({ project_id: projectId, title: title || null })
     });
 
     if (res.ok) {

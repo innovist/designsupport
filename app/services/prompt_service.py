@@ -2,6 +2,9 @@
 Prompt engineering service for AI generation
 """
 
+# @MX:NOTE: [AUTO] Prompt engineering service - manages AI model interactions and prompt templates
+# Maintains 29 specialized prompt methods for different AI models and generation types
+
 import asyncio
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
@@ -10,6 +13,7 @@ import json
 import logging
 
 from app.core.logging import get_logger
+from app.core.config import get_local_now
 from app.models.design import DesignConcept, PromptSpec
 
 logger = get_logger(__name__)
@@ -278,7 +282,7 @@ class PromptService:
             steps=self._get_default_steps(model),
             cfg_scale=self._get_default_cfg(model),
             metadata={
-                'generation_date': datetime.utcnow().isoformat(),
+                'generation_date': get_local_now().isoformat(),
                 'concept_name': concept.concept_name,
                 'style_options': self._extract_style_options(concept)
             }

@@ -1,0 +1,11 @@
+{
+  "domain": "advertising",
+  "label": "Advertising Design",
+  "brief_schema": {
+    "required_fields": ["target_insight", "core_message", "channel", "campaign_tone"],
+    "optional_fields": ["call_to_action", "size_spec", "duration"]
+  },
+  "evaluation_axes": ["target_insight", "message_clarity", "hooking_power", "channel_fit", "campaign_tone"],
+  "spec_template_uri": "templates/specs/advertising.md",
+  "generation_outputs": ["campaign_cut", "social_asset", "copy_direction", "storyboard"]
+}

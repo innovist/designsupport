@@ -222,6 +222,8 @@ class Project(BaseModel):
     def __repr__(self) -> str:
         return f"<Project(id={self.id}, title='{self.title}', status='{self.status.value}')>"
 
+    # @MX:ANCHOR: [AUTO] Project state machine - lifecycle management with progress tracking
+    # @MX:REASON: State transition methods called from 85+ locations across workflow and API layers
     def start(self) -> None:
         """프로젝트 시작"""
         self.status = ProjectStatus.ACTIVE

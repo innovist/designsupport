@@ -61,13 +61,13 @@ document.getElementById('project-form').addEventListener('submit', async (e) => 
     }
 
     try {
-        const res = await fetch('/api/v1/projects/', {
+        const res = await fetch('/api/projects/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 title,
-                description: description || null,
-                prompt
+                domain: 'fashion',
+                prompt: prompt || description
             })
         });
 

@@ -180,6 +180,8 @@ class Report(BaseModel):
     def __repr__(self) -> str:
         return f"<Report(id={self.id}, name='{self.report_name}', type='{self.report_type}')>"
 
+    # @MX:ANCHOR: [AUTO] Report generation state machine - lifecycle management
+    # @MX:REASON: State transition methods called from 85+ locations across report service and pipeline
     def generate(self) -> None:
         """보고서 생성"""
         self.status = ReportStatus.GENERATING

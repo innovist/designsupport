@@ -44,7 +44,7 @@
 
 <script>
 const t = window.t;
-const projectId = {{ project_id }};
+const projectId = '{{ project_id }}';
 let project = null;
 let sessions = [];
 
@@ -81,7 +81,7 @@ function renderProjectDetail() {
 }
 
 async function loadProjectDetail() {
-    const res = await fetch(`/api/v1/projects/${projectId}`);
+    const res = await fetch(`/api/projects/${projectId}/`);
     if (!res.ok) {
         alert(t('projectDetail.messages.notFound'));
         window.location.href = '/projects';
@@ -92,7 +92,7 @@ async function loadProjectDetail() {
 }
 
 async function loadSessions() {
-    const res = await fetch(`/api/v1/sessions/?project_id=${projectId}&limit=100`);
+    const res = await fetch(`/api/sessions/?project_id=${projectId}&limit=100`);
     if (res.ok) {
         sessions = await res.json();
         renderSessions();
@@ -124,8 +124,8 @@ function renderSessions() {
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: var(--font-xs); color: var(--text-muted);">${t('projectDetail.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
                 <div style="display: flex; gap: 0.5rem;">
-                    <a href="/sessions/${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
-                    <button onclick="deleteSession(${session.id})" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.delete')}</button>
+                    <a href="/workspace?session=${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
+                    <button onclick="deleteSession('${session.id}')" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.delete')}</button>
                 </div>
             </div>
         </div>
@@ -145,7 +145,7 @@ function cancelEditDescription() {
 
 async function saveDescription() {
     const description = document.getElementById('description-input').value.trim();
-    const res = await fetch(`/api/v1/projects/${projectId}`, {
+    const res = await fetch(`/api/projects/${projectId}/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description })
@@ -162,7 +162,7 @@ async function saveDescription() {
 
 async function deleteSession(sessionId) {
     if (!confirm(t('projectDetail.messages.confirmDeleteSession'))) return;
-    const res = await fetch(`/api/v1/sessions/${sessionId}`, { method: 'DELETE' });
+    const res = await fetch(`/api/sessions/${sessionId}/`, { method: 'DELETE' });
     if (res.ok) {
         await loadSessions();
     } else {

@@ -1,0 +1,11 @@
+{
+  "domain": "industrial",
+  "label": "Industrial Design",
+  "brief_schema": {
+    "required_fields": ["product_type", "target_user", "usage_context", "manufacturing_method"],
+    "optional_fields": ["material_preference", "price_range", "safety_requirements"]
+  },
+  "evaluation_axes": ["usability", "structure", "material", "manufacturability", "CMF", "safety"],
+  "spec_template_uri": "templates/specs/industrial.md",
+  "generation_outputs": ["form_sketch", "structure_sketch", "usage_scene", "material_variation"]
+}

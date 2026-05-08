@@ -2,6 +2,9 @@
 Analysis service for fashion trend analysis using multiple AI models
 """
 
+# @MX:NOTE: [AUTO] Trend analysis service - multi-model AI analysis ensemble
+# Maintains 27 analysis methods using Gemini, GLM, and ensemble techniques
+
 import asyncio
 import json
 from datetime import datetime
@@ -194,7 +197,8 @@ class AnalysisService:
         filters: Dict[str, Any] = None,
         user_input: str = "",
         project_id: int = None,
-        crawl_job_id: int = None
+        crawl_job_id: int = None,
+        ai_research: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         트렌드 분석 실행
@@ -205,6 +209,7 @@ class AnalysisService:
             user_input: 사용자 입력 프롬프트
             project_id: 프로젝트 ID (선택)
             crawl_job_id: 크롤링 작업 ID (선택)
+            ai_research: AI 조사 결과 (선택)
 
         Returns:
             트렌드 분석 결과 딕셔너리
@@ -213,7 +218,7 @@ class AnalysisService:
         filters = filters or {}
         data_count = len(raw_data) if isinstance(raw_data, list) else 0
 
-        logger.info(f"Starting trend analysis: {data_count} items, filters={filters}")
+        logger.info(f"Starting trend analysis: {data_count} items, filters={filters}, ai_research={bool(ai_research)}")
 
         # 데이터 전처리
         comment_insights = await self.comment_insight_service.summarize(raw_data, filters, user_input)
@@ -225,9 +230,9 @@ class AnalysisService:
         # Phase 2: 상호 검증
         cross_validation = await self._perform_cross_validation(individual_analyses)
 
-        # Phase 3: 최종 종합
+        # Phase 3: 최정 종합 (AI 조사 결과 통합, 필터 정보 전달)
         synthesis = await self._perform_final_synthesis(
-            individual_analyses, cross_validation
+            individual_analyses, cross_validation, ai_research, filters
         )
 
         # 분석 결과 구성
@@ -294,13 +299,27 @@ class AnalysisService:
         if not filtered_data:
             raise ValueError("No valid data available for trend analysis")
 
+        # 대상 명세 생성 (프롬프트에서 강조하기 위함)
+        target_spec = self._build_target_constraint(filters or {})
+        is_children = self._is_children_target(filters or {})
+
         context = {
             'user_query': user_input,
             'filters': filters,
+            'target_specification': target_spec,
+            'is_children_clothing': is_children,
             'data': filtered_data
         }
         if comment_insights:
             context['comment_insights'] = comment_insights
+
+        # 아동복인 경우 명시적 경고 추가
+        if is_children:
+            context['CRITICAL_NOTE'] = (
+                "This analysis is for CHILDREN'S clothing. "
+                "Do NOT include adult-oriented trends like 'kidult', 'mature fashion', etc. "
+                "All trends must be AGE-APPROPRIATE for children."
+            )
 
         return json.dumps(context, ensure_ascii=False, default=str)
 
@@ -567,13 +586,71 @@ class AnalysisService:
             "consensus_rate": len(consensus_trends) / len(all_trends) if all_trends else 0
         }
 
+    def _build_target_constraint(self, filters: Dict[str, Any]) -> str:
+        """필터 정보를 대상 제약으로 변환"""
+        if not filters:
+            return ""
+
+        parts = []
+        age = filters.get("age", [])
+        if isinstance(age, str):
+            age = [age] if age else []
+        if age:
+            age_map = {
+                "toddler": "toddlers (0-5 years)",
+                "child": "children (6-12 years)",
+                "teen": "teenagers (13-19 years)",
+                "20s": "20s", "30s": "30s", "40s": "40s", "50s_plus": "50+"
+            }
+            parts.append(f"Age: {', '.join([age_map.get(a, a) for a in age if a])}")
+
+        gender = filters.get("gender", [])
+        if isinstance(gender, str):
+            gender = [gender] if gender else []
+        if gender:
+            parts.append(f"Gender: {', '.join(gender)}")
+
+        category = filters.get("category", [])
+        if isinstance(category, str):
+            category = [category] if category else []
+        if category:
+            parts.append(f"Category: {', '.join(category)}")
+
+        season = filters.get("season", [])
+        if isinstance(season, str):
+            season = [season] if season else []
+        if season:
+            parts.append(f"Season: {', '.join(season)}")
+
+        return " | ".join(parts)
+
+    def _is_children_target(self, filters: Dict[str, Any]) -> bool:
+        """아동 대상인지 확인"""
+        if not filters:
+            return False
+        age = filters.get("age", [])
+        if isinstance(age, str):
+            age = [age] if age else []
+        return any(a in ["toddler", "child", "teen"] for a in age)
+
     async def _perform_final_synthesis(
         self,
         analyses: Dict[str, Any],
-        cross_validation: Dict[str, Any]
+        cross_validation: Dict[str, Any],
+        ai_research: Optional[Dict[str, Any]] = None,
+        filters: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """최종 종합"""
+        """
+        최종 종합
+
+        Args:
+            analyses: 개별 모델 분석 결과
+            cross_validation: 상호 검증 결과
+            ai_research: AI 조사 결과 (선택)
+            filters: 대상 필터 정보 (필수)
+        """
         logger.info("Performing final synthesis with GLM-4.7")
+        filters = filters or {}
 
         # 분석 결과 준비
         analysis_data = {
@@ -581,22 +658,116 @@ class AnalysisService:
             "cross_validation": cross_validation
         }
 
-        # GLM-4.7에 종합 요청
-        try:
-            synthesis_prompt = self.prompts['concept_synthesis']['glm_4_6'].format(
-                analyses=json.dumps(analyses, indent=2)
+        # AI 조사 결과가 있으면 통합
+        if ai_research and ai_research.get("enabled"):
+            merged_insights = ai_research.get("merged_insights", {})
+            analysis_data["ai_research"] = merged_insights
+            logger.info(f"Integrating AI research results: {merged_insights.get('source_count', 0)} sources")
+
+        # 대상 제약 조건 생성 (매우 중요!)
+        target_constraint = self._build_target_constraint(filters)
+        is_children = self._is_children_target(filters)
+
+        target_instruction = ""
+        if target_constraint:
+            target_instruction = f"\n\nCRITICAL TARGET SPECIFICATION: {target_constraint}.\n"
+            target_instruction += "ALL design concepts MUST be specifically designed for this target audience.\n"
+        if is_children:
+            target_instruction += (
+                "IMPORTANT: This is for CHILDREN'S clothing.\n"
+                "- Do NOT include adult-oriented concepts like 'kidult', 'mature fashion', or 'adult style'\n"
+                "- All concepts must be AGE-APPROPRIATE for children\n"
+                "- Focus on children's fashion trends, safety, comfort, and playfulness\n"
             )
 
-            response = await self._call_glm_api(
-                prompt=synthesis_prompt,
-                model="glm-4.7"
-            )
+        # GLM-4.7에 종합 요청 (재시도 로직 포함)
+        max_retries = 2
+        last_error = None
 
-            return parse_json(response)
+        for attempt in range(max_retries):
+            try:
+                base_prompt = self.prompts['concept_synthesis']['glm_4_6'].format(
+                    analyses=json.dumps(analysis_data, indent=2, ensure_ascii=False)
+                )
+                # 대상 제약 추가
+                synthesis_prompt = base_prompt + target_instruction
 
-        except Exception as e:
-            logger.error(f"Final synthesis failed: {e}")
-            raise
+                # 재시도 시 더 엄격한 JSON 요구 추가
+                if attempt > 0:
+                    synthesis_prompt += "\n\nIMPORTANT: Respond with valid JSON only. No markdown, no explanation outside JSON."
+
+                response = await self._call_glm_api(
+                    prompt=synthesis_prompt,
+                    model="glm-4.7"
+                )
+
+                if not response:
+                    logger.warning(f"GLM synthesis returned empty response (attempt {attempt + 1}/{max_retries})")
+                    if attempt < max_retries - 1:
+                        await asyncio.sleep(0.5)
+                        continue
+                    return self._fallback_synthesis(analyses, cross_validation, ai_research, filters)
+
+                result = parse_json(response)
+                if attempt > 0:
+                    logger.info(f"Successfully parsed JSON on retry {attempt + 1}")
+                return result
+
+            except ValueError as e:
+                last_error = e
+                logger.warning(f"JSON parse failed (attempt {attempt + 1}/{max_retries}): {e}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(0.5)
+                    continue
+                # 모든 재시도 실패 후 폴백
+                logger.error("All retry attempts failed, using fallback synthesis")
+                return self._fallback_synthesis(analyses, cross_validation, ai_research, filters)
+            except Exception as e:
+                logger.error(f"Final synthesis failed (attempt {attempt + 1}/{max_retries}): {e}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(0.5)
+                    continue
+                raise
+
+    def _fallback_synthesis(
+        self,
+        analyses: Dict[str, Any],
+        cross_validation: Dict[str, Any],
+        ai_research: Optional[Dict[str, Any]] = None,
+        filters: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """GLM 실패 시 사용할 폴백 종합 결과 (필터 정보 포함)"""
+        # 개별 분석에서 합의점 추출
+        consensus_points = []
+        all_trends = []
+
+        for model_name, result in analyses.items():
+            if result.get('success') and isinstance(result.get('result'), str):
+                try:
+                    parsed = json.loads(result['result'])
+                    if 'trends' in parsed:
+                        all_trends.extend(parsed['trends'])
+                    if 'key_findings' in parsed:
+                        consensus_points.extend(parsed['key_findings'][:2])
+                except:
+                    pass
+
+        # AI 조사 결과가 있으면 추가
+        if ai_research and ai_research.get("enabled"):
+            merged_insights = ai_research.get("merged_insights", {})
+            if merged_insights.get("trends"):
+                all_trends.extend(merged_insights["trends"][:5])
+
+        return {
+            "synthesis_summary": "AI 모델 응답 파싱 실패로 기본 종합 결과를 반환합니다.",
+            "consensus_points": consensus_points[:5] if consensus_points else ["데이터 분석 완료"],
+            "recommendations": [
+                "더 많은 데이터 수집 권장",
+                "여러 소스에서 정보 교차 검증 필요"
+            ],
+            "overall_confidence": 0.5,
+            "trends": all_trends[:10]
+        }
 
     async def _save_trend_insights(
         self,
@@ -680,6 +851,12 @@ class AnalysisService:
         """GLM API 호출"""
         logger.info(f"Calling GLM API with model: {model}")
         response = await self.glm_client.generate_content(prompt=prompt, model=model)
+        if response is None:
+            logger.error("GLM API returned None")
+            return ""
+        if not hasattr(response, 'text') or not response.text:
+            logger.error("GLM response has no text attribute or text is empty")
+            return ""
         return response.text
 
     async def generate_design_concepts(

@@ -1,0 +1,201 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'admin.providers.title'|i18n }}{% endblock %}
+{% block description %}Manage model providers and API configurations{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page" data-i18n="admin.breadcrumb.providers">
+    Providers
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="providers-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title" data-i18n="admin.providers.title">Model Providers</h1>
+        <p class="page-description" data-i18n="admin.providers.description">
+            Configure AI model providers and API credentials
+        </p>
+        <button
+            class="btn btn--primary"
+            data-action="create-provider"
+            aria-label="Create new provider">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <span data-i18n="admin.providers.create_button">Add Provider</span>
+        </button>
+    </div>
+
+    <!-- Skeleton Loading State -->
+    {% if skeleton %}
+    <div class="providers-skeleton" aria-hidden="true">
+        {% for i in range(5) %}
+        <div class="skeleton-card">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+
+    <!-- Providers List -->
+    <section class="providers-section" aria-label="Model providers">
+        {% if providers %}
+        <div class="providers-list">
+            {% for provider in providers %}
+            <article class="provider-card {{ provider.is_active|yesno:'provider-card--active,' }}">
+                <div class="provider-header">
+                    <div class="provider-info">
+                        <h3 class="provider-name">{{ provider.name }}</h3>
+                        <span class="provider-status {{ provider.is_active|yesno:'status--active,status--inactive' }}">
+                            {{ provider.is_active|yesno:'Active,Inactive' }}
+                        </span>
+                    </div>
+                    <div class="provider-actions">
+                        <button
+                            class="btn btn--icon"
+                            data-action="edit-provider"
+                            data-provider-id="{{ provider.id }}"
+                            aria-label="Edit provider {{ provider.name }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        {% if provider.is_active %}
+                        <button
+                            class="btn btn--icon btn--warning"
+                            data-action="deactivate-provider"
+                            data-provider-id="{{ provider.id }}"
+                            aria-label="Deactivate provider {{ provider.name }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            </svg>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="provider-details">
+                    <div class="detail-item">
+                        <span class="detail-label" data-i18n="admin.providers.api_key_env">API Key Env:</span>
+                        <code class="detail-value">{{ provider.api_key_env_var }}</code>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label" data-i18n="admin.providers.base_url">Base URL:</span>
+                        <code class="detail-value">{{ provider.base_url }}</code>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label" data-i18n="admin.providers.auth_scheme">Auth Scheme:</span>
+                        <span class="detail-value">{{ provider.auth_scheme }}</span>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p data-i18n="admin.providers.no_providers">No providers configured</p>
+            <button class="btn btn--primary" data-action="create-provider">
+                <span data-i18n="admin.providers.create_first">Add Your First Provider</span>
+            </button>
+        </div>
+        {% endif %}
+    </section>
+
+    {% endif %} {# End skeleton check #}
+</div>
+
+<!-- Create/Edit Provider Modal -->
+<div class="modal" id="provider-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-content" role="document">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="admin.providers.modal_title">Provider Configuration</h2>
+            <button class="btn btn--icon" data-action="close-modal" aria-label="Close modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <form class="modal-body" id="provider-form">
+            <div class="form-field">
+                <label for="provider-name" class="form-label" data-i18n="admin.providers.form.name">Provider Name</label>
+                <input
+                    type="text"
+                    id="provider-name"
+                    name="name"
+                    class="form-input"
+                    required
+                    aria-required="true">
+            </div>
+            <div class="form-field">
+                <label for="api-key-env" class="form-label" data-i18n="admin.providers.form.api_key_env">API Key Environment Variable</label>
+                <input
+                    type="text"
+                    id="api-key-env"
+                    name="api_key_env_var"
+                    class="form-input"
+                    placeholder="e.g., OPENAI_API_KEY"
+                    required
+                    aria-required="true">
+            </div>
+            <div class="form-field">
+                <label for="base-url" class="form-label" data-i18n="admin.providers.form.base_url">Base URL</label>
+                <input
+                    type="url"
+                    id="base-url"
+                    name="base_url"
+                    class="form-input"
+                    placeholder="https://api.example.com">
+            </div>
+            <div class="form-field">
+                <label for="auth-scheme" class="form-label" data-i18n="admin.providers.form.auth_scheme">Authentication Scheme</label>
+                <select id="auth-scheme" name="auth_scheme" class="form-select">
+                    <option value="bearer">Bearer Token</option>
+                    <option value="api_key">API Key in Header</option>
+                    <option value="none">No Authentication</option>
+                </select>
+            </div>
+        </form>
+        <div class="modal-footer">
+            <button class="btn btn--secondary" data-action="close-modal" data-i18n="common.cancel">Cancel</button>
+            <button class="btn btn--primary" type="submit" form="provider-form" data-i18n="common.save">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Deactivate Confirmation Modal -->
+<div class="modal" id="deactivate-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-content modal-content--small" role="document">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="admin.providers.deactivate_title">Deactivate Provider</h2>
+            <button class="btn btn--icon" data-action="close-modal" aria-label="Close modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p data-i18n="admin.providers.deactivate_message">
+                Are you sure you want to deactivate this provider? This will affect all models using this provider.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn--secondary" data-action="close-modal" data-i18n="common.cancel">Cancel</button>
+            <button class="btn btn--danger" id="confirm-deactivate" data-i18n="common.deactivate">Deactivate</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

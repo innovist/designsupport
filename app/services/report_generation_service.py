@@ -2,6 +2,9 @@
 Report generation service for trend analysis
 """
 
+# @MX:TODO: [AUTO] Missing test coverage for multi-language report generation
+# Report generation methods lack tests for non-English languages and PDF export
+
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 import json
@@ -108,6 +111,71 @@ def _normalize_text(value: Any) -> Optional[str]:
     return str(value)
 
 
+def _build_target_specification(filters: Dict[str, Any]) -> str:
+    """필터 정보를 대상 명세로 변환 (프롬프트에 필수 포함)"""
+    if not filters:
+        return ""
+
+    parts = []
+
+    # 연령대 (가장 중요!)
+    age = filters.get("age", [])
+    if isinstance(age, str):
+        age = [age] if age else []
+    if age:
+        age_map = {
+            "toddler": "toddlers (0-5 years old)",
+            "child": "children (6-12 years old)",
+            "teen": "teenagers (13-19 years old)",
+            "20s": "young adults in 20s",
+            "30s": "adults in 30s",
+            "40s": "adults in 40s",
+            "50s_plus": "adults 50+"
+        }
+        age_texts = [age_map.get(a, a) for a in age if a]
+        if age_texts:
+            parts.append(f"Target Age: {', '.join(age_texts)}")
+
+    # 성별
+    gender = filters.get("gender", [])
+    if isinstance(gender, str):
+        gender = [gender] if gender else []
+    if gender:
+        gender_map = {"female": "female/girls", "male": "male/boys", "unisex": "unisex"}
+        gender_texts = [gender_map.get(g, g) for g in gender if g]
+        if gender_texts:
+            parts.append(f"Gender: {', '.join(gender_texts)}")
+
+    # 카테고리
+    category = filters.get("category", [])
+    if isinstance(category, str):
+        category = [category] if category else []
+    if category:
+        parts.append(f"Category: {', '.join(category)}")
+
+    # 계절
+    season = filters.get("season", [])
+    if isinstance(season, str):
+        season = [season] if season else []
+    if season:
+        season_map = {"spring": "Spring", "summer": "Summer", "fall": "Fall", "winter": "Winter"}
+        season_texts = [season_map.get(s, s) for s in season if s]
+        if season_texts:
+            parts.append(f"Season: {', '.join(season_texts)}")
+
+    return " | ".join(parts) if parts else ""
+
+
+def _is_children_target(filters: Dict[str, Any]) -> bool:
+    """아동 대상인지 확인"""
+    if not filters:
+        return False
+    age = filters.get("age", [])
+    if isinstance(age, str):
+        age = [age] if age else []
+    return any(a in ["toddler", "child", "teen"] for a in age)
+
+
 class ReportGenerationService:
     """Generate report payloads for trend analysis."""
 
@@ -167,11 +235,15 @@ class ReportGenerationService:
         return response.text
 
     async def _parse_payload(self, text: str, language: str) -> Dict[str, Any]:
+        if not text:
+            raise ValueError("Report payload text is empty")
         try:
             return parse_json(text)
-        except Exception as exc:
+        except ValueError as exc:
             logger.warning(f"Report payload JSON parse failed, attempting repair: {exc}")
             repaired = await self._repair_payload(text, language)
+            if not repaired:
+                raise ValueError("Report payload repair failed")
             return parse_json(repaired)
 
     async def generate_payload(
@@ -184,11 +256,30 @@ class ReportGenerationService:
     ) -> Dict[str, Any]:
         context = self.build_context(session_data, crawled, analysis, ideas, keywords)
         language = _language_label(self._resolve_language(session_data))
+
+        # 대상 명세 추출 (필수!)
+        filters = session_data.get("filters") or {}
+        target_spec = _build_target_specification(filters)
+        is_children = _is_children_target(filters)
+
+        # 대상 정보를 명시적으로 포함한 system_instruction
+        target_constraint = ""
+        if target_spec:
+            target_constraint = f"\n\nCRITICAL TARGET SPECIFICATION: {target_spec}. "
+            target_constraint += "ALL analysis, trends, and recommendations MUST be specifically for this target audience. "
+        if is_children:
+            target_constraint += (
+                "\nIMPORTANT: This is for CHILDREN'S clothing. "
+                "Do NOT include adult-oriented content, kidult trends, or mature fashion concepts. "
+                "Focus ONLY on age-appropriate children's fashion trends and designs."
+            )
+
         system_instruction = (
             "You are a fashion trend research analyst. Use only the provided context JSON. "
             "Do not invent sources, brands, or statistics. If data is missing, return empty strings "
             "or empty arrays for those fields. "
-            f"Respond in {language}. "
+            f"{target_constraint}"
+            f"\nRespond in {language}. "
             "Output strict JSON with keys: title, executive_summary, target_audience, research_scope, "
             "market_analysis, trend_analysis, competitor_analysis, design_proposals, recommendations, conclusion."
         )

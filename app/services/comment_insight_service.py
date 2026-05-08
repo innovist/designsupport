@@ -123,7 +123,7 @@ class CommentInsightService:
                 model=get_glm_model(),
                 system_prompt=system_instruction
             )
-        if not response or not response.text:
+        if not response or not hasattr(response, 'text') or not response.text:
             raise ValueError("Comment insight response is empty")
 
         data = parse_json(response.text)

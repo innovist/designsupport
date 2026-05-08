@@ -7,6 +7,8 @@ const {
     getStatusText
 } = window.dashboardUtils;
 
+// @MX:WARN: [AUTO] Async API call without retry mechanism or offline handling
+// @MX:REASON: If API fails silently, project list remains empty without user notification
 async function loadProjects() {
     try {
         const res = await fetch('/api/v1/projects/');
@@ -35,7 +37,7 @@ function renderProjects() {
 
 function onProjectSelect(value) {
     if (value) {
-        selectProject(parseInt(value, 10));
+        selectProject(value);
         document.getElementById('edit-project-btn').style.display = 'block';
         document.getElementById('delete-project-btn').style.display = 'block';
     } else {
@@ -123,6 +125,8 @@ async function createProject() {
     }
 }
 
+// @MX:WARN: [AUTO] Async PATCH operation without optimistic update or rollback on failure
+// @MX:REASON: If update succeeds but loadProjects() fails, UI shows stale data without indication
 async function updateProject() {
     const projectId = document.getElementById('edit-project-id').value;
     const title = document.getElementById('edit-project-title').value.trim();

@@ -3,6 +3,9 @@ Settings Storage Module - Persists user settings to file
 API keys and config are saved to a JSON file in storage directory
 """
 
+# @MX:NOTE: [AUTO] Settings persistence layer - maintains 20+ configuration accessor methods
+# Centralizes API keys, model configurations, and user preferences across the application
+
 import json
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -31,6 +34,11 @@ AVAILABLE_MODELS = {
     "image": {
         "seedream": ["seedream-4.5"],
         "nano_banana": ["nano-banana-base", "nano-banana-pro"]
+    },
+    "research": {
+        "gemini_search": ["gemini-2.5-flash"],
+        "perplexity": ["sonar", "sonar-pro"],
+        "glm_research": ["glm-4.7"]
     }
 }
 
@@ -54,7 +62,8 @@ DEFAULT_SETTINGS = {
         "gemini": None,
         "glm": None,
         "seedream": None,
-        "nano_banana": None
+        "nano_banana": None,
+        "perplexity": None
     },
     "models": {
         "gemini_text": "gemini-2.5-flash",
@@ -67,6 +76,16 @@ DEFAULT_SETTINGS = {
         "crawler_workers": 5,
         "crawler_timeout": 30,
         "searxng_api_url": "http://localhost:8913"
+    },
+    "ai_research": {
+        "enabled": False,
+        "models": {
+            "gemini_search": False,
+            "perplexity": False,
+            "glm_research": False
+        },
+        "perplexity_model": "sonar",
+        "research_depth": "standard"
     }
 }
 

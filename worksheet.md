@@ -1,5 +1,32 @@
 # worksheet.md
 
+154. 작업 완료(2026-05-07 18:08): 요청-사용자 스케치 업로드 및 구체화 지원 반영.
+작업-User_Needs_v01.md에 UserSketchAsset/SketchAnalysis, 스케치 기반 챗봇 참고·구체화, UX Sketch Input Board, ERD/시퀀스/성공기준 반영. 결과-스케치가 외부 레퍼런스와 분리된 창작 입력 자산으로 정리됨.
+153. 작업 시작(2026-05-07 18:05): 요구사항-사용자가 자신의 스케치를 업로드해 챗봇 참고 및 구체화에 활용.
+계획-편집툴이 아닌 창작 지원 흐름으로 파이프라인, UX/UI, 엔티티, 시퀀스에 반영한다.
+
+152. 작업 완료(2026-05-07 18:00): 요청-User_Needs_v01 상세 기획 문서 작성.
+작업-범용 디자인 창작 지원도구 방향, UX/UI, 파이프라인 검증, 도메인팩, 트렌드 지식, 모델 카탈로그, 클린 아키텍처, ERD/시퀀스, 레퍼런스 검토를 상세 작성. 결과-루트 문서 완성.
+151. 작업 시작(2026-05-07 17:26): 요구사항-패션 중심 시스템을 범용 디자인 창작 지원 SaaS로 재기획.
+계획-기존 요구/레퍼런스 확인 후 User_Needs_v01.md에 방향성, 워크플로우, 아키텍처, UX/UI, ERD, 시퀀스를 정리한다.
+
+150. 작업 완료(2026-05-07 17:12): 요청-패션 중심 시스템을 범용 디자인 지원도구로 확장하는 기획 논의.
+작업-현 구조와 벤치마크(Canva/Figma/Firefly/Vizcom/Krea)를 대조해 목적입력→챗봇리서치→컨셉결정→레퍼런스→추상화→스케치→구체화→스펙 문서 흐름으로 정리. 결과-단순하고 가능성 높은 제품 방향 제시.
+149. 작업 시작(2026-05-07 17:12): 요구사항-산업/패션/시각/광고 디자인까지 확장하는 새 기획 방향 논의.
+계획-현재 패션 파이프라인 재사용 가능성을 기준으로 벤치마크와 차별화, 최소 MVP 범위를 간단히 제시한다.
+
+148. 작업 완료(2026-05-07 16:13): 요청-프로그램 기능 업데이트/방향성 논의를 위한 현황 파악.
+작업-CLAUDE/worksheet/최신 plan·todo 확인 후 FastAPI 라우트, 세션 파이프라인, 크롤러, 분석/리포트/이미지/블루프린트, 대시보드·설정·라이브러리 UX 흐름 검토. 결과-구조 요약 및 개선 논의용 관찰점 확보.
+147. 작업 시작(2026-05-07 16:13): 요청-프로그램의 현재 성격과 파이프라인/아키텍처/UX 설명.
+계획-필수 지침과 최근 기록 확인 후 실제 코드 흐름 기준으로 백엔드·프론트엔드 전체 구조를 요약한다.
+
+146. 작업 완료(2026-03-10 23:54): 요청-판매용 소개서/제안서와 PPT 신규 작성 완료.
+작업-marketing_docs에 코드기반 판매 문안 `fashion_ai_sales_proposal_20260310.md` 작성, 스크린샷 7장을 반영하는 `create_marketing_ppt.py`와 `fashion_ai_sales_proposal_20260310.pptx` 생성.
+결과-py_compile 통과, PPT 10슬라이드/미디어 7개 포함 확인, SaaS·온프레미스 제안 포인트와 실제 구현 강점을 반영한 영업 산출물 확보.
+
+145. 작업 시작(2026-03-10 23:45): 요청-코드베이스 검토 기반 판매용 소개서·제안서와 PPT 신규 작성.
+요구사항-marketing_docs에 md 먼저 작성 후 스크린샷 포함 PPT 생성. 계획-코드/문서/화면 근거 재정리 후 판매 포인트 중심 산출물 작성.
+
 ## ⚠️ AI 모델 설정 - 절대 수정 금지! ⚠️
 ```
 [사용 가능한 모델 - 하드코딩 금지, 반드시 settings_storage.py의 함수 사용]
@@ -17,6 +44,83 @@
 ```
 
 ---
+144. 작업 완료(2025-12-25 16:25): 요청-소개서 보완(사용 방법/기술 상세/아키텍처 강화).
+작업-introduce.md에 실행/설정/세션 운영 가이드 추가, 아키텍처 레이어/네트워크 구성/기술 상세 섹션 확장.
+결과-사용자 관점 운영 절차와 기술 설명이 보강된 소개서 완성.
+143. 작업 완료(2025-12-25 16:15): 요청-v3 PPTX 디자인 개선 반영.
+작업-타이틀/본문/콜아웃/테이블 타이포·컬러 규칙 적용, 헤더/행 음영 및 강조색 통일로 제안서 톤 강화.
+결과-Fashion_AI_System_Proposal_v3.pptx 시각적 계층과 일관성 개선 완료.
+142. 작업 시작(2025-12-25 15:45): 요청-v3 PPTX 디자인 개선(프로그램 스타일 반영, 제안서 품질 강화).
+요구사항-슬라이드 스타일/타이포/색상 정렬 및 시각적 일관성 강화. 계획-v2 스타일 분석 후 v3 텍스트/레이아웃 스타일링.
+141. 작업 완료(2025-12-25 16:05): 요청-PPTX 신규 제작(v2 디자인 반영) 완료.
+작업-v2 슬라이드 구조/테이블 텍스트 치환, 과장·허위 수치 제거 후 Fashion_AI_System_Proposal_v3.pptx 생성.
+결과-제안서 내용과 정합되는 새 PPTX 산출물 확보.
+140. 작업 시작(2025-12-25 15:50): 요청-PPTX 신규 제작(v2 디자인 반영)으로 제안서 슬라이드 텍스트 재구성.
+요구사항-실제 구현 기반 내용으로 슬라이드 문구 정합화. 계획-v2 슬라이드 구조 분석 후 문구 치환 및 v3 생성.
+139. 작업 완료(2025-12-25 15:45): 요청-제안서 톤/분량 리라이팅 및 PPT 디자인 반영한 proposal.md 재작성.
+작업-proposal.md와 PPT 슬라이드 텍스트/구성 확인 후 실제 구현 기반으로 구조 재정렬, 슬라이드 톤 반영한 제안서 서술로 리라이팅.
+결과-허위 요소 제거 및 사실 기반 제안서 완성(아키텍처/파이프라인/기능/로드맵/효과 포함).
+138. 작업 시작(2025-12-25 15:30): 요청-제안서 톤/분량 리라이팅 및 PPT 디자인 반영한 proposal.md 재작성.
+요구사항-기존 proposal.md 및 Fashion_AI_System_Proposal_v2.pptx 근거로 상세 제안서 구성. 계획-문서/슬라이드 분석 후 섹션별 리라이팅.
+137. 작업 완료(2025-12-25 02:40): 요청-프로그램 소개서 상세 작성(아키텍처/파이프라인/워크플로우/유스케이스, 기술·비즈니스 관점).
+작업-코드/템플릿/설정/파이프라인 근거 확인 후 introduce.md에 전체 구조·기능·모델·크롤러·API·운영 유의사항 상세 정리.
+결과-소개 중심의 기초 자료 문서 작성 완료, 향후 제안서/설명서 기반으로 활용 가능.
+136. 작업 시작(2025-12-25 02:30): 소개서 작성 요청에 따라 시스템 전반(아키텍처/파이프라인/워크플로우/유스케이스) 정확한 정보 확인 및 introduce.md 작성 계획 수립.
+요구사항-소개 중심의 상세 문서, 기술·비즈니스 관점 모두 포함. 계획-코드/문서 근거 확인 후 소개서 구조 설계 및 작성.
+135. 작업 완료(2025-12-25 01:45): 요구사항-연령 필터가 API에 전달되지 않는 근본 원인 해결.
+원인분석-sessions.js createSession() 함수에서 filter-age 체크박스 값 수집이 누락되어 있었음. gender/season/category는 수집하지만 age는 수집하지 않아 filters 객체에 age 키 자체가 없었음. 프론트엔드→백엔드 데이터 전달 문제.
+작업-sessions.js:174-177에서 `const ages = getSelectedCheckboxValues('filter-age');` 추가. 189줄 API 요청 body의 filters 객체에 `age: ages.length > 0 ? ages : null` 추가.
+결과-사용자가 유아/아동/청소년 등 연령대 체크박스 선택 시 filters.age로 정확하게 백엔드에 전달됨. 이제 프롬프트에 Target age 정보가 정확히 포함됨.
+134. 작업 완료(2025-12-25 01:15): 요구사항-아동복 선택 시 성인복 프롬프트 출력 문제 해결. 필터 정보(연령/성별/카테고리/계절) 필수 포함.
+작업-1) pipeline_utils.py: is_children_clothing() 함수에 age 필터 확인 추가 (toddler/child/teen). _build_filter_context_for_prompt() 함수 신규 생성하여 프롬프트에 대상 정보 명시적 삽입. build_master_prompt()와 build_model_prompt()에 [TARGET SPECIFICATION: ...] 형태로 필터 정보 필수 포함. 아동복일 경우 "IMPORTANT: This is CHILDREN'S clothing" 강조 문구 추가.
+2) report_generation_service.py: _build_target_specification()과 _is_children_target() 헬퍼 함수 추가. generate_payload()의 system_instruction에 CRITICAL TARGET SPECIFICATION 및 아동복 제약 조건 명시.
+3) analysis_service.py: _build_target_constraint()와 _is_children_target() 메서드 추가. _preprocess_data_flexible()에 target_specification과 CRITICAL_NOTE 추가. _perform_final_synthesis()에 filters 파라미터 추가하여 대상 제약 프롬프트에 삽입. 아동복일 경우 "kidult", "mature fashion" 등 성인 콘텐츠 금지 명시.
+결과-아동 연령 선택 시 모든 단계(분석→아이디어→보고서→이미지)에서 아동복 대상임을 명시적으로 프롬프트에 포함. 성인 대상 콘텐츠(키덜트 등) 생성 방지.
+133. 작업 완료(2025-12-25 00:30): 요구사항-워크시트 기반 구현 검토 및 i18n 다국어 키 보완.
+작업-plan_27/todo_27 기준 AI 조사 파이프라인(ai_research_service.py, pipeline_orchestrator.py, analysis_service.py, research 클라이언트 3개) 구현 상태 검토 완료. i18n 다국어 키 누락 발견: en.json, zh-CN.json, zh-TW.json에 settingsPage.aiResearch 섹션 추가, messages.aiResearchSaved 키 추가.
+결과-AI 조사 파이프라인 전체 구현 확인. 4개 언어(ko/en/zh-CN/zh-TW) i18n 키 정합화 완료. todo_27.md 다국어 지원 항목 체크 완료.
+132. 작업 완료(2025-12-24 23:50): 요구사항-키워드/블루프린트/크롤링 설정 수정.
+작업-1) 키워드 추출: 최대 5개로 제한, 3단어 이내로 수정. pipeline_orchestrator.py _extract_keywords: 프롬프트에 "정확히 5개 생성", "최대 3단어" 명시. 추출 후 5개 초과 시 상위 5개만 사용, 3단어 초과 시 상위 3단어만 자르는 로직 추가. 2) 블루프린트 기본 생성: pipeline_generation_steps.py generate_blueprints에서 조건을 "generate_blueprints=False→스킵"에서 "skip_blueprints=True→스킵"으로 변경하여 기본적으로 생성되도록 수정. _build_filter_context 함수 추가로 필터(연령대/성별/카테고리/계절) 정보를 design_description에 포함. 3) 크롤링 설정 확인: build_crawl_plan에서 max_items_per_source, youtube_keyword_count, youtube_channel_max, start_date, end_date가 올바르게 파싱되어 crawl_all에 전달됨 확인.
+결과-키워드가 5개로 제한되고 검색 효율 향상. 블루프린트가 기본적으로 생성되며 필터 정보(특히 연령대)가 프롬프트에 반영되어 유아복 등 정확한 디자인 생성 가능. 크롤링 설정(기간, 개수)이 정확히 적용됨.
+131. 작업 완료(2025-12-24 23:40): 요구사항-JSON parse failed 오류 수정(보정+재시도).
+작업-pipeline_utils.py parse_json 함수 강화: 빈/None 입력 체크, 마크다운 코드 블록 제거(```json```), 중괄호 추출 개선, 실패 시 상세 로그 출력. analysis_service.py: _perform_final_synthesis에 ValueError 캐치 및 폴백 사용 추가, _fallback_synthesis 메서드 추가(GLM 실패 시 기본 종합 반환), _call_glm_api에 None/빈 응답 체크 추가. pipeline_orchestrator.py: _glm_keyword_fallback에 응답 유효성 체크 추가. comment_insight_service.py: hasattr(response, 'text') 체크 추가. report_generation_service.py: _parse_payload에 빈 텍스트 체크 추가.
+결과-AI 모델이 유효하지 않은 JSON을 반환하거나 응답이 없을 때 시스템이 중단되지 않고 폴백을 사용하여 계속 진행. 파싱 실패 시 원인을 로그에 출력하여 디버깅 가능.
+129. 작업 완료(2025-12-24 23:20): 요구사항-계절 필터에서 복합 옵션(ss/fw) 제거.
+작업-session-modal.html에서 계절 체크박스 6개에서 4개로 축소(ss, fw 제거). i18n(ko/en/zh-CN/zh-TW.json)에서 season.options의 ss/fw 항목 삭제. pipeline_crawl_utils.py의 FILTER_VALUE_MAP season에서 ss/fw 삭제.
+결과-이미 개별 계절 선택이 가능하므로 "봄/여름", "가을/겨울" 복합 옵션은 중복 제거. 사용자는 봄+여름 동시 체크로 같은 효과 달성 가능.
+128. 작업 완료(2025-12-24 23:15): 요구사항-session-modal.html 필터 레이아웃 수정(계절 누락 및 정렬 문제).
+작업-session-modal.html 필터 설정 영역 레이아웃을 3열(70px 80px 1fr)에서 4열(80px 120px 90px 1fr)로 변경. 성별(80px, 3항목), 연령대(120px, 7항목: toddler/child/teen/20s/30s/40s/50s_plus), 계절(90px, 6항목: spring/summer/fall/winter/ss/fw) 순으로 배치. gap을 10px→12px로 확대, align-items: start 추가로 상단 정렬.
+결과-4개 필터(성별/연령대/계절/카테고리)가 올바른 순서로 정렬, 계절 필터가 누락된 문제 해결, 연령대 7개 항목을 위한 충분한 너비(120px) 확보로 텍스트가 깨지지 않음.
+127. 작업 완료(2025-12-24 18:30): 요구사항-카테고리 논리적 재구성 및 연령대 필터 확장.
+작업-카테고리 재구성: 액세서리 섹션(10개 항목) 전체 삭제, 의류에서 한복/유니폼/임부복/아동복 삭제(아동복은 연령 속성이므로 카테고리가 아님). 최종 19개 카테고리 유지(스타일 11 + 의류 8). 연령대 필터: 10s→toddler/child/teen/20s/30s/40s/50s_plus로 확장(유아0-5세, 아동6-12세, 청소년13-19세 포함). session-modal.html: 액세서리 섹션(lines 67-78) 삭제, 의류에서 4개 항목 삭제. new_session.html: 연령대 옵션 7개로 변경, 액세서리 optgroup 삭제. i18n(4개 언어): age.options에 toddler/child/teen 추가, category.options에서 14개 항목 삭제. pipeline_crawl_utils.py: FILTER_VALUE_MAP에 age 추가, category에서 14개 항목 삭제, format_filters()에 age 처리 추가.
+결과-카테고리가 의류 중심 19개로 논리적으로 정리, 유아/아동/청소년 연령대가 필터로 분리되어 아동복 카테고리 중복 해결, 시스템이 패션 트렌드 분석(의류 위주)에 더 적합해짐.
+126. 작업 완료(2025-12-24 17:45): 요구사항-카테고리 UI 미세 조정(스크린샷 피드백).
+작업-session-modal.html: 모달 폭 800→950px로 확대, 계절 체크박스를 2열에서 1열로 변경(세로 배치), 카테고리 gap을 6px 8px→2px 4px로 축소.
+결과-계절 텍스트 두 줄 현상 해결, 카테고리 항목 간격이 더紧凑하게, 모달 전체 여유공간 확보.
+125. 작업 완료(2025-12-24 17:30): 요구사항-카테고리 UI/UX 개선(너무 많아 찾기 어려움).
+작업-session-modal.html: 레이아웃을 80px/100px/1fr로 변경해 성별/계절 공간 축소, 카테고리 영역을 120px→200px로 확대, 4열 그리드로 배치, 섹션별 헤더(스타일/의류/액세서리) 추가로 구분 강화, 배경색/패딩 추가. new_session.html: 계절을 ss/fw 2개에서 spring/summer/fall/winter 4개 단일계절로 변경, 카테고리 select size를 5→15로 확대, min-height: 180px 추가, optgroup명을 "의류 종류"→"의류"로 간소화.
+결과-카테고리 영역이 더 넓어지고 시각적 섹션 구분으로 항목 찾기가 용이해짐, 성별/계절 선택이 간결해짐, 전체적인 균형 개선.
+124. 작업 완료(2025-12-24 17:00): 요구사항-의류 카테고리 확장.
+작업-세션생성(session-modal.html, new_session.html)과 i18n(ko/en/zh-CN/zh-TW.json)에 카테고리 추가. 스타일(11): street/minimal/vintage/romantic/ethnic/avantgarde/genderless. 의류종류(7): underwear/sleepwear/swimwear/activewear/hanbok/uniform/kids/maternity. 액세서리(9): bags/shoes/headwear/jewelry/scarf/belt/gloves/socks/eyewear. 백엔드 FILTER_VALUE_MAP(pipeline_crawl_utils.py)에 한글명 매핑 추가. new_session.html은 다중선택가능(multiple, size=5, optgroup)으로 구성.
+결과-총32개 카테고리(기존 10 + 신규 22) 추가됨. 다중 선택 지원으로 복합 카테고리 분석 가능.
+123. 작업 완료(2025-12-24 16:00): 요구사항-다중 버그 수정 (블루프린트 기본값/AI조사로깅/시간대/아동복프롬프트/진행률/SearXNG).
+작업-1블루프린트기본값: session_schemas.py에서 generate_blueprints: True로 변경. 2AI조사로깅: ai_research_service.py에 모델별 시작/성공/실패 로그 강화([AI_RESEARCH]태그). 3시간대: config.py에 get_local_now()함수 추가, session_store/pipeline_orchestrator/prompt_service/pipeline_utils/generation_steps의 utcnow()를 get_local_now()로 변경. 4아동복프롬프트: pipeline_utils.py에 is_children_clothing()함수 추가, build_master_prompt/build_model_prompt에 아동복 고려 로직 추가, ImageGenerationRequest에 is_children_clothing 플래그 추가, _optimize_prompt_for_fashion에 아동복 프롬프트 지시사항 추가. 5진행률16/143: compute_crawl_progress 로직 확인, 수집된 데이터가 적어도 키워드 전체 처리되면 100% 완료됨을 확인. 6SearXNG msgspec: msgspec 모듈 누락으로 SearXNG 서버 실행 실패, pip/conda로 설치 필요.
+결과-블루프린트 기본 생성 활성화, AI 조사 실패 시 어떤 모델 실패인지 로그 확인 가능, 시스템 로컬 시간대로 타임스탬프 표시, 아동복 카테고리 시 child model(6-12세) 프롬프트 자동 추가, 텍스트/로고/잡지표지 방지 네거티브 프롬프트 추가.
+원인-ai_research_service._build_context_query에서 필터값(age_group, category 등)이 리스트일 경우 처리하지 않음. 문자열만 되는 parts.append() 사용으로 오류 발생.
+수정-_to_str() 헬퍼 함수 추가, 리스트인 경우 \" \".join()으로 문자열 변환 처리.
+결과-필터가 리스트여도 쿼리 정상 생성: \"2025 SS 20대 30대 여성 캐주얼 스트릿 패션 트렌드 전망 분석\"
+121. 작업 완료(2025-12-24 13:30): 요구사항-Perplexity API 키 저장 표시 문제 수정.
+작업-원인분석: saveAIResearchSettings()가 API 키를 저장하지 않음, keyLabels에 perplexity 누락, 다국어 키 누락. 수정: saveAIResearchSettings()에 perplexity API 키 저장 로직 추가, loadSettings() 호출로 상태갱신, keyLabels에 perplexity 추가, ko/en/zh-CN/zh-TW.json에 다국어 키 추가.
+결과-AI 조사 설정 카드에서 Perplexity API 키 입력 후 저장 시 정상 저장 및 상태 표시(✅).
+120. 작업 완료(2025-12-24 13:00): 요구사항-AI 직접 조사 파이프라인 구현 검증 및 버그 수정.
+작업-정적검증 3회(데이터흐름/API통합/엣지케이스), 실제기능테스트 수행. 수정사항: saveAIResearchSettings 전역노출추가, ko.json 다국어키추가, GLM클라이언트 OpenAI호환방식으로 수정.
+결과-모듈임포트성공, 파이프라인통합확인, 엣지케이스처리확인, 전체시스템검증완료. AI조사비활성화시기존동작유지확인.
+119. 작업 완료(2025-12-24 11:30): 요구사항-AI 직접 조사 파이프라인 통합 백엔드 구현.
+작업-Phase1~5 완료: settings_storage.py(Perplexity키/AI조사설정추가), API엔드포인트(ai-research GET/POST), 연구클라이언트(base/gemini/perplexity/glm), AI조사서비스(conduct_research/_merge_results), 파이프라인(3.5단계AI조사/_analyze_trends ai_research파라미터), 프론트엔드(settings.html AI조사설정카드/JS함수).
+결과-8단계 파이프라인 구조 완성, AI조사기능 옵션설정가능, 정적검증 통과.
+118. 작업 완료(2025-12-24 10:30): 요구사항-AI 직접 조사 파이프라인 통합 가능성 조사 및 설계.
+작업-Gemini/Perplexity/GLM 검색 API 조사, 프로젝트 구조 분석, plan_27.md(상세 설계) 및 todo_27.md(체크리스트) 작성.
+결과-3개 AI 서비스 모두 웹 검색 API 지원 확인, 8단계 파이프라인(기존7+AI조사) 설계 완료, 5 Phase 구현 계획 수립.
 117. 작업 완료(2025-12-23 17:20): 원인-대시보드 탭 이미지 확대 미지원.
 작업-대시보드에 라이브러리와 동일한 이미지 모달 추가, 클릭 시 확대/다운로드/정보 표시 적용.
 결과-의상/착장/블루프린트 탭에서 이미지 클릭 확대 뷰 가능.

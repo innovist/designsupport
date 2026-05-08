@@ -2,6 +2,9 @@
 Blueprint and pattern generation service for fashion designs
 """
 
+# @MX:NOTE: [AUTO] Blueprint generation service - pattern creation and export
+# Maintains 22 methods for garment pattern generation, layout, and PDF export
+
 import io
 import json
 import math

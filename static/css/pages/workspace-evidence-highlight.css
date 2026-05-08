@@ -1,0 +1,112 @@
+/**
+ * SPEC-05 Workspace: Evidence Board Highlight Animation
+ * When clicking evidence_refs from Chat Board or Spec Builder
+ */
+
+/* Highlight animation for evidence cards */
+.evidence-card.highlighted {
+  animation: evidenceHighlight 2s ease-out;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+}
+
+@keyframes evidenceHighlight {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);
+  }
+
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(var(--color-primary-rgb), 0.3);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+  }
+}
+
+/* Evidence ref badges in Chat Board */
+.evidence-refs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.evidence-ref {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 12px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.evidence-ref:hover,
+.evidence-ref:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.evidence-ref:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Hypothesis badge */
+.hypothesis-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: var(--color-warning);
+  color: white;
+  border-radius: var(--spacing-sm);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  margin-top: var(--spacing-sm);
+}
+
+.hypothesis-badge::before {
+  content: '💡';
+  margin-right: 4px;
+}
+
+/* Accessibility */
+.evidence-ref[aria-label],
+.hypothesis-badge[aria-label] {
+  position: relative;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .evidence-card.highlighted {
+    animation: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+  }
+
+  .evidence-ref:hover,
+  .evidence-ref:focus {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .evidence-ref,
+  .hypothesis-badge {
+    border: 1px solid currentColor;
+  }
+
+  .evidence-card.highlighted {
+    border-width: 3px;
+  }
+}

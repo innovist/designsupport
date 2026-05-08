@@ -1,59 +1,275 @@
-# Python
+# ============================================
+# DesignSupport Project .gitignore
+# Python / Django / FastAPI / Celery
+# Updated: 2026-05-08
+# ============================================
+
+# ===========================================
+# Python Cache & Bytecode
+# ===========================================
 __pycache__/
-*/__pycache__/
-**/__pycache__/
+.pytest_cache/
 *.pyc
 *.pyo
 *.pyd
-.Python
-.pytest_cache/
 .mypy_cache/
-*.coverage
-coverage.xml
-htmlcov/
-*.egg-info/
-.eggs/
+.ruff_cache/
 
-# Virtual Environments (모든 위치)
-.env
-.env.*
-!.env.template
-.venv/
+# ===========================================
+# Virtual Environments
+# ===========================================
 venv/
-*/venv/
-**/venv/
-backend/venv/
-ENV/
+.venv/
+env/
+.env/
+.uv_cache/
+.uv-cache/
 
-# Node/Frontend
-node_modules/
-dist/
+# ===========================================
+# Build Artifacts & Distribution
+# ===========================================
 build/
+dist/
+*.egg-info/
+*.egg
 
-# Editors/OS
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# ===========================================
+# Test Output
+# ===========================================
+.coverage
+coverage.json
+htmlcov/
+pytest.xml
+cover.out
+cover.html
 
-# Logs
+# ===========================================
+# Database Files
+# ===========================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-*
+*.db.*
+*.sqlite-*
+*.sqlite.*
+*.sqlite3-*
+*.sqlite3.*
+*.rdb
+*.dbm
+
+# ===========================================
+# Storage Directory (runtime-generated only)
+# Tracked: storage/config/ — project defaults
+# Ignored: user-specific overrides and generated data
+# ===========================================
+storage/results/
+storage/temp/
+storage/searxng/
+storage/searxng-src/
+storage/config/user_settings.json
+storage/config/user_settings.*.json
+
+# ===========================================
+# User Uploads (runtime files)
+# ===========================================
+uploads/
+
+# ===========================================
+# Logs & Temporary Files
+# ===========================================
 *.log
 logs/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.zip
+*.parquet
 
-# Docker volumes/artifacts
-docker/postgres/data/
-docker/qdrant/data/
-docker/redis/data/
+# ===========================================
+# Backups
+# ===========================================
+.moai-backups/
+*.backup/
+*-backup/
+*_backup_*/
+.reset_backups/
+legacy/
 
-# Test artifacts
-.tox/
-.nox/
+# ===========================================
+# IDE & Editors
+# ===========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sw?
+*~
+.cursor/
+*.sublime-project
+*.sublime-workspace
+*.njsproj
+*.sln
+*.suo
+.#*
 
-# Build artifacts
-*.so
-*.dylib
+# ===========================================
+# OS Files
+# ===========================================
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
 
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+ehthumbs.db
+
+# Linux
+.directory
+
+# ===========================================
+# Binary / Office / Media Files
+# (not suitable for git version control)
+# ===========================================
+# Office documents
+*.pptx
+*.xls
+*.xlsx
+*.docx
+*.pdf
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+*.tiff
+*.tif
+*.ico
+*.svg
+*.heic
+*.heif
+
+# Audio / Video
+*.mp4
+*.mp3
+*.wav
+*.mov
+*.avi
+*.mkv
+*.webm
+*.ogg
+*.flac
+*.m4a
+*.m4v
+
+# Marketing / reference media directories
+marketing_docs/
+
+# ===========================================
+# Data Files
+# ===========================================
+*.csv
+
+# ===========================================
+# Secrets and Credentials (CRITICAL)
+# ===========================================
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Certificate files
+*.pem
+*.p12
+*.pfx
+*.jks
+
+# Private keys (specific patterns to avoid false positives)
+*-key.*
+*_key.*
+*.key.*
+*-secret-key.*
+*-api-key.*
+api-key-*
+secret-key-*
+private-key*
+*-secret.*
+*_secret.*
+*.secret.*
+secret-*.*
+
+# Credential patterns
+*_secret=*
+*_token=*
+
+# Cloud provider credentials
+.aws/config
+.aws/credentials
+
+# ===========================================
+# Claude Code Configuration (local-only)
+# NOTE: .claude/ directory itself is NOT excluded —
+#       only local/private files within it are.
+# ===========================================
+.claude/settings.local.json
+.claude/settings.local.*.json
+.claude/.env.local*
+.claude/local/
+.claude/plans/
+.claude/agent-memory/
+.claude/worktrees/
+
+# Skill-specific credentials
+.claude/skills/*/.env*
+.claude/skills/*/secrets/
+.claude/skills/*/*/*secret*
+.claude/skills/*/*/*key*
+.claude/skills/*/*/*token*
+# Re-include legitimate skill module files containing "token" in their name
+!.claude/skills/*/modules/*token*.md
+
+# MCP server config (local paths — not portable)
+.mcp.json
+
+# ===========================================
+# MoAI Local Files (not for sync)
+# NOTE: .moai/ directory itself is NOT excluded —
+#       only local/runtime files within it are.
+# Tracked: config/, specs/, design/*.md, project/, learning/, manifest.json
+# Ignored: runtime state, logs, binary assets, local-only files
+# ===========================================
+.moai/status_line.sh
+.moai/memory/
+.moai/worktrees/
+.moai/logs/
+.moai/design/screenshots/
+.moai/design/wireframes/
+
+# Evolution telemetry (local-only usage data)
+.moai/evolution/telemetry/*.jsonl
+!.moai/evolution/telemetry/.gitkeep
+
+# ===========================================
+# Reference Projects (separate codebases, not part of this repo)
+# Contains large binary models, node_modules, and media files
+# ===========================================
 reference/
-storage/
+
+# ===========================================
+# Local-only Shell Scripts
+# ===========================================
+start.sh
+stop.sh
+infra.sh

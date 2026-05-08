@@ -1,0 +1,317 @@
+<!--
+  SPEC-05 Workspace Template Integration Guide
+  Add these sections to your existing workspace.html template
+-->
+
+<!-- 1. Add CSS imports in <head> section -->
+<link rel="stylesheet" href="/static/css/pages/workspace-spec-builder.css">
+<link rel="stylesheet" href="/static/css/pages/workspace-empty-states.css">
+<link rel="stylesheet" href="/static/css/pages/workspace-evidence-highlight.css">
+
+<!-- 2. Add aria-live region for screen reader announcements (place before main content) -->
+<div id="workspace-live-region" aria-live="polite" class="sr-only"></div>
+
+<!-- 3. Add Spec Builder Board HTML (add to boards container, after other boards) -->
+<div id="board-spec" class="board" data-board="spec" style="display: none;">
+  <div class="spec-builder">
+    <div id="spec-toc"></div>
+    <div id="spec-content"></div>
+  </div>
+</div>
+
+<!-- 4. Update existing evidence cards to support highlighting -->
+<!-- Find: <div class="evidence-card"> -->
+<!-- Change to: <div class="evidence-card" data-evidence-id="{id}"> -->
+<!-- Example: -->
+<div class="evidence-card" data-evidence-id="insight-123" tabindex="0">
+  <!-- existing content -->
+</div>
+
+<!-- 5. Update generation cards to support AI attribution -->
+<!-- Find generation card container -->
+<!-- Ensure it has: data-generation-id, data-kind attributes -->
+<!-- Example: -->
+<div class="generation-card" data-generation-id="gen-456" data-kind="refinement">
+  <!-- existing content -->
+</div>
+
+<!-- 6. JavaScript Integration -->
+<!-- Add to workspace initialization script -->
+
+<!-- Step 1: Import SpecBuilderBoard -->
+<script type="module">
+  import { SpecBuilderBoard } from '/static/js/pages/workspace/boards/spec-builder.js';
+
+  // Step 2: Initialize Spec Builder board (in workspace init)
+  class Workspace {
+    constructor() {
+      // ... existing code ...
+      this.boards = {
+        chat: null,
+        evidence: null,
+        sketch: null,
+        reference: null,
+        abstraction: null,
+        generation: null,
+        decision: null,
+        spec: null  // NEW: Add spec board
+      };
+    }
+
+    async initialize() {
+      // ... existing board initialization ...
+
+      // NEW: Initialize Spec Builder board
+      this.boards.spec = new SpecBuilderBoard(this);
+      await this.boards.spec.initialize();
+
+      // ... rest of initialization ...
+    }
+
+    // Step 3: Update board switching logic
+    switchBoard(boardName) {
+      // Hide all boards
+      document.querySelectorAll('.board').forEach(board => {
+        board.style.display = 'none';
+      });
+
+      // Show selected board
+      const targetBoard = document.querySelector(`[data-board="${boardName}"]`);
+      if (targetBoard) {
+        targetBoard.style.display = 'block';
+      }
+
+      // Load board content
+      if (this.boards[boardName]) {
+        this.boards[boardName].load();
+      }
+    }
+
+    // Step 4: Add auto mode state display updates
+    setupAutoModeStateListener() {
+      this.state.subscribe('autoModeState', (state) => {
+        // Update step bar
+        this.updateStepBarState(state);
+
+        // Update Decision Panel
+        this.updateDecisionPanelState(state);
+
+        // Show notification
+        this.showAutoModeNotification(state);
+      });
+    }
+
+    updateStepBarState(state) {
+      const stepBar = document.querySelector('.step-bar');
+      if (stepBar) {
+        stepBar.setAttribute('data-auto-state', state);
+      }
+    }
+
+    updateDecisionPanelState(state) {
+      const statusElement = document.querySelector('#decision-panel .status');
+      if (statusElement) {
+        statusElement.textContent = window.t(`workspace.autoMode.states.${state}`);
+      }
+    }
+
+    showAutoModeNotification(state) {
+      const message = window.t(`workspace.autoMode.states.${state}`);
+      this.notifications.show(message, 'info');
+    }
+  }
+
+  // Step 5: Initialize workspace
+  const workspace = new Workspace();
+  await workspace.initialize();
+  workspace.setupAutoModeStateListener();
+</script>
+
+<!-- 7. Enhanced Empty State Usage -->
+<script type="module">
+  // Example: Show empty state when evidence is insufficient
+  async function loadEvidence() {
+    try {
+      const evidence = await fetch('/api/evidence').then(r => r.json());
+
+      if (evidence.length === 0) {
+        // Show empty state
+        workspace.emptyState.showEmptyState('evidence', 'noTrendData');
+        return;
+      }
+
+      // Render evidence normally
+      renderEvidence(evidence);
+    } catch (error) {
+      // Show error empty state
+      workspace.emptyState.showEmptyState('evidence', 'networkError');
+    }
+  }
+
+  // Example: Handle license risk
+  function renderReferenceCard(reference) {
+    const card = createReferenceCard(reference);
+
+    if (reference.license_risk === 'high') {
+      // Add license risk badge
+      const badge = document.createElement('span');
+      badge.className = 'license-risk-badge';
+      badge.textContent = '⚠️ High Risk';
+      card.appendChild(badge);
+
+      // Disable apply button
+      const applyButton = card.querySelector('[data-action="apply-style"]');
+      if (applyButton) {
+        applyButton.disabled = true;
+        applyButton.title = 'Direct application limited due to license risk';
+      }
+    }
+
+    return card;
+  }
+</script>
+
+<!-- 8. Evidence Highlight Integration -->
+<script type="module">
+  // Chat Board evidence reference click handler
+  function handleEvidenceRefClick(evidenceId) {
+    // Switch to evidence board
+    workspace.boardManager.switchBoard('evidence');
+
+    // Wait for board to load, then highlight
+    setTimeout(() => {
+      const evidenceCard = document.querySelector(`[data-evidence-id="${evidenceId}"]`);
+      if (evidenceCard) {
+        evidenceCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        evidenceCard.classList.add('highlighted');
+
+        // Remove highlight after animation
+        setTimeout(() => {
+          evidenceCard.classList.remove('highlighted');
+        }, 2000);
+      }
+    }, 100);
+  }
+</script>
+
+<!-- 9. Spec Builder Navigation -->
+<script type="module">
+  // Navigate from Spec Builder to Evidence Board
+  function navigateToEvidence(evidenceId) {
+    workspace.boardManager.switchBoard('evidence');
+    handleEvidenceRefClick(evidenceId);
+  }
+
+  // Navigate from Spec Builder to Decision Board
+  function navigateToDecision(decisionId) {
+    workspace.boardManager.switchBoard('decision');
+
+    setTimeout(() => {
+      const decisionEntry = document.querySelector(`[data-decision-id="${decisionId}"]`);
+      if (decisionEntry) {
+        decisionEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        decisionEntry.classList.add('highlighted');
+      }
+    }, 100);
+  }
+</script>
+
+<!-- 10. Auto Mode Progress Display -->
+<div class="auto-mode-status" data-auto-mode-state="idle">
+  <div class="auto-mode-icon" aria-hidden="true">🤖</div>
+  <div class="auto-mode-text">
+    <span class="auto-mode-state-text">Idle</span>
+    <span class="auto-mode-task-log"></span>
+  </div>
+  <div class="auto-mode-progress">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Auto mode status styling */
+  .auto-mode-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--color-bg-secondary);
+    border-radius: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .auto-mode-status[data-auto-mode-state="running"] {
+    border: 2px solid var(--color-primary);
+  }
+
+  .auto-mode-status[data-auto-mode-state="failed"] {
+    border: 2px solid var(--color-error);
+  }
+
+  .auto-mode-icon {
+    font-size: 1.5rem;
+  }
+
+  .auto-mode-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .auto-mode-state-text {
+    font-weight: 600;
+  }
+
+  .auto-mode-task-log {
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+  }
+
+  .auto-mode-progress {
+    width: 200px;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+  }
+</style>
+
+<!-- 11. Screen Reader Only Utility -->
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<!--
+  END OF SPEC-05 WORKSPACE TEMPLATE INTEGRATION
+
+  Next Steps:
+  1. Copy the relevant sections to your workspace.html
+  2. Test the Spec Builder board loads correctly
+  3. Test auto mode state updates display
+  4. Test evidence highlighting works
+  5. Verify all empty states show correctly
+  6. Test keyboard navigation
+  7. Test with screen reader (VoiceOver/NVDA)
+-->

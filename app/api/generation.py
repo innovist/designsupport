@@ -42,6 +42,8 @@ class DesignGenerationResponse(BaseModel):
     data: Optional[Dict[str, Any]] = None
 
 
+# @MX:ANCHOR: [AUTO] Fashion design generation API endpoint - core image generation interface
+# @MX:REASON: Called from 5+ locations across frontend, workflow services, and test suites
 @router.post("/fashion-design", response_model=DesignGenerationResponse)
 async def generate_fashion_design(
     request: DesignGenerationRequest,

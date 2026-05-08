@@ -2,6 +2,9 @@
 Data processing service for crawled fashion data
 """
 
+# @MX:TODO: [AUTO] Missing comprehensive test coverage for data quality filters
+# Public methods in DataProcessor lack unit tests for quality scoring, deduplication, and spam detection
+
 import asyncio
 import hashlib
 import re

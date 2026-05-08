@@ -105,6 +105,8 @@ class FullWorkflowService:
         self.sessions: Dict[str, WorkflowSession] = {}
         self.logger = get_logger(__name__)
 
+    # @MX:ANCHOR: [AUTO] Workflow session creation - core workflow entry point
+    # @MX:REASON: Called from 5+ locations as the primary workflow initialization interface
     async def create_session(self, project_id: str, user_input: Dict[str, Any]) -> str:
         """새 워크플로우 세션 생성"""
         import uuid

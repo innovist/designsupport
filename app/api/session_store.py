@@ -10,6 +10,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db_session
+from app.core.config import get_local_now
 from app.core.logging import get_logger
 from app.services.pipeline_orchestrator import FashionPipelineOrchestrator
 from app.services.report_generation_service import ReportGenerationService
@@ -33,7 +34,7 @@ def update_metadata(session: ProjectSession, updates: Dict[str, Any]) -> Dict[st
 def append_log(metadata: Dict[str, Any], step: str, message: str) -> None:
     logs = list(metadata.get("logs", []))
     logs.append({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": get_local_now().isoformat(),
         "step": step,
         "message": message
     })
@@ -147,6 +148,17 @@ def get_session_record(db: Session, session_id: int) -> ProjectSession:
     return session
 
 
+# @MX:ANCHOR: [AUTO] Session progress update - core progress tracking mechanism
+# @MX:REASON: Called from 5+ locations across pipeline orchestrator and workflow services
+def update_progress(session: ProjectSession, step: str, percent: float, message: str) -> None:
+    metadata = _get_metadata(session)
+    metadata["current_step"] = step
+    metadata["progress_percent"] = round(percent, 1)
+    append_log(metadata, step, message)
+    session.metadata_json = metadata
+    session.updated_at = get_local_now()
+
+
 def sync_session_state(db: Session, session: ProjectSession) -> ProjectSession:
     metadata = _get_metadata(session)
     status = metadata.get("status")
@@ -156,19 +168,21 @@ def sync_session_state(db: Session, session: ProjectSession) -> ProjectSession:
         metadata["error_message"] = "워커 작업이 중단되었습니다. 다시 실행하세요."
         append_log(metadata, "error", "Failed: 워커 작업이 중단되었습니다. 다시 실행하세요.")
         session.metadata_json = metadata
-        session.updated_at = datetime.utcnow()
+        session.updated_at = get_local_now()
         db.commit()
         db.refresh(session)
     return session
 
 
+# @MX:ANCHOR: [AUTO] Session progress update - core progress tracking mechanism
+# @MX:REASON: Called from 5+ locations across pipeline orchestrator and workflow services
 def update_progress(session: ProjectSession, step: str, percent: float, message: str) -> None:
     metadata = _get_metadata(session)
     metadata["current_step"] = step
     metadata["progress_percent"] = round(percent, 1)
     append_log(metadata, step, message)
     session.metadata_json = metadata
-    session.updated_at = datetime.utcnow()
+    session.updated_at = get_local_now()
 
 
 def get_sessions_snapshot() -> List[Dict[str, Any]]:
@@ -184,13 +198,13 @@ async def start_pipeline(session_id: int) -> None:
         project = db.query(Project).filter(Project.id == session.project_id).first()
         metadata = update_metadata(session, {
             "status": "running",
-            "started_at": datetime.utcnow().isoformat(),
+            "started_at": get_local_now().isoformat(),
             "error_message": None,
             "progress_percent": 0.0
         })
         append_log(metadata, "started", "Pipeline started")
         session.metadata_json = metadata
-        session.updated_at = datetime.utcnow()
+        session.updated_at = get_local_now()
         session_data = serialize_session(session)
         if project and project.preferred_image_model:
             session_data["preferred_image_model"] = project.preferred_image_model
@@ -210,7 +224,7 @@ async def start_pipeline(session_id: int) -> None:
                     metadata = _get_metadata(state_session)
                     metadata.update(updates)
                     state_session.metadata_json = metadata
-                    state_session.updated_at = datetime.utcnow()
+                    state_session.updated_at = get_local_now()
 
             results = await orchestrator.run_complete_pipeline(session_data, progress_cb, state_cb)
             with get_db_session() as done_db:
@@ -249,7 +263,7 @@ async def start_pipeline(session_id: int) -> None:
                     return
 
                 metadata["status"] = "completed"
-                metadata["completed_at"] = datetime.utcnow().isoformat()
+                metadata["completed_at"] = get_local_now().isoformat()
                 metadata["error_message"] = None
                 done_session.metadata_json = metadata
                 update_progress(done_session, "completed", 100, "Pipeline completed")

@@ -1,0 +1,69 @@
+# Visual Design Domain Pack Manifest
+#
+# REQ-03-GEN-005: Domain-specific generation configuration
+
+id: "visual"
+domain: "Visual Design"
+
+brief_schema:
+  title:
+    type: string
+    required: true
+    description: "Project title"
+  description:
+    type: string
+    required: true
+    description: "Project description"
+  brand_guidelines:
+    type: object
+    properties:
+      colors:
+        type: array
+        items:
+          type: string
+      typography:
+        type: object
+      logo_usage:
+        type: string
+    required: false
+    description: "Brand guidelines reference"
+  target_medium:
+    type: array
+    items:
+      type: string
+      enum: ["digital", "print", "environmental", "packaging"]
+    required: true
+    description: "Target media"
+  deliverables:
+    type: array
+    items:
+      type: string
+    required: true
+    description: "Required deliverables"
+
+evaluation_axes:
+  - "Visual Impact"
+  - "Brand Consistency"
+  - "Communication Clarity"
+  - "Technical Quality"
+  - "Originality"
+  - "Versatility"
+
+generation_outputs:
+  - "layout_composition"
+  - "typography_study"
+  - "color_exploration"
+  - "icon_set"
+  - "visual_system"
+  - "mockup_rendering"
+
+spec_template_uri: "templates/visual_spec.md"
+
+spec_sections:
+  - "brand_analysis"
+  - "visual_hierarchy"
+  - "typography_system"
+  - "color_system"
+  - "component_library"
+  - "usage_guidelines"
+  - "asset_organization"

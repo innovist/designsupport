@@ -35,6 +35,7 @@ class ApiKeysUpdate(BaseModel):
     glm: Optional[str] = None
     seedream: Optional[str] = None
     nano_banana: Optional[str] = None
+    perplexity: Optional[str] = None
 
 
 class CrawlerConfigUpdate(BaseModel):
@@ -46,6 +47,14 @@ class CrawlerConfigUpdate(BaseModel):
 class ModelsUpdate(BaseModel):
     gemini_text: Optional[str] = None
     glm_text: Optional[str] = None
+
+
+class AIResearchConfig(BaseModel):
+    """AI 조사 설정 모델"""
+    enabled: bool = False
+    models: Optional[Dict[str, bool]] = None
+    perplexity_model: Optional[str] = "sonar"
+    research_depth: Optional[str] = "standard"
 
 
 class SettingsUpdate(BaseModel):

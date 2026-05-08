@@ -452,6 +452,7 @@
       "zimage": "Z-Image API Key",
       "seedream": "Seedream API Key",
       "nanoBanana": "Nano Banana API Key",
+      "perplexity": "Perplexity API Key",
       "placeholder": "Enter API key",
       "save": "Save API Keys",
       "test": "Test Connection",
@@ -527,7 +528,9 @@
       "label": "Age Group",
       "options": {
         "": "All",
-        "10s": "10s",
+        "toddler": "Toddler (0-5)",
+        "child": "Child (6-12)",
+        "teen": "Teen (13-19)",
         "20s": "20s",
         "30s": "30s",
         "40s": "40s",
@@ -541,9 +544,7 @@
         "spring": "Spring",
         "summer": "Summer",
         "fall": "Fall",
-        "winter": "Winter",
-        "ss": "Spring/Summer",
-        "fw": "Fall/Winter"
+        "winter": "Winter"
       }
     },
     "category": {
@@ -554,11 +555,21 @@
         "formal": "Formal",
         "sports": "Sports",
         "outdoor": "Outdoor",
+        "street": "Street",
+        "minimal": "Minimal",
+        "vintage": "Vintage",
+        "romantic": "Romantic",
+        "ethnic": "Ethnic",
+        "avantgarde": "Avant-Garde",
+        "genderless": "Genderless",
         "top": "Tops",
         "bottom": "Bottoms",
         "dress": "Dress",
         "outer": "Outerwear",
-        "accessory": "Accessories"
+        "underwear": "Underwear",
+        "sleepwear": "Sleepwear",
+        "swimwear": "Swimwear",
+        "activewear": "Activewear"
       }
     }
   },
@@ -1108,13 +1119,25 @@
       "apiKeysSaved": "API keys saved.",
       "saveFailed": "Save failed",
       "saveError": "Error while saving",
-      "crawlerSaved": "Crawler settings saved."
+      "crawlerSaved": "Crawler settings saved.",
+      "aiResearchSaved": "AI research settings saved."
     },
     "crawlerStatus": {
       "active": "Active",
       "inactive": "Inactive",
       "empty": "No crawlers.",
       "loadFailed": "Failed to load crawler status."
+    },
+    "aiResearch": {
+      "title": "AI Research Settings",
+      "enable": "Enable AI Direct Research",
+      "hint": "After crawler collection, AI performs additional web searches to investigate trends",
+      "selectModels": "Select research models",
+      "perplexityKey": "Perplexity API Key",
+      "perplexityModel": "Perplexity Model",
+      "researchDepth": "Research Depth",
+      "depthStandard": "Standard (quick search)",
+      "depthDeep": "Deep (multiple searches)"
     }
   },
   "pipeline": {
@@ -1176,5 +1199,261 @@
   "currency": {
     "symbol": "$",
     "code": "USD"
+  },
+  "workspace": {
+    "stepBar": {
+      "title": "Progress Steps",
+      "steps": {
+        "step1": "Input Analysis",
+        "step2": "Keyword Extraction",
+        "step3": "Data Collection",
+        "step4": "Trend Analysis",
+        "step5": "Evidence Collection",
+        "step6": "Sketch Input",
+        "step7": "AI Interpretation",
+        "step8": "Reference Search",
+        "step9": "Abstraction Rules",
+        "step10": "Design Generation",
+        "step11": "Result Review",
+        "step12": "Decision Log",
+        "step13": "Improvement Iteration",
+        "step14": "Final Selection",
+        "step15": "Export",
+        "step16": "Documentation",
+        "step17": "Complete"
+      }
+    },
+    "boards": {
+      "chat": {
+        "title": "Chat",
+        "placeholder": "Enter your message...",
+        "sendButton": "Send",
+        "hypothesis": "Hypothesis",
+        "evidenceRef": "Evidence",
+        "user": "User",
+        "ai": "AI"
+      },
+      "evidence": {
+        "title": "Evidence",
+        "filterBySource": "Filter by Source",
+        "sortBy": "Sort By",
+        "credibility": "Credibility",
+        "recency": "Recency",
+        "source": "Source",
+        "date": "Date",
+        "expand": "Expand"
+      },
+      "sketch": {
+        "title": "Sketch Input",
+        "original": "Original",
+        "interpretation": "AI Interpretation",
+        "refinement": "Refinement",
+        "upload": "Upload",
+        "intent": "Intent",
+        "form": "Form",
+        "structure": "Structure",
+        "uncertain": "Uncertain Elements",
+        "questions": "User Questions",
+        "actions": {
+          "keep": "Keep",
+          "clarify": "Clarify",
+          "vary": "Vary",
+          "refine": "Refine",
+          "expand": "Expand",
+          "useAsEvidence": "Use as Evidence",
+          "runSearch": "Run Search",
+          "generate": "Generate"
+        },
+        "saveAsNew": "Save as New Version",
+        "overwriteWarning": "A sketch already exists. Do you want to save it as a new version?"
+      },
+      "reference": {
+        "title": "Reference Search",
+        "clusters": "Source Clusters",
+        "grid": "Reference Grid",
+        "analysis": "Analysis",
+        "categories": {
+          "nature": "Nature",
+          "product": "Product",
+          "architecture": "Architecture",
+          "fashion": "Fashion",
+          "graphic": "Graphic",
+          "advertising": "Advertising",
+          "material": "Material"
+        },
+        "basedOnSketch": "Based on Sketch",
+        "similarity": "Similarity",
+        "license": "License",
+        "risk": "Risk Level",
+        "directApply": "Direct Style Application",
+        "riskReason": "Direct application limited due to license risk"
+      },
+      "abstraction": {
+        "title": "Abstraction",
+        "axes": {
+          "form": "Form",
+          "structure": "Structure",
+          "surface": "Surface",
+          "colorMaterial": "Color/Material",
+          "meaning": "Meaning",
+          "usability": "Usability"
+        },
+        "observation": "Observation",
+        "appliedRule": "Applied Rule",
+        "riskLevel": "Risk Level"
+      },
+      "generation": {
+        "title": "Generation",
+        "kinds": {
+          "refinement": "Refinement",
+          "variation": "Variation",
+          "domainApplication": "Domain Application"
+        },
+        "parentSketch": "Parent Sketch",
+        "aiGenerated": "AI Generated",
+        "modelPolicy": "Model Policy",
+        "comparison": "Comparison",
+        "download": "Download",
+        "select": "Select"
+      },
+      "decision": {
+        "title": "Decision",
+        "candidates": "Candidates",
+        "scores": {
+          "creativity": "Creativity",
+          "feasibility": "Feasibility",
+          "marketFit": "Market Fit"
+        },
+        "actions": {
+          "select": "Select",
+          "reject": "Reject",
+          "requestRevision": "Request Revision"
+        },
+        "log": "Decision Log"
+      },
+      "spec": {
+        "title": "Spec Builder",
+        "evidenceReferences": "Evidence References",
+        "decisionLog": "Decision Log",
+        "memoLabel": "Memo",
+        "memoPlaceholder": "Add your notes here...",
+        "memoSaveFailed": "Failed to save memo",
+        "rejectedConcepts": "Rejected/Held Concepts",
+        "toggleExpand": "Toggle Expand"
+      }
+    },
+    "decisionPanel": {
+      "title": "Decision Panel",
+      "currentStep": "Current Step",
+      "briefScore": "Brief Score",
+      "conceptScores": "Concept Scores",
+      "selectedSketch": "Selected Sketch",
+      "selectedReferences": "Selected References",
+      "nextAction": "Next Action",
+      "nextActionReason": "Reason",
+      "progress": "Progress",
+      "notifications": "Notifications"
+    },
+    "emptyStates": {
+      "noTrendData": {
+        "title": "Insufficient Trend Data",
+        "message": "Could not collect enough trend data. Try additional searches or switch domains.",
+        "action": "Run Additional Search"
+      },
+      "noReferences": {
+        "title": "No References Found",
+        "message": "No references found with current criteria. Try expanding search or upload manually.",
+        "action": "Expand Search"
+      },
+      "licenseRisk": {
+        "title": "License Risk Detected",
+        "message": "This reference has usage restrictions. Direct style application is limited.",
+        "badge": "High Risk",
+        "action": "View Alternatives"
+      },
+      "modelFailure": {
+        "title": "Model Generation Failed",
+        "message": "AI model {modelName} failed to generate results.",
+        "action": "Retry"
+      },
+      "highUncertainty": {
+        "title": "Review Needed",
+        "message": "AI is not confident about this content. User review required.",
+        "action": "Review Now"
+      },
+      "documentParsingFailure": {
+        "title": "Document Parsing Failed",
+        "message": "Could not parse the uploaded document. Check admin queue for details.",
+        "action": "View Admin Queue"
+      },
+      "networkError": {
+        "title": "Network Error",
+        "description": "Please check your connection and try again"
+      },
+      "quotaExceeded": {
+        "title": "Quota Exceeded",
+        "description": "API quota has been exceeded"
+      },
+      "insufficientEvidence": {
+        "title": "Insufficient Evidence",
+        "description": "Could not collect enough evidence"
+      },
+      "permissionDenied": {
+        "title": "Permission Denied",
+        "description": "You do not have permission to perform this action"
+      }
+    },
+    "skeleton": {
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "analyzing": "Analyzing...",
+      "generating": "Generating..."
+    },
+    "a11y": {
+      "stepChanged": "Changed from {oldStep} to {newStep}",
+      "boardChanged": "Switched from {oldBoard} to {newBoard}",
+      "progressUpdate": "{step}: {progress}% - {message}",
+      "error": "Error: {error}",
+      "loading": "Loading content",
+      "decisionRequired": "Your decision is required",
+      "cardSelected": "Card selected",
+      "cardExpanded": "Card expanded",
+      "cardCollapsed": "Card collapsed"
+    },
+    "errors": {
+      "authRequired": "Authentication required",
+      "permissionDenied": "Permission denied",
+      "notFound": "Resource not found",
+      "conflict": "Resource conflict",
+      "validationError": "Validation error",
+      "quotaExceeded": "API quota exceeded",
+      "serverError": "Server error",
+      "networkError": "Network error",
+      "insufficientEvidence": "Insufficient evidence",
+      "licenseBlocked": "License blocked",
+      "celeryTaskFailed": "Task failed",
+      "unknown": "Unknown error"
+    },
+    "navigator": {
+      "projectList": "Project List",
+      "sessionList": "Session List",
+      "pipelineSteps": "Pipeline Steps"
+    },
+    "autoMode": {
+      "states": {
+        "queued": "Queued",
+        "researching": "Researching trends and evidence...",
+        "concepting": "Generating concept candidates...",
+        "referencing": "Searching and analyzing references...",
+        "abstracting": "Extracting abstraction rules...",
+        "generating": "Generating design variations...",
+        "documenting": "Creating spec document...",
+        "review_ready": "Review required",
+        "failed": "Task failed"
+      },
+      "taskLog": "Running: {featureKey} (Attempt {attempt})"
+    },
+    "initFailed": "Failed to initialize workspace",
+    "navigationFailed": "Navigation failed"
   }
 }

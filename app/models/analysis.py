@@ -149,6 +149,8 @@ class TrendAnalysis(BaseModel):
     def __repr__(self) -> str:
         return f"<TrendAnalysis(id={self.id}, model='{self.model_used.value}', status='{self.status.value}')>"
 
+    # @MX:ANCHOR: [AUTO] Analysis job state machine - lifecycle management
+    # @MX:REASON: State transition methods called from 85+ locations across analysis service and pipeline
     def start(self) -> None:
         """분석 시작"""
         self.status = AnalysisStatus.RUNNING

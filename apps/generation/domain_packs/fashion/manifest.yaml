@@ -1,0 +1,65 @@
+# Fashion Design Domain Pack Manifest
+#
+# REQ-03-GEN-005: Domain-specific generation configuration
+
+id: "fashion"
+domain: "Fashion Design"
+
+brief_schema:
+  title:
+    type: string
+    required: true
+    description: "Collection or piece title"
+  description:
+    type: string
+    required: true
+    description: "Creative concept description"
+  target_audience:
+    type: array
+    items:
+      type: string
+    required: true
+    description: "Target demographic"
+  season:
+    type: string
+    required: true
+    enum: ["spring/summer", "fall/winter", "resort", "couture"]
+    description: "Fashion season"
+  style_category:
+    type: string
+    required: true
+    enum: ["ready-to-wear", "avant-garde", "streetwear", "formal", "casual"]
+    description: "Style category"
+  materials:
+    type: array
+    items:
+      type: string
+    required: false
+    description: "Preferred materials"
+
+evaluation_axes:
+  - "Aesthetic Appeal"
+  - "Wearability"
+  - "Trend Alignment"
+  - "Brand Identity"
+  - "Innovation"
+  - "Commercial Viability"
+
+generation_outputs:
+  - "garment_sketch"
+  - "fabric_rendering"
+  - "detail_study"
+  - "style_variations"
+  - "lookbook_rendering"
+  - "pattern_preview"
+
+spec_template_uri: "templates/fashion_spec.md"
+
+spec_sections:
+  - "mood_board"
+  - "color_palette"
+  - "fabric_selection"
+  - "silhouette_study"
+  - "construction_details"
+  - "styling_guide"
+  - "market_positioning"

@@ -8,6 +8,8 @@ const {
     getStatusText,
     getSelectedCheckboxValues
 } = window.dashboardUtils;
+// @MX:WARN: [AUTO] Async API call without error boundary - failures leave session list empty
+// @MX:REASON: Called during project selection and language changes; silent failures confuse users
 async function loadSessions(projectId) {
     try {
         const res = await fetch(`/api/v1/sessions/?project_id=${projectId}`);
@@ -32,7 +34,7 @@ function renderSessions() {
     container.innerHTML = sessionState.sessions.map(s => {
         const statusColor = s.status === 'completed' ? '#10b981' : s.status === 'running' ? '#f59e0b' : '#6b7280';
         return `
-        <div class="item-card ${sessionState.currentSessionId === s.id ? 'active' : ''}" onclick="selectSession(${s.id})" style="border-left: 3px solid ${statusColor};">
+        <div class="item-card ${sessionState.currentSessionId === s.id ? 'active' : ''}" onclick="selectSession('${s.id}')" style="border-left: 3px solid ${statusColor};">
             <div class="item-title">${escapeHtml(s.session_title || _t('common.noTitle'))}</div>
             <div class="item-meta">${getStatusText(s.status)} | ${formatDate(s.created_at)}</div>
         </div>
@@ -122,6 +124,8 @@ async function runAnalysis() {
         btn.textContent = _t('dashboard.actions.startAnalysis');
     }
 }
+// @MX:WARN: [AUTO] Polling interval without cleanup on page navigation or component unmount
+// @MX:REASON: Creates memory leak if user navigates away while polling is active
 function startProgressPolling() {
     const interval = setInterval(async () => {
         if (!sessionState.currentSessionId) { clearInterval(interval); return; }
@@ -172,6 +176,7 @@ async function createSession() {
         return;
     }
     const genders = getSelectedCheckboxValues('filter-gender');
+    const ages = getSelectedCheckboxValues('filter-age');
     const seasons = getSelectedCheckboxValues('filter-season');
     const categories = getSelectedCheckboxValues('filter-category');
     const youtubeChannelUrls = getSelectedYoutubeChannels();
@@ -190,7 +195,7 @@ async function createSession() {
                 project_id: sessionState.currentProjectId,
                 session_title: title,
                 description: desc,
-                filters: { gender: genders.length > 0 ? genders : null, season: seasons.length > 0 ? seasons : null, category: categories.length > 0 ? categories : null },
+                filters: { gender: genders.length > 0 ? genders : null, age: ages.length > 0 ? ages : null, season: seasons.length > 0 ? seasons : null, category: categories.length > 0 ? categories : null },
                 crawler_config: { crawlers: selectedCrawlers, youtube_channel_urls: youtubeChannelUrls, start_date: startDate, end_date: endDate, max_items_per_source: maxPostsPerCrawler, youtube_keyword_count: youtubeKeywordCount, youtube_channel_max: youtubeChannelMax, youtube_parallel: youtubeParallel, youtube_enable_stt: youtubeEnableStt },
                 auto_start: true,
                 generate_images: true,
@@ -240,7 +245,7 @@ async function updateSession() {
         if (res.ok) {
             closeEditSessionModal();
             await loadSessions(sessionState.currentProjectId);
-            await loadSessionDetails(parseInt(sessionId, 10));
+            await loadSessionDetails(sessionId);
         } else {
             const err = await res.json();
             alert(_t('dashboard.messages.updateFailed', { error: err.detail || _t('common.unknownError') }));

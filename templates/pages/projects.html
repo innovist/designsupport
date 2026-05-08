@@ -82,7 +82,7 @@ function renderProjects(projects) {
 
             <div style="display: flex; gap: var(--spacing-sm);">
                 <a href="/projects/${project.id}" class="btn btn-primary" style="flex: 1; text-align: center;">${t('common.open')}</a>
-                <button onclick="deleteProject(${project.id})" class="btn btn-outline" style="padding: 0.75rem 1rem;">${t('common.delete')}</button>
+                <button onclick="deleteProject('${project.id}')" class="btn btn-outline" style="padding: 0.75rem 1rem;">${t('common.delete')}</button>
             </div>
         </div>
     `).join('');

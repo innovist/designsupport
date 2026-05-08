@@ -452,6 +452,7 @@
       "zimage": "Z-Image API 키",
       "seedream": "Seedream API 키",
       "nanoBanana": "Nano Banana API 키",
+      "perplexity": "Perplexity API 키",
       "placeholder": "API 키를 입력하세요",
       "save": "API 키 저장",
       "test": "연결 테스트",
@@ -527,7 +528,9 @@
       "label": "나이대",
       "options": {
         "": "전체",
-        "10s": "10대",
+        "toddler": "유아 (0-5세)",
+        "child": "아동 (6-12세)",
+        "teen": "청소년 (13-19세)",
         "20s": "20대",
         "30s": "30대",
         "40s": "40대",
@@ -541,9 +544,7 @@
         "spring": "봄",
         "summer": "여름",
         "fall": "가을",
-        "winter": "겨울",
-        "ss": "봄/여름",
-        "fw": "가을/겨울"
+        "winter": "겨울"
       }
     },
     "category": {
@@ -554,11 +555,21 @@
         "formal": "포멀",
         "sports": "스포츠",
         "outdoor": "아웃도어",
+        "street": "스트릿",
+        "minimal": "미니멀",
+        "vintage": "빈티지",
+        "romantic": "로맨틱",
+        "ethnic": "에스닉",
+        "avantgarde": "아방가르드",
+        "genderless": "젠더리스",
         "top": "상의",
         "bottom": "하의",
         "dress": "원피스",
         "outer": "아우터",
-        "accessory": "액세서리"
+        "underwear": "내의",
+        "sleepwear": "수면복",
+        "swimwear": "수영복",
+        "activewear": "액티브웨어"
       }
     }
   },
@@ -1108,13 +1119,25 @@
       "apiKeysSaved": "API 키가 저장되었습니다.",
       "saveFailed": "저장 실패",
       "saveError": "저장 중 오류 발생",
-      "crawlerSaved": "크롤러 설정이 저장되었습니다."
+      "crawlerSaved": "크롤러 설정이 저장되었습니다.",
+      "aiResearchSaved": "AI 조사 설정이 저장되었습니다."
     },
     "crawlerStatus": {
       "active": "활성",
       "inactive": "비활성",
       "empty": "크롤러가 없습니다.",
       "loadFailed": "크롤러 상태를 불러오지 못했습니다."
+    },
+    "aiResearch": {
+      "title": "AI 조사 설정",
+      "enable": "AI 직접 조사 활성화",
+      "hint": "크롤러 수집 후 AI가 추가로 웹 검색하여 트렌드를 조사합니다",
+      "selectModels": "조사에 사용할 모델",
+      "perplexityKey": "Perplexity API Key",
+      "perplexityModel": "Perplexity 모델",
+      "researchDepth": "조사 깊이",
+      "depthStandard": "표준 (빠른 조사)",
+      "depthDeep": "심층 (다중 검색)"
     }
   },
   "pipeline": {
@@ -1176,5 +1199,197 @@
   "currency": {
     "symbol": "₩",
     "code": "KRW"
+  },
+  "workspace": {
+    "stepBar": {
+      "title": "진행 단계",
+      "steps": {
+        "step1": "입력 분석",
+        "step2": "키워드 추출",
+        "step3": "데이터 수집",
+        "step4": "트렌드 분석",
+        "step5": "증거 수집",
+        "step6": "스케치 입력",
+        "step7": "AI 해석",
+        "step8": "레퍼런스 검색",
+        "step9": "추상화 규칙",
+        "step10": "디자인 생성",
+        "step11": "결과 검토",
+        "step12": "결정 로그",
+        "step13": "개선 반복",
+        "step14": "최종 선택",
+        "step15": "내보내기",
+        "step16": "문서화",
+        "step17": "완료"
+      }
+    },
+    "boards": {
+      "chat": {
+        "title": "채팅",
+        "placeholder": "메시지를 입력하세요...",
+        "sendButton": "전송",
+        "hypothesis": "가설",
+        "evidenceRef": "증거",
+        "user": "사용자",
+        "ai": "AI"
+      },
+      "evidence": {
+        "title": "증거",
+        "filterBySource": "출처별 필터",
+        "sortBy": "정렬",
+        "credibility": "신뢰도",
+        "recency": "최신성",
+        "source": "출처",
+        "date": "날짜",
+        "expand": "펼쳐보기"
+      },
+      "sketch": {
+        "title": "스케치 입력",
+        "original": "원본",
+        "interpretation": "AI 해석",
+        "refinement": "개선 작업",
+        "upload": "업로드",
+        "intent": "의도",
+        "form": "형태",
+        "structure": "구조",
+        "uncertain": "불확실 요소",
+        "questions": "사용자 질문",
+        "actions": {
+          "keep": "유지",
+          "clarify": "명확화",
+          "vary": "변형",
+          "refine": "개선",
+          "expand": "확장",
+          "useAsEvidence": "증거로 사용",
+          "runSearch": "검색 실행",
+          "generate": "생성"
+        },
+        "saveAsNew": "새 버전으로 저장"
+      },
+      "reference": {
+        "title": "레퍼런스 검색",
+        "clusters": "소스 클러스터",
+        "grid": "레퍼런스 그리드",
+        "analysis": "분석",
+        "categories": {
+          "nature": "자연",
+          "product": "제품",
+          "architecture": "건축",
+          "fashion": "패션",
+          "graphic": "그래픽",
+          "advertising": "광고",
+          "material": "소재"
+        },
+        "basedOnSketch": "스케치 기반",
+        "similarity": "유사도",
+        "license": "라이선스",
+        "risk": "위험도",
+        "directApply": "직접 스타일 적용",
+        "riskReason": "라이선스 위험으로 인해 직접 적용이 제한됩니다"
+      },
+      "abstraction": {
+        "title": "추상화",
+        "axes": {
+          "form": "형태",
+          "structure": "구조",
+          "surface": "표면",
+          "colorMaterial": "색상/소재",
+          "meaning": "의미",
+          "usability": "사용성"
+        },
+        "observation": "관찰",
+        "appliedRule": "적용 규칙",
+        "riskLevel": "위험도"
+      },
+      "generation": {
+        "title": "생성",
+        "kinds": {
+          "refinement": "개선",
+          "variation": "변형",
+          "domainApplication": "도메인 적용"
+        },
+        "parentSketch": "부모 스케치",
+        "aiGenerated": "AI 생성",
+        "modelPolicy": "모델 정책",
+        "comparison": "비교",
+        "download": "다운로드",
+        "select": "선택"
+      },
+      "decision": {
+        "title": "결정",
+        "candidates": "후보",
+        "scores": {
+          "creativity": "창의성",
+          "feasibility": "실현가능성",
+          "marketFit": "시적합성"
+        },
+        "actions": {
+          "select": "선택",
+          "reject": "거부",
+          "requestRevision": "수정 요청"
+        },
+        "log": "결정 로그"
+      }
+    },
+    "decisionPanel": {
+      "title": "결정 패널",
+      "currentStep": "현재 단계",
+      "briefScore": "브리프 점수",
+      "conceptScores": "컨셉 점수",
+      "selectedSketch": "선택된 스케치",
+      "selectedReferences": "선택된 레퍼런스",
+      "nextAction": "다음 결정",
+      "nextActionReason": "사유",
+      "progress": "진행률",
+      "notifications": "알림"
+    },
+    "emptyStates": {
+      "noTrendData": {
+        "title": "트렌드 데이터 부족",
+        "description": "충분한 트렌드 데이터를 수집하지 못했습니다"
+      },
+      "noReferences": {
+        "title": "레퍼런스 없음",
+        "description": "검색된 레퍼런스가 없습니다"
+      },
+      "licenseRisk": {
+        "title": "라이선스 위험",
+        "description": "이 레퍼런스는 사용에 제한이 있습니다"
+      },
+      "modelFailure": {
+        "title": "모델 실패",
+        "description": "AI 모델이 실패했습니다. 다시 시도해주세요"
+      },
+      "autoUncertainty": {
+        "title": "불확실성",
+        "description": "AI가 이 내용을 확신하지 못합니다"
+      },
+      "parseFailure": {
+        "title": "파싱 실패",
+        "description": "콘텐츠를 파싱하지 못했습니다"
+      },
+      "networkError": {
+        "title": "네트워크 오류",
+        "description": "연결을 확인하고 다시 시도해주세요"
+      },
+      "quotaExceeded": {
+        "title": "할당량 초과",
+        "description": "API 할당량을 초과했습니다"
+      },
+      "insufficientEvidence": {
+        "title": "증거 불충분",
+        "description": "충분한 증거를 수집하지 못했습니다"
+      },
+      "permissionDenied": {
+        "title": "권한 거부",
+        "description": "이 작업을 수행할 권한이 없습니다"
+      }
+    },
+    "skeleton": {
+      "loading": "로딩 중...",
+      "processing": "처리 중...",
+      "analyzing": "분석 중...",
+      "generating": "생성 중..."
+    }
   }
 }

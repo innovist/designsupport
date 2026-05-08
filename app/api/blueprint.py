@@ -44,6 +44,8 @@ class BlueprintGenerateResponse(BaseModel):
     data: Optional[Dict[str, Any]] = None
 
 
+# @MX:ANCHOR: [AUTO] Blueprint generation API endpoint - core pattern creation interface
+# @MX:REASON: Called from 10+ locations across frontend, workflow services, and test suites
 @router.post("/generate", response_model=BlueprintGenerateResponse)
 async def generate_blueprint(
     request: BlueprintGenerateRequest,

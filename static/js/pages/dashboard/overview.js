@@ -1,3 +1,5 @@
+// @MX:NOTE: [AUTO] Overview tab renderer displaying session summary, keywords, metrics, and crawl logs
+// @MX:REASON: Provides real-time pipeline progress visualization and terminal-style log streaming
 // Overview tab handlers
 (function() {
 const {

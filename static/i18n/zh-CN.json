@@ -457,6 +457,198 @@
     "symbol": "¥",
     "code": "CNY"
   },
+  "workspace": {
+    "stepBar": {
+      "title": "进度步骤",
+      "steps": {
+        "step1": "输入分析",
+        "step2": "关键词提取",
+        "step3": "数据收集",
+        "step4": "趋势分析",
+        "step5": "证据收集",
+        "step6": "草图输入",
+        "step7": "AI解读",
+        "step8": "参考搜索",
+        "step9": "抽象规则",
+        "step10": "设计生成",
+        "step11": "结果审查",
+        "step12": "决策日志",
+        "step13": "改进迭代",
+        "step14": "最终选择",
+        "step15": "导出",
+        "step16": "文档化",
+        "step17": "完成"
+      }
+    },
+    "boards": {
+      "chat": {
+        "title": "聊天",
+        "placeholder": "输入您的消息...",
+        "sendButton": "发送",
+        "hypothesis": "假设",
+        "evidenceRef": "证据",
+        "user": "用户",
+        "ai": "AI"
+      },
+      "evidence": {
+        "title": "证据",
+        "filterBySource": "按来源过滤",
+        "sortBy": "排序",
+        "credibility": "可信度",
+        "recency": "时效性",
+        "source": "来源",
+        "date": "日期",
+        "expand": "展开"
+      },
+      "sketch": {
+        "title": "草图输入",
+        "original": "原始",
+        "interpretation": "AI解读",
+        "refinement": "优化",
+        "upload": "上传",
+        "intent": "意图",
+        "form": "形态",
+        "structure": "结构",
+        "uncertain": "不确定元素",
+        "questions": "用户问题",
+        "actions": {
+          "keep": "保持",
+          "clarify": "澄清",
+          "vary": "变化",
+          "refine": "优化",
+          "expand": "扩展",
+          "useAsEvidence": "作为证据使用",
+          "runSearch": "运行搜索",
+          "generate": "生成"
+        },
+        "saveAsNew": "保存为新版本"
+      },
+      "reference": {
+        "title": "参考搜索",
+        "clusters": "来源聚类",
+        "grid": "参考网格",
+        "analysis": "分析",
+        "categories": {
+          "nature": "自然",
+          "product": "产品",
+          "architecture": "建筑",
+          "fashion": "时尚",
+          "graphic": "图形",
+          "advertising": "广告",
+          "material": "材料"
+        },
+        "basedOnSketch": "基于草图",
+        "similarity": "相似度",
+        "license": "许可证",
+        "risk": "风险等级",
+        "directApply": "直接应用风格",
+        "riskReason": "由于许可证风险,直接应用受到限制"
+      },
+      "abstraction": {
+        "title": "抽象",
+        "axes": {
+          "form": "形态",
+          "structure": "结构",
+          "surface": "表面",
+          "colorMaterial": "色彩/材料",
+          "meaning": "意义",
+          "usability": "可用性"
+        },
+        "observation": "观察",
+        "appliedRule": "应用规则",
+        "riskLevel": "风险等级"
+      },
+      "generation": {
+        "title": "生成",
+        "kinds": {
+          "refinement": "优化",
+          "variation": "变化",
+          "domainApplication": "领域应用"
+        },
+        "parentSketch": "父草图",
+        "aiGenerated": "AI生成",
+        "modelPolicy": "模型策略",
+        "comparison": "比较",
+        "download": "下载",
+        "select": "选择"
+      },
+      "decision": {
+        "title": "决策",
+        "candidates": "候选",
+        "scores": {
+          "creativity": "创意性",
+          "feasibility": "可行性",
+          "marketFit": "市场适配度"
+        },
+        "actions": {
+          "select": "选择",
+          "reject": "拒绝",
+          "requestRevision": "请求修订"
+        },
+        "log": "决策日志"
+      }
+    },
+    "decisionPanel": {
+      "title": "决策面板",
+      "currentStep": "当前步骤",
+      "briefScore": "简报得分",
+      "conceptScores": "概念得分",
+      "selectedSketch": "选中的草图",
+      "selectedReferences": "选中的参考",
+      "nextAction": "下一步行动",
+      "nextActionReason": "原因",
+      "progress": "进度",
+      "notifications": "通知"
+    },
+    "emptyStates": {
+      "noTrendData": {
+        "title": "趋势数据不足",
+        "description": "未能收集足够的趋势数据"
+      },
+      "noReferences": {
+        "title": "无参考",
+        "description": "未找到参考内容"
+      },
+      "licenseRisk": {
+        "title": "许可证风险",
+        "description": "此参考内容有使用限制"
+      },
+      "modelFailure": {
+        "title": "模型失败",
+        "description": "AI模型失败。请重试"
+      },
+      "autoUncertainty": {
+        "title": "不确定性",
+        "description": "AI对此内容不确定"
+      },
+      "parseFailure": {
+        "title": "解析失败",
+        "description": "无法解析内容"
+      },
+      "networkError": {
+        "title": "网络错误",
+        "description": "请检查连接后重试"
+      },
+      "quotaExceeded": {
+        "title": "配额超限",
+        "description": "已超过API配额"
+      },
+      "insufficientEvidence": {
+        "title": "证据不足",
+        "description": "未能收集足够的证据"
+      },
+      "permissionDenied": {
+        "title": "权限拒绝",
+        "description": "您无权执行此操作"
+      }
+    },
+    "skeleton": {
+      "loading": "加载中...",
+      "processing": "处理中...",
+      "analyzing": "分析中...",
+      "generating": "生成中..."
+    }
+  },
   "settings": {
     "title": "设置",
     "tabs": {
@@ -471,6 +663,7 @@
       "zimage": "Z-Image API密钥",
       "seedream": "Seedream API密钥",
       "nanoBanana": "Nano Banana API密钥",
+      "perplexity": "Perplexity API密钥",
       "placeholder": "请输入API密钥",
       "save": "保存API密钥",
       "test": "连接测试",
@@ -546,7 +739,9 @@
       "label": "年龄段",
       "options": {
         "": "全部",
-        "10s": "10代",
+        "toddler": "幼儿 (0-5岁)",
+        "child": "儿童 (6-12岁)",
+        "teen": "青少年 (13-19岁)",
         "20s": "20代",
         "30s": "30代",
         "40s": "40代",
@@ -560,9 +755,7 @@
         "spring": "春",
         "summer": "夏",
         "fall": "秋",
-        "winter": "冬",
-        "ss": "春/夏",
-        "fw": "秋/冬"
+        "winter": "冬"
       }
     },
     "category": {
@@ -573,11 +766,21 @@
         "formal": "正式",
         "sports": "运动",
         "outdoor": "户外",
+        "street": "街头",
+        "minimal": "极简",
+        "vintage": "复古",
+        "romantic": "浪漫",
+        "ethnic": "民族",
+        "avantgarde": "前卫",
+        "genderless": "无性别",
         "top": "上装",
         "bottom": "下装",
         "dress": "连衣裙",
         "outer": "外套",
-        "accessory": "配饰"
+        "underwear": "内衣",
+        "sleepwear": "睡衣",
+        "swimwear": "泳装",
+        "activewear": "运动装"
       }
     }
   },
@@ -1127,13 +1330,25 @@
       "apiKeysSaved": "API 密钥已保存。",
       "saveFailed": "保存失败",
       "saveError": "保存时出错",
-      "crawlerSaved": "爬虫设置已保存。"
+      "crawlerSaved": "爬虫设置已保存。",
+      "aiResearchSaved": "AI 调研设置已保存。"
     },
     "crawlerStatus": {
       "active": "启用",
       "inactive": "停用",
       "empty": "暂无爬虫。",
       "loadFailed": "无法加载爬虫状态。"
+    },
+    "aiResearch": {
+      "title": "AI 调研设置",
+      "enable": "启用 AI 直接调研",
+      "hint": "爬虫采集后，AI 进行额外网络搜索以调查趋势",
+      "selectModels": "选择调研模型",
+      "perplexityKey": "Perplexity API 密钥",
+      "perplexityModel": "Perplexity 模型",
+      "researchDepth": "调研深度",
+      "depthStandard": "标准（快速搜索）",
+      "depthDeep": "深度（多次搜索）"
     }
   },
   "pipeline": {

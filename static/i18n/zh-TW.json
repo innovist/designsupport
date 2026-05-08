@@ -452,6 +452,7 @@
       "zimage": "Z-Image API金鑰",
       "seedream": "Seedream API金鑰",
       "nanoBanana": "Nano Banana API金鑰",
+      "perplexity": "Perplexity API金鑰",
       "placeholder": "請輸入API金鑰",
       "save": "儲存API金鑰",
       "test": "連線測試",
@@ -527,7 +528,9 @@
       "label": "年齡層",
       "options": {
         "": "全部",
-        "10s": "10代",
+        "toddler": "幼兒 (0-5歲)",
+        "child": "兒童 (6-12歲)",
+        "teen": "青少年 (13-19歲)",
         "20s": "20代",
         "30s": "30代",
         "40s": "40代",
@@ -541,9 +544,7 @@
         "spring": "春",
         "summer": "夏",
         "fall": "秋",
-        "winter": "冬",
-        "ss": "春/夏",
-        "fw": "秋/冬"
+        "winter": "冬"
       }
     },
     "category": {
@@ -554,11 +555,21 @@
         "formal": "正式",
         "sports": "運動",
         "outdoor": "戶外",
+        "street": "街頭",
+        "minimal": "極簡",
+        "vintage": "復古",
+        "romantic": "浪漫",
+        "ethnic": "民族",
+        "avantgarde": "前衛",
+        "genderless": "無性別",
         "top": "上衣",
         "bottom": "下裝",
         "dress": "洋裝",
         "outer": "外套",
-        "accessory": "配飾"
+        "underwear": "內衣",
+        "sleepwear": "睡衣",
+        "swimwear": "泳裝",
+        "activewear": "運動裝"
       }
     }
   },
@@ -1108,13 +1119,25 @@
       "apiKeysSaved": "API 金鑰已儲存。",
       "saveFailed": "儲存失敗",
       "saveError": "儲存時出錯",
-      "crawlerSaved": "爬蟲設定已儲存。"
+      "crawlerSaved": "爬蟲設定已儲存。",
+      "aiResearchSaved": "AI 調研設定已儲存。"
     },
     "crawlerStatus": {
       "active": "啟用",
       "inactive": "停用",
       "empty": "暫無爬蟲。",
       "loadFailed": "無法載入爬蟲狀態。"
+    },
+    "aiResearch": {
+      "title": "AI 調研設定",
+      "enable": "啟用 AI 直接調研",
+      "hint": "爬蟲採集後，AI 進行額外網路搜尋以調查趨勢",
+      "selectModels": "選擇調研模型",
+      "perplexityKey": "Perplexity API 金鑰",
+      "perplexityModel": "Perplexity 模型",
+      "researchDepth": "調研深度",
+      "depthStandard": "標準（快速搜尋）",
+      "depthDeep": "深度（多次搜尋）"
     }
   },
   "pipeline": {
@@ -1176,5 +1199,197 @@
   "currency": {
     "symbol": "NT$",
     "code": "TWD"
+  },
+  "workspace": {
+    "stepBar": {
+      "title": "進度步驟",
+      "steps": {
+        "step1": "輸入分析",
+        "step2": "關鍵詞提取",
+        "step3": "資料收集",
+        "step4": "趨勢分析",
+        "step5": "證據收集",
+        "step6": "草圖輸入",
+        "step7": "AI 解讀",
+        "step8": "參考搜尋",
+        "step9": "抽象規則",
+        "step10": "設計生成",
+        "step11": "結果檢視",
+        "step12": "決定日誌",
+        "step13": "改善迭代",
+        "step14": "最終選擇",
+        "step15": "匯出",
+        "step16": "文件化",
+        "step17": "完成"
+      }
+    },
+    "boards": {
+      "chat": {
+        "title": "聊天",
+        "placeholder": "輸入您的訊息...",
+        "sendButton": "傳送",
+        "hypothesis": "假設",
+        "evidenceRef": "證據",
+        "user": "使用者",
+        "ai": "AI"
+      },
+      "evidence": {
+        "title": "證據",
+        "filterBySource": "按來源篩選",
+        "sortBy": "排序",
+        "credibility": "可信度",
+        "recency": "時效性",
+        "source": "來源",
+        "date": "日期",
+        "expand": "展開"
+      },
+      "sketch": {
+        "title": "草圖輸入",
+        "original": "原始",
+        "interpretation": "AI 解讀",
+        "refinement": "改善",
+        "upload": "上傳",
+        "intent": "意圖",
+        "form": "形態",
+        "structure": "結構",
+        "uncertain": "不確定元素",
+        "questions": "使用者問題",
+        "actions": {
+          "keep": "保持",
+          "clarify": "釐清",
+          "vary": "變化",
+          "refine": "改善",
+          "expand": "擴展",
+          "useAsEvidence": "作為證據使用",
+          "runSearch": "執行搜尋",
+          "generate": "生成"
+        },
+        "saveAsNew": "儲存為新版本"
+      },
+      "reference": {
+        "title": "參考搜尋",
+        "clusters": "來源集群",
+        "grid": "參考網格",
+        "analysis": "分析",
+        "categories": {
+          "nature": "自然",
+          "product": "產品",
+          "architecture": "建築",
+          "fashion": "時尚",
+          "graphic": "圖形",
+          "advertising": "廣告",
+          "material": "材料"
+        },
+        "basedOnSketch": "基於草圖",
+        "similarity": "相似度",
+        "license": "授權",
+        "risk": "風險等級",
+        "directApply": "直接套用風格",
+        "riskReason": "由於授權風險,直接套用受到限制"
+      },
+      "abstraction": {
+        "title": "抽象",
+        "axes": {
+          "form": "形態",
+          "structure": "結構",
+          "surface": "表面",
+          "colorMaterial": "色彩/材料",
+          "meaning": "意義",
+          "usability": "可用性"
+        },
+        "observation": "觀察",
+        "appliedRule": "應用規則",
+        "riskLevel": "風險等級"
+      },
+      "generation": {
+        "title": "生成",
+        "kinds": {
+          "refinement": "改善",
+          "variation": "變化",
+          "domainApplication": "領域應用"
+        },
+        "parentSketch": "父草圖",
+        "aiGenerated": "AI 生成",
+        "modelPolicy": "模型策略",
+        "comparison": "比較",
+        "download": "下載",
+        "select": "選擇"
+      },
+      "decision": {
+        "title": "決定",
+        "candidates": "候選",
+        "scores": {
+          "creativity": "創意性",
+          "feasibility": "可行性",
+          "marketFit": "市場適配度"
+        },
+        "actions": {
+          "select": "選擇",
+          "reject": "拒絕",
+          "requestRevision": "請求修訂"
+        },
+        "log": "決定日誌"
+      }
+    },
+    "decisionPanel": {
+      "title": "決定面板",
+      "currentStep": "目前步驟",
+      "briefScore": "簡報得分",
+      "conceptScores": "概念得分",
+      "selectedSketch": "選取的草圖",
+      "selectedReferences": "選取的參考",
+      "nextAction": "下一步行動",
+      "nextActionReason": "原因",
+      "progress": "進度",
+      "notifications": "通知"
+    },
+    "emptyStates": {
+      "noTrendData": {
+        "title": "趨勢資料不足",
+        "description": "未能收集足夠的趨勢資料"
+      },
+      "noReferences": {
+        "title": "無參考",
+        "description": "未找到參考內容"
+      },
+      "licenseRisk": {
+        "title": "授權風險",
+        "description": "此參考內容有使用限制"
+      },
+      "modelFailure": {
+        "title": "模型失敗",
+        "description": "AI 模型失敗。請重試"
+      },
+      "autoUncertainty": {
+        "title": "不確定性",
+        "description": "AI 對此內容不確定"
+      },
+      "parseFailure": {
+        "title": "解析失敗",
+        "description": "無法解析內容"
+      },
+      "networkError": {
+        "title": "網路錯誤",
+        "description": "請檢查連線後重試"
+      },
+      "quotaExceeded": {
+        "title": "配額超限",
+        "description": "已超過 API 配額"
+      },
+      "insufficientEvidence": {
+        "title": "證據不足",
+        "description": "未能收集足夠的證據"
+      },
+      "permissionDenied": {
+        "title": "權限拒絕",
+        "description": "您無權執行此操作"
+      }
+    },
+    "skeleton": {
+      "loading": "載入中...",
+      "processing": "處理中...",
+      "analyzing": "分析中...",
+      "generating": "生成中..."
+    }
   }
 }

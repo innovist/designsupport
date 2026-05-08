@@ -1,0 +1,531 @@
+/**
+ * SPEC-05 UX Workspace Card Visual Differentiation
+ * INV-05-01: User sketch / reference / abstraction / generation cards always visually different
+ */
+
+/* ==================== Design Tokens for Card Types ==================== */
+:root {
+  /* UserSketchCard Tokens */
+  --card-sketch-border: #E91E63;
+  --card-sketch-bg: #FCE4EC;
+  --card-sketch-icon: '✏️';
+  --card-sketch-shadow: rgba(233, 30, 99, 0.15);
+
+  /* ReferenceCard Tokens */
+  --card-ref-border: #2196F3;
+  --card-ref-bg: #E3F2FD;
+  --card-ref-icon: '🔗';
+  --card-ref-shadow: rgba(33, 150, 243, 0.15);
+
+  /* AbstractionRuleCard Tokens */
+  --card-abstraction-border: #9C27B0;
+  --card-abstraction-bg: #F3E5F5;
+  --card-abstraction-icon: '📐';
+  --card-abstraction-shadow: rgba(156, 39, 176, 0.15);
+
+  /* GeneratedDesignCard Tokens */
+  --card-gen-border: #4CAF50;
+  --card-gen-bg: #E8F5E9;
+  --card-gen-icon: '✨';
+  --card-gen-shadow: rgba(76, 175, 80, 0.15);
+}
+
+/* ==================== Base Card Styles ==================== */
+.card {
+  border-radius: var(--spacing-md);
+  padding: var(--spacing-md);
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ==================== UserSketchCard ==================== */
+.user-sketch-card {
+  border: 2px solid var(--card-sketch-border);
+  background: var(--card-sketch-bg);
+  box-shadow: 0 2px 8px var(--card-sketch-shadow);
+}
+
+.user-sketch-card::before {
+  content: var(--card-sketch-icon);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.user-sketch-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-sketch-card .card-type {
+  background: var(--card-sketch-border);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.user-sketch-card .card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-sketch-card .card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.user-sketch-card .action-btn {
+  background: white;
+  border: 1px solid var(--card-sketch-border);
+  color: var(--card-sketch-border);
+  padding: 4px 12px;
+  border-radius: var(--spacing-xs);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-sketch-card .action-btn:hover {
+  background: var(--card-sketch-border);
+  color: white;
+}
+
+/* ==================== ReferenceCard ==================== */
+.reference-card {
+  border: 2px solid var(--card-ref-border);
+  background: var(--card-ref-bg);
+  box-shadow: 0 2px 8px var(--card-ref-shadow);
+}
+
+.reference-card::before {
+  content: var(--card-ref-icon);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.reference-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.reference-card .card-type {
+  background: var(--card-ref-border);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.reference-card .card-source {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.reference-card .card-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.reference-card .license-risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.reference-card .license-risk.high {
+  background: #FFCDD2;
+  color: #C62828;
+}
+
+.reference-card .license-risk.medium {
+  background: #FFE0B2;
+  color: #EF6C00;
+}
+
+.reference-card .license-risk.low {
+  background: #C8E6C9;
+  color: #2E7D32;
+}
+
+.reference-card .card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.reference-card .action-btn {
+  background: white;
+  border: 1px solid var(--card-ref-border);
+  color: var(--card-ref-border);
+  padding: 4px 12px;
+  border-radius: var(--spacing-xs);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reference-card .action-btn:hover {
+  background: var(--card-ref-border);
+  color: white;
+}
+
+.reference-card .action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== AbstractionRuleCard ==================== */
+.abstraction-rule-card {
+  border: 2px solid var(--card-abstraction-border);
+  background: var(--card-abstraction-bg);
+  box-shadow: 0 2px 8px var(--card-abstraction-shadow);
+}
+
+.abstraction-rule-card::before {
+  content: var(--card-abstraction-icon);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.abstraction-rule-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.abstraction-rule-card .card-type {
+  background: var(--card-abstraction-border);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.abstraction-rule-card .rule-axis {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--card-abstraction-border);
+  margin-bottom: var(--spacing-xs);
+}
+
+.abstraction-rule-card .rule-description {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.abstraction-rule-card .rule-examples {
+  background: white;
+  border-radius: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.abstraction-rule-card .rule-example {
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.abstraction-rule-card .rule-example:last-child {
+  margin-bottom: 0;
+}
+
+/* ==================== GeneratedDesignCard ==================== */
+.generated-design-card {
+  border: 2px solid var(--card-gen-border);
+  background: var(--card-gen-bg);
+  box-shadow: 0 2px 8px var(--card-gen-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.generated-design-card::before {
+  content: var(--card-gen-icon);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: 1.5rem;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* AI Watermark Overlay */
+.generated-design-card .ai-watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.05) 0%,
+    rgba(76, 175, 80, 0.1) 50%,
+    rgba(76, 175, 80, 0.05) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.generated-design-card .ai-watermark::after {
+  content: 'AI Generated';
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(76, 175, 80, 0.2);
+  transform: rotate(-30deg);
+}
+
+.generated-design-card .card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.generated-design-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.generated-design-card .card-type {
+  background: var(--card-gen-border);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.generated-design-card .model-policy {
+  background: rgba(76, 175, 80, 0.2);
+  color: #2E7D32;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.generated-design-card .generation-kind {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.generated-design-card .generation-kind.refinement {
+  background: #E1BEE7;
+  color: #6A1B9A;
+}
+
+.generated-design-card .generation-kind.variation {
+  background: #BBDEFB;
+  color: #1565C0;
+}
+
+.generated-design-card .generation-kind.domain_application {
+  background: #FFCCBC;
+  color: #D84315;
+}
+
+.generated-design-card .card-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.generated-design-card .parent-link {
+  font-size: var(--font-xs);
+  color: var(--card-gen-border);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.generated-design-card .parent-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.generated-design-card .card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.generated-design-card .action-btn {
+  background: white;
+  border: 1px solid var(--card-gen-border);
+  color: var(--card-gen-border);
+  padding: 4px 12px;
+  border-radius: var(--spacing-xs);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.generated-design-card .action-btn:hover {
+  background: var(--card-gen-border);
+  color: white;
+}
+
+/* ==================== EvidenceCard (for reference) ==================== */
+.evidence-card {
+  border: 2px solid var(--card-ref-border);
+  background: var(--card-ref-bg);
+  border-radius: var(--spacing-md);
+  padding: var(--spacing-md);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.evidence-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--card-ref-shadow);
+}
+
+.evidence-card:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.evidence-card .evidence-source {
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.evidence-card .evidence-content {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.evidence-card .evidence-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-xs);
+  color: var(--text-secondary);
+}
+
+.evidence-card .evidence-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.evidence-card .evidence-credibility {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.evidence-card .credibility-high {
+  color: #2E7D32;
+}
+
+.evidence-card .credibility-medium {
+  color: #EF6C00;
+}
+
+.evidence-card .credibility-low {
+  color: #C62828;
+}
+
+/* ==================== Dark Mode Support ==================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-sketch-bg: #4A1A2E;
+    --card-sketch-shadow: rgba(233, 30, 99, 0.3);
+
+    --card-ref-bg: #0D2744;
+    --card-ref-shadow: rgba(33, 150, 243, 0.3);
+
+    --card-abstraction-bg: #2E1A3E;
+    --card-abstraction-shadow: rgba(156, 39, 176, 0.3);
+
+    --card-gen-bg: #1A3A24;
+    --card-gen-shadow: rgba(76, 175, 80, 0.3);
+  }
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-sm);
+  }
+
+  .user-sketch-card .card-image,
+  .reference-card .card-image,
+  .generated-design-card .card-image {
+    height: 150px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}

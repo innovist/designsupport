@@ -1,12 +1,12 @@
-# Fashion AI Generator - 배포 매뉴얼
-**Version:** 1.0.0
-**Last Updated:** 2025-12-21
+# Design Support System - 배포 매뉴얼
+**Version:** 2.0.0
+**Last Updated:** 2026-05-07
 
 ---
 
 ## 1. 배포 개요
 
-본 문서는 Fashion AI Generator 시스템을 프로덕션 환경에 배포하기 위한 전체 과정을 상세히 설명합니다.
+본 문서는 Design Support System을 프로덕션 환경에 배포하기 위한 전체 과정을 설명합니다. 근거 기반 디자인 창작 지원 플랫폼으로, Django + PostgreSQL 기반 SaaS 서비스입니다.
 
 ### 1.1. 배포 대상
 - 개발 환경 (Development)
@@ -17,7 +17,7 @@
 - Docker 및 Docker Compose 설치
 - Git 설치 및 설정
 - 도메인 및 SSL 인증서 준비
-- API 키 및 환경 변수 준비
+- AI Provider API 키 준비
 
 ---
 
@@ -43,7 +43,7 @@
 - **OS**: Ubuntu 22.04 LTS 또는 CentOS 8 이상
 - **Docker**: 20.10 이상
 - **Docker Compose**: 2.0 이상
-- **Python**: 3.10 이상 (컨테이너 내부)
+- **Python**: 3.13 이상 (컨테이너 내부)
 
 ### 2.3. 네트워크 설정
 - **외부 포트**: 80 (HTTP), 443 (HTTPS)
@@ -78,8 +78,8 @@ sudo systemctl enable docker
 
 ```bash
 # Git 클론
-git clone https://github.com/your-org/fashion-ai-generator.git
-cd fashion-ai-generator
+git clone https://github.com/your-org/design-support.git
+cd design-support
 
 # 프로덕션 브랜치로 전환
 git checkout main
@@ -98,42 +98,35 @@ nano .env
 
 #### .env 설정 예시
 ```env
+# Django 설정
+DJANGO_SETTINGS_MODULE=config.settings.production
+SECRET_KEY=your_very_secure_secret_key_here
+DEBUG=false
+ALLOWED_HOSTS=design-support.com,www.design-support.com
+
 # 데이터베이스 설정
-DATABASE_URL=postgresql://postgres:your_password@db:5432/fashion_ai
+DATABASE_URL=postgresql://postgres:your_password@db:5432/design_support
 DB_HOST=db
 DB_PORT=5432
-DB_NAME=fashion_ai
+DB_NAME=design_support
 DB_USER=postgres
 DB_PASSWORD=your_secure_password
 
 # Redis 설정
 REDIS_URL=redis://redis:6379/0
-REDIS_HOST=redis
-REDIS_PORT=6379
 
-# API Keys
+# AI Provider API Keys
 GEMINI_API_KEY=your_gemini_api_key
 GLM_API_KEY=your_glm_api_key
-Z_IMAGE_API_KEY=your_zimage_api_key
-SEEDREAM_API_KEY=your_seedream_api_key
-NANO_BANANA_API_KEY=your_nano_banana_api_key
+OPENAI_API_KEY=your_openai_api_key
 
-# 애플리케이션 설정
-SECRET_KEY=your_very_secure_secret_key_here
-ENVIRONMENT=production
-DEBUG=false
-HOST=0.0.0.0
-PORT=8000
+# 파일 저장소
+MEDIA_ROOT=/var/www/media
+STATIC_ROOT=/var/www/static
 
 # SSL 설정
 SSL_CERT_PATH=/etc/nginx/ssl/cert.pem
 SSL_KEY_PATH=/etc/nginx/ssl/key.pem
-
-# 기타 설정
-DEFAULT_LANGUAGE=ko
-DEFAULT_SIZE_STANDARD=KS
-MAX_CRAWL_PAGES=100
-ALLOWED_HOSTS=fashion-ai.com,www.fashion-ai.com
 ```
 
 ---
@@ -148,11 +141,10 @@ sudo apt update
 sudo apt install certbot python3-certbot-nginx
 
 # 도메인 인증서 발급
-sudo certbot --nginx -d fashion-ai.com -d www.fashion-ai.com
+sudo certbot --nginx -d design-support.com -d www.design-support.com
 
 # 자동 갱신 설정
 sudo crontab -e
-# 다음 라인 추가
 0 12 * * * /usr/bin/certbot renew --quiet
 ```
 
@@ -181,42 +173,45 @@ chmod 644 nginx/ssl/cert.pem
 # Docker Compose로 데이터베이스 시작
 docker-compose up -d db redis
 
-# 데이터베이스 초기화 스크립트 실행
-docker-compose exec db psql -U postgres -d fashion_ai -f /docker-entrypoint-initdb.d/init.sql
+# Django 마이그레이션 실행
+docker-compose exec web python manage.py migrate
 
-# 마이그레이션 실행
-docker-compose exec web alembic upgrade head
+# 관리자 계정 생성
+docker-compose exec web python manage.py createsuperuser
+
+# 기본 모델 카탈로그 로드 (필요 시)
+docker-compose exec web python manage.py loaddata model_catalog.json
 ```
 
 ### 5.2. 데이터베이스 백업 설정
 
 ```bash
 # 백업 스크립트 생성
-sudo nano /usr/local/bin/backup_fashion_ai.sh
+sudo nano /usr/local/bin/backup_design_support.sh
 ```
 
 ```bash
 #!/bin/bash
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="/backup/postgresql"
-CONTAINER_NAME="fashion_ai_db"
+CONTAINER_NAME="design_support_db"
 
 # 백업 디렉토리 생성
 mkdir -p $BACKUP_DIR
 
 # 데이터베이스 백업
-docker exec $CONTAINER_NAME pg_dump -U postgres fashion_ai > $BACKUP_DIR/fashion_ai_$DATE.sql
+docker exec $CONTAINER_NAME pg_dump -U postgres design_support > $BACKUP_DIR/design_support_$DATE.sql
 
 # 7일 이전 백업 삭제
-find $BACKUP_DIR -name "fashion_ai_*.sql" -mtime +7 -delete
+find $BACKUP_DIR -name "design_support_*.sql" -mtime +7 -delete
 ```
 
 ```bash
 # 실행 권한 부여 및 crontab 등록
-sudo chmod +x /usr/local/bin/backup_fashion_ai.sh
+sudo chmod +x /usr/local/bin/backup_design_support.sh
 sudo crontab -e
 # 매일 새벽 2시 백업
-0 2 * * * /usr/local/bin/backup_fashion_ai.sh
+0 2 * * * /usr/local/bin/backup_design_support.sh
 ```
 
 ---
@@ -250,11 +245,11 @@ docker-compose logs -f db
 ### 6.3. 헬스 체크
 
 ```bash
-# API 헬스 체크
-curl http://localhost:8000/health
+# Django 헬스 체크
+curl http://localhost:8000/health/
 
 # 데이터베이스 연결 확인
-docker-compose exec web python -c "from app.core.database import engine; print(engine.execute('SELECT 1').scalar())"
+docker-compose exec web python manage.py check --database default
 
 # Redis 연결 확인
 docker-compose exec redis redis-cli ping
@@ -276,7 +271,6 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-    # 로그 형식
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                     '$status $body_bytes_sent "$http_referer" '
                     '"$http_user_agent" "$http_x_forwarded_for"';
@@ -284,17 +278,14 @@ http {
     access_log /var/log/nginx/access.log main;
     error_log /var/log/nginx/error.log warn;
 
-    # Gzip 압축
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
     gzip_types text/plain text/css application/json application/javascript;
 
-    # Rate Limiting
     limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
 
-    # Upstream
-    upstream fashion_ai_backend {
+    upstream design_support_backend {
         server web:8000;
         keepalive 32;
     }
@@ -302,32 +293,25 @@ http {
     # HTTPS Server
     server {
         listen 443 ssl http2;
-        server_name fashion-ai.com www.fashion-ai.com;
+        server_name design-support.com www.design-support.com;
 
-        # SSL 설정
         ssl_certificate /etc/nginx/ssl/cert.pem;
         ssl_certificate_key /etc/nginx/ssl/key.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384;
         ssl_prefer_server_ciphers off;
 
-        # 보안 헤더
         add_header X-Frame-Options DENY;
         add_header X-Content-Type-Options nosniff;
-        add_header X-XSS-Protection "1; mode=block";
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
 
         # API 라우트
         location /api/ {
             limit_req zone=api burst=20 nodelay;
-            proxy_pass http://fashion_ai_backend;
+            proxy_pass http://design_support_backend;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_connect_timeout 30s;
-            proxy_send_timeout 30s;
-            proxy_read_timeout 30s;
         }
 
         # 정적 파일
@@ -337,63 +321,53 @@ http {
             add_header Cache-Control "public, immutable";
         }
 
+        # 미디어 파일
+        location /media/ {
+            alias /var/www/media/;
+            expires 30d;
+        }
+
         # 메인 애플리케이션
         location / {
-            proxy_pass http://fashion_ai_backend;
+            proxy_pass http://design_support_backend;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # 파일 업로드 제한
         client_max_body_size 100M;
     }
 
     # HTTP to HTTPS 리다이렉트
     server {
         listen 80;
-        server_name fashion-ai.com www.fashion-ai.com;
+        server_name design-support.com www.design-support.com;
         return 301 https://$server_name$request_uri;
     }
 }
 ```
 
-### 7.2. Nginx 재시작
-
-```bash
-# 설정 테스트
-docker-compose exec nginx nginx -t
-
-# 재시작
-docker-compose restart nginx
-```
-
 ---
 
-## 8. 모니터링 설정
+## 8. 관리자 초기 설정
 
-### 8.1. Prometheus & Grafana
+배포 후 관리자 콘솔에서 다음을 설정합니다.
 
-```bash
-# 모니터링 스택 시작
-docker-compose -f docker-compose.monitoring.yml up -d
+### 8.1. 트렌드 지식 시스템
+- Trend Source 등록 (Vogue Business, Core77, Dezeen 등)
+- 도메인별 수집 주기 설정
+- 트렌드 분류 관리
 
-# Grafana 접속
-# URL: http://your-server:3000
-# ID: admin
-# PW: admin (최초 로그인 후 변경)
-```
+### 8.2. AI 모델 카탈로그
+- Model Provider 등록 (Gemini, GLM, OpenAI 등)
+- 기능별 모델 정책 설정
+- Fallback 정책 구성
 
-### 8.2. ELK Stack
-
-```bash
-# 로그 수집 스택 시작
-docker-compose -f docker-compose.logging.yml up -d
-
-# Kibana 접속
-# URL: http://your-server:5601
-```
+### 8.3. 테넌트 및 워크스페이스
+- 초기 테넌트 생성
+- 관리자 계정 설정
+- 권한 정책 구성
 
 ---
 
@@ -413,45 +387,41 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.13'
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-cov
+          pip install pytest pytest-django pytest-cov ruff
+      - name: Lint
+        run: ruff check .
       - name: Run tests
-        run: pytest tests/ --cov=app
+        run: pytest tests/ --cov=apps --cov-report=term-missing
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /opt/fashion-ai-generator
+            cd /opt/design-support
             git pull origin main
             docker-compose build
+            docker-compose exec web python manage.py migrate --noinput
+            docker-compose exec web python manage.py collectstatic --noinput
             docker-compose up -d
             docker system prune -f
 ```
-
-### 9.2. Secrets 설정
-
-GitHub 리포지토리 Settings > Secrets and variables > Actions에 다음 항목 추가:
-
-- `HOST`: 배포 서버 IP 또는 도메인
-- `USERNAME`: 서버 접속 사용자명
-- `SSH_KEY`: 서버 접속용 SSH 개인키
 
 ---
 
@@ -470,181 +440,32 @@ docker-compose up -d
 
 ```bash
 # 백업에서 복원
-docker-compose exec db psql -U postgres -d fashion_ai < /backup/postgresql/fashion_ai_backup.sql
+docker-compose exec db psql -U postgres -d design_support < /backup/postgresql/design_support_backup.sql
 
-# 마이그레이션 롤백
-docker-compose exec web alembic downgrade -1
+# Django 마이그레이션 롤백
+docker-compose exec web python manage.py migrate <app_name> <migration_number>
 ```
 
 ---
 
-## 11. 성능 튜닝
+## 11. 배포 체크리스트
 
-### 11.1. 데이터베이스 튜닝
-
-```sql
--- postgresql.conf 설정 예시
-shared_buffers = 256MB
-effective_cache_size = 1GB
-maintenance_work_mem = 64MB
-checkpoint_completion_target = 0.9
-wal_buffers = 16MB
-default_statistics_target = 100
-random_page_cost = 1.1
-effective_io_concurrency = 200
-```
-
-### 11.2. Nginx 튜닝
-
-```nginx
-# nginx.conf 튜닝
-worker_processes auto;
-worker_connections 2048;
-
-# keepalive 활성화
-keepalive_timeout 65;
-keepalive_requests 100;
-
-# 버퍼 크기 조정
-client_body_buffer_size 128k;
-client_max_body_size 100m;
-client_header_buffer_size 1k;
-large_client_header_buffers 4 4k;
-```
-
----
-
-## 12. 보안 강화
-
-### 12.1. 방화벽 설정
-
-```bash
-# UFW 설정
-sudo ufw enable
-sudo ufw allow ssh
-sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw deny 5432  # DB 외부 접속 차단
-sudo ufw deny 6379  # Redis 외부 접속 차단
-```
-
-### 12.2. Fail2ban 설정
-
-```bash
-# Fail2ban 설치
-sudo apt install fail2ban
-
-# Nginx 보안 규칙 추가
-sudo nano /etc/fail2ban/jail.local
-```
-
-```ini
-[nginx-http-auth]
-enabled = true
-filter = nginx-http-auth
-port = http,https
-logpath = /var/log/nginx/error.log
-
-[nginx-limit-req]
-enabled = true
-filter = nginx-limit-req
-port = http,https
-logpath = /var/log/nginx/error.log
-maxretry = 10
-findtime = 600
-bantime = 7200
-```
-
----
-
-## 13. 문제 해결
-
-### 13.1. 일반적인 문제
-
-#### 문제: 컨테이너가 시작되지 않음
-```bash
-# 로그 확인
-docker-compose logs <service_name>
-
-# 컨테이너 상세 정보 확인
-docker inspect <container_name>
-```
-
-#### 문제: 데이터베이스 연결 오류
-```bash
-# DB 상태 확인
-docker-compose exec db pg_isready
-
-# 연결 테스트
-docker-compose exec web python -c "
-import psycopg2
-try:
-    conn = psycopg2.connect('postgresql://postgres:password@db:5432/fashion_ai')
-    print('Connection successful')
-except Exception as e:
-    print(f'Error: {e}')
-"
-```
-
-#### 문제: 502 Bad Gateway
-```bash
-# Nginx 재시작
-docker-compose restart nginx
-
-# 웹 서비스 상태 확인
-docker-compose ps web
-```
-
-### 13.2. 성능 문제
-
-#### 문제: 응답 시간이 느림
-```bash
-# 리소스 사용량 확인
-docker stats
-
-# DB 쿼리 모니터링
-docker-compose exec db psql -U postgres -d fashion_ai -c "
-SELECT query, calls, total_time, mean_time
-FROM pg_stat_statements
-ORDER BY total_time DESC
-LIMIT 10;"
-```
-
----
-
-## 14. 배포 체크리스트
-
-### 14.1. 사전 점검
+### 11.1. 사전 점검
 - [ ] 서버 사양 충족 여부 확인
 - [ ] Docker 및 Docker Compose 설치 확인
 - [ ] 도메인 및 SSL 인증서 준비
-- [ ] API 키 및 환경 변수 준비
+- [ ] AI Provider API 키 준비
 - [ ] 방화벽 설정 완료
 - [ ] 백업 전략 수립
 
-### 14.2. 배포 후 점검
+### 11.2. 배포 후 점검
 - [ ] 모든 서비스 정상 시작 확인
 - [ ] 헬스 체크 통과 확인
 - [ ] SSL 인증서 정상 적용 확인
-- [ ] API 기능 테스트 완료
-- [ ] 모니터링 대시보드 설정 확인
-- [ ] 로그 수집 정상 확인
+- [ ] 관리자 콘솔 접속 확인
+- [ ] 모델 카탈로그 설정 확인
+- [ ] 트렌드 출처 등록 확인
 - [ ] 백업 스크립트 실행 테스트
-
-### 14.3. 운영 준비
-- [ ] 문서 업데이트 완료
-- [ ] 팀원 교육 완료
-- [ ] 알림 설정 완료
-- [ ] 장애 대응 절차 확립
-- [ ] 사용자 안내 공지 준비
-
----
-
-## 15. 연락처
-
-- **개발팀**: dev-team@fashion-ai.com
-- **운영팀**: ops-team@fashion-ai.com
-- **긴급 연락**: +82-10-XXXX-XXXX (24/7)
 
 ---
 

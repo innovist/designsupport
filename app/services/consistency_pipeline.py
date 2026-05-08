@@ -3,6 +3,9 @@ Consistency Pipeline for Fashion AI Generation System
 패션 디자인의 일관성을 유지하는 파이프라인
 """
 
+# @MX:TODO: [AUTO] Missing integration tests for consistency validation workflow
+# ConsistencyPipeline lacks end-to-end tests for reference image tracking and quality gates
+
 import asyncio
 import logging
 from typing import Dict, Any, Optional, List

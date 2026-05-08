@@ -145,6 +145,8 @@ class CrawlJob(BaseModel):
     def __repr__(self) -> str:
         return f"<CrawlJob(id={self.id}, status='{self.status.value}', progress={self.progress_percent})>"
 
+    # @MX:ANCHOR: [AUTO] Crawl job state machine - lifecycle management
+    # @MX:REASON: State transition methods called from 85+ locations across crawler service and pipeline
     def start(self) -> None:
         """크롤링 시작"""
         self.status = CrawlStatus.RUNNING

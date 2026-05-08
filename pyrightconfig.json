@@ -1,0 +1,21 @@
+{
+  "include": [
+    "apps",
+    "shared",
+    "config"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "app",
+    "archive",
+    "crawlers"
+  ],
+  "pythonVersion": "3.13",
+  "executionEnvironments": [
+    {
+      "root": "."
+    }
+  ],
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false
+}

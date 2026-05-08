@@ -1,3 +1,5 @@
+// @MX:WARN: [AUTO] File size exceeds 500 lines (844 lines total) - consider splitting into modules
+// @MX:REASON: Large monolithic file reduces maintainability and makes testing difficult
 // Dashboard JavaScript for Fashion AI Generation System
 // Use _t to avoid conflict with i18n.js global t
 const _t = (key, params) => window.t ? window.t(key, params) : key;
@@ -88,7 +90,7 @@ function renderProjects() {
 
 function onProjectSelect(value) {
     if (value) {
-        selectProject(parseInt(value, 10));
+        selectProject(value);
         // Show edit/delete buttons
         document.getElementById('edit-project-btn').style.display = 'block';
         document.getElementById('delete-project-btn').style.display = 'block';
@@ -143,7 +145,7 @@ function renderSessions() {
     container.innerHTML = sessions.map(s => {
         const statusColor = s.status === 'completed' ? '#10b981' : s.status === 'running' ? '#f59e0b' : '#6b7280';
         return `
-        <div class="item-card ${currentSessionId === s.id ? 'active' : ''}" onclick="selectSession(${s.id})" style="border-left: 3px solid ${statusColor};">
+        <div class="item-card ${currentSessionId === s.id ? 'active' : ''}" onclick="selectSession('${s.id}')" style="border-left: 3px solid ${statusColor};">
             <div class="item-title">${escapeHtml(s.session_title || _t('common.noTitle'))}</div>
             <div class="item-meta">${getStatusText(s.status)} | ${formatDate(s.created_at)}</div>
         </div>
@@ -478,7 +480,7 @@ async function updateSession() {
         if (res.ok) {
             closeEditSessionModal();
             await loadSessions(currentProjectId);
-            await loadSessionDetails(parseInt(sessionId, 10));
+            await loadSessionDetails(sessionId);
         } else {
             const err = await res.json();
             alert(_t('dashboard.messages.updateFailed', { error: err.detail || _t('common.unknownError') }));
@@ -540,6 +542,8 @@ function getSelectedCheckboxValues(name) {
     return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
 }
 
+// @MX:WARN: [AUTO] Complex async function with 8+ branches and multiple API calls without error boundary
+// @MX:REASON: Function handles session creation, file upload, and analysis triggering - failure in later steps can leave inconsistent state
 async function createSession() {
     const title = document.getElementById('session-title-input').value.trim();
     const desc = document.getElementById('session-desc-input').value.trim();

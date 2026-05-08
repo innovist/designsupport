@@ -1,0 +1,69 @@
+# Industrial Design Domain Pack Manifest
+#
+# REQ-03-GEN-005: Domain-specific generation configuration
+
+id: "industrial"
+domain: "Industrial Design"
+
+brief_schema:
+  title:
+    type: string
+    required: true
+    description: "Project title"
+  description:
+    type: string
+    required: true
+    description: "Detailed project description"
+  target_users:
+    type: array
+    items:
+      type: string
+    required: true
+    description: "Target user personas"
+  functional_requirements:
+    type: array
+    items:
+      type: string
+    required: true
+    description: "Key functional requirements"
+  constraints:
+    type: object
+    properties:
+      materials:
+        type: array
+        items:
+          type: string
+      manufacturing:
+        type: array
+        items:
+          type: string
+      budget:
+        type: string
+    required: false
+    description: "Design constraints"
+
+evaluation_axes:
+  - "Functionality"
+  - "Ergonomics"
+  - "Manufacturability"
+  - "Aesthetics"
+  - "Innovation"
+  - "Sustainability"
+
+generation_outputs:
+  - "product_sketch"
+  - "exploded_view"
+  - "material_study"
+  - "user_context_rendering"
+  - "technical_drawing"
+
+spec_template_uri: "templates/industrial_spec.md"
+
+spec_sections:
+  - "functional_requirements"
+  - "user_research"
+  - "ergonomics_analysis"
+  - "material_selection"
+  - "manufacturing_considerations"
+  - "technical_specifications"
+  - "compliance_standards"

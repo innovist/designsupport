@@ -1,0 +1,11 @@
+{
+  "domain": "visual",
+  "label": "Visual Design",
+  "brief_schema": {
+    "required_fields": ["brand_tone", "design_type", "output_format"],
+    "optional_fields": ["color_system", "typography", "grid_system"]
+  },
+  "evaluation_axes": ["brand_tone", "color", "typography", "grid", "layout", "legibility"],
+  "spec_template_uri": "templates/specs/visual.md",
+  "generation_outputs": ["key_visual", "logo_direction", "poster", "graphic_system"]
+}

@@ -2,6 +2,9 @@
 Image generation service for fashion designs
 """
 
+# @MX:NOTE: [AUTO] Image generation service - multi-provider AI image generation orchestration
+# Manages Z-Image, Seedream, and Nano Banana clients with fallback and retry logic
+
 import asyncio
 import io
 import logging
@@ -44,6 +47,7 @@ class ImageGenerationRequest:
     height: int = 1024
     quality: str = "high"  # low, medium, high, ultra
     model_preference: Optional[str] = None  # zimage, seedream, nano_banana
+    is_children_clothing: bool = False  # 아동복 여부
 
 
 @dataclass
@@ -108,7 +112,8 @@ class ImageGenerationService:
             style=request.style,
             garment_type=request.garment_type,
             color_scheme=request.color_scheme,
-            fabric_type=request.fabric_type
+            fabric_type=request.fabric_type,
+            is_children_clothing=request.is_children_clothing
         )
 
         # 모델 선택
@@ -179,9 +184,21 @@ class ImageGenerationService:
         style: str,
         garment_type: str,
         color_scheme: Optional[str] = None,
-        fabric_type: Optional[str] = None
+        fabric_type: Optional[str] = None,
+        is_children_clothing: bool = False
     ) -> str:
         """패션 프롬프트 최적화"""
+
+        # 아동복 여부에 따른 추가 지시사항
+        kids_instruction = ""
+        if is_children_clothing:
+            kids_instruction = """
+            IMPORTANT: This is for CHILDREN'S CLOTHING.
+            - Specify age-appropriate child model (6-12 years old)
+            - Emphasize kids' fashion proportions (smaller body, youthful features)
+            - NO adult features, NO mature elements
+            - Use keywords: "child model", "kids fashion", "age-appropriate"
+            """
 
         # Gemini를 사용한 프롬프트 최적화
         optimization_prompt = f"""
@@ -192,13 +209,14 @@ class ImageGenerationService:
         Garment Type: {garment_type}
         Color Scheme: {color_scheme or 'not specified'}
         Fabric Type: {fabric_type or 'not specified'}
+        {kids_instruction}
 
         Create an enhanced prompt that:
         1. Is specific and detailed
         2. Includes professional fashion terminology
         3. Specifies lighting and composition
         4. Mentions quality and detail level
-        5. Includes appropriate negative aspects to avoid
+        5. Excludes: text, letters, watermarks, logos, magazine covers
 
         Return only the optimized prompt without explanation.
         """
@@ -208,11 +226,23 @@ class ImageGenerationService:
                 optimization_prompt,
                 model=get_gemini_model()
             )
-            return response.text.strip()
+            optimized = response.text.strip()
+            # 아동복인 경우 추가 안전장치
+            if is_children_clothing:
+                safe_suffixes = [
+                    "child model", "kids fashion", "age-appropriate",
+                    "6-12 years old", "kids wear"
+                ]
+                if not any(s in optimized.lower() for s in safe_suffixes):
+                    optimized += ", child model (6-12 years old), kids fashion"
+            return optimized
         except Exception as e:
             logger.warning(f"Prompt optimization failed: {str(e)}")
             # 폴백으로 수동 최적화
-            return f"Professional fashion design of a {garment_type}, {prompt}, style: {style}, high quality, detailed, studio lighting"
+            fallback = f"Professional fashion design of a {garment_type}, {prompt}, style: {style}, high quality, detailed, studio lighting"
+            if is_children_clothing:
+                fallback += ", child model (6-12 years old), kids fashion"
+            return fallback
 
     def _is_gpu_available(self) -> bool:
         if not config.gpu_enabled:

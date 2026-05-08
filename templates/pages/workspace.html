@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ workspace.pageTitle | default:"UX Workspace" }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/pages/workspace-base.css">
+<link rel="stylesheet" href="/static/css/pages/workspace-navigator.css">
+<link rel="stylesheet" href="/static/css/pages/workspace.css">
+<link rel="stylesheet" href="/static/css/pages/workspace-cards.css">
+{% endblock %}
+
+{% block content %}
+<div class="workspace-container" data-session-id="{{ session_id|default:'' }}">
+  <!-- Step Bar -->
+  <div class="step-bar" role="navigation" aria-label="{{ workspace.stepBar.title }}">
+    <div class="step-bar-inner">
+      {% for step in workspace.stepBar.steps %}
+      <div class="step-item {% if step.key == current_step %}active{% endif %}"
+           data-step="{{ step.key }}"
+           role="button"
+           tabindex="0"
+           aria-label="{{ step.label }}"
+           aria-current="{% if step.key == current_step %}step{% else %}false{% endif %}">
+        <span class="step-number">{{ forloop.counter }}</span>
+        <span class="step-label" data-i18n="workspace.stepBar.steps.{{ step.key }}">{{ step.label }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 3-Panel Layout -->
+  <div class="workspace-layout">
+    <!-- LEFT: Project Navigator -->
+    <aside class="project-navigator" role="complementary" aria-label="{{ workspace.projectNavigator }}">
+      <div class="navigator-section">
+        <h2 data-i18n="workspace.navigator.projectList">{{ workspace.navigator.projectList | default:"Project List" }}</h2>
+        <div id="project-list" class="project-list">
+          <!-- Skeleton -->
+          <div class="skeleton-list" data-skeleton="project-list"></div>
+        </div>
+      </div>
+
+      <div class="navigator-section">
+        <h2 data-i18n="workspace.navigator.sessionList">{{ workspace.navigator.sessionList | default:"Session List" }}</h2>
+        <div id="session-list" class="session-list">
+          <!-- Skeleton -->
+          <div class="skeleton-list" data-skeleton="session-list"></div>
+        </div>
+      </div>
+
+      <div class="navigator-section">
+        <h2 data-i18n="workspace.navigator.pipelineSteps">{{ workspace.navigator.pipelineSteps | default:"Pipeline Steps" }}</h2>
+        <div id="pipeline-steps" class="pipeline-steps">
+          <!-- Skeleton -->
+          <div class="skeleton-list" data-skeleton="pipeline-steps"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: Design Studio with 7 Boards -->
+    <main class="design-studio" role="main">
+      <!-- Board Tabs -->
+      <nav class="board-tabs" role="tablist" aria-label="{{ workspace.boards.title }}">
+        <button class="board-tab tab-active"
+                data-board="chat"
+                role="tab"
+                aria-selected="true"
+                aria-controls="board-chat"
+                data-i18n="workspace.boards.chat.title">
+          {{ workspace.boards.chat.title | default:"Chat" }}
+        </button>
+        <button class="board-tab"
+                data-board="evidence"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-evidence"
+                data-i18n="workspace.boards.evidence.title">
+          {{ workspace.boards.evidence.title | default:"Evidence" }}
+        </button>
+        <button class="board-tab"
+                data-board="sketch"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-sketch"
+                data-i18n="workspace.boards.sketch.title">
+          {{ workspace.boards.sketch.title | default:"Sketch" }}
+        </button>
+        <button class="board-tab"
+                data-board="reference"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-reference"
+                data-i18n="workspace.boards.reference.title">
+          {{ workspace.boards.reference.title | default:"Reference" }}
+        </button>
+        <button class="board-tab"
+                data-board="abstraction"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-abstraction"
+                data-i18n="workspace.boards.abstraction.title">
+          {{ workspace.boards.abstraction.title | default:"Abstraction" }}
+        </button>
+        <button class="board-tab"
+                data-board="generation"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-generation"
+                data-i18n="workspace.boards.generation.title">
+          {{ workspace.boards.generation.title | default:"Generation" }}
+        </button>
+        <button class="board-tab"
+                data-board="decision"
+                role="tab"
+                aria-selected="false"
+                aria-controls="board-decision"
+                data-i18n="workspace.boards.decision.title">
+          {{ workspace.boards.decision.title | default:"Decision" }}
+        </button>
+      </nav>
+
+      <!-- Board Content Area -->
+      <div class="board-content">
+        <!-- Chat Board -->
+        <section id="board-chat"
+                 class="board-panel active"
+                 role="tabpanel"
+                 aria-labelledby="tab-chat">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.chat.title">{{ workspace.boards.chat.title | default:"Chat Board" }}</h2>
+          </div>
+          <div id="chat-messages" class="chat-messages">
+            <div class="skeleton-chat" data-skeleton="chat-messages"></div>
+          </div>
+          <div class="chat-input-area">
+            <textarea id="chat-input"
+                      class="chat-input"
+                      placeholder="{{ workspace.boards.chat.placeholder }}"
+                      data-i18n-placeholder="workspace.boards.chat.placeholder"
+                      aria-label="{{ workspace.boards.chat.inputLabel }}"
+                      rows="3"></textarea>
+            <button id="chat-send"
+                    class="btn btn-primary"
+                    data-i18n="workspace.boards.chat.sendButton">
+              {{ workspace.boards.chat.sendButton | default:"Send" }}
+            </button>
+          </div>
+        </section>
+
+        <!-- Evidence Board -->
+        <section id="board-evidence"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-evidence">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.evidence.title">{{ workspace.boards.evidence.title | default:"Evidence Board" }}</h2>
+            <div class="board-actions">
+              <select id="evidence-filter" aria-label="{{ workspace.boards.evidence.filterBySource }}">
+                <option value="" data-i18n="workspace.boards.evidence.allSources">{{ workspace.boards.evidence.allSources | default:"All Sources" }}</option>
+              </select>
+              <select id="evidence-sort" aria-label="{{ workspace.boards.evidence.sortBy }}">
+                <option value="credibility" data-i18n="workspace.boards.evidence.credibility">{{ workspace.boards.evidence.credibility | default:"Credibility" }}</option>
+                <option value="recency" data-i18n="workspace.boards.evidence.recency">{{ workspace.boards.evidence.recency | default:"Recency" }}</option>
+              </select>
+            </div>
+          </div>
+          <div id="evidence-cards" class="evidence-cards">
+            <div class="skeleton-cards" data-skeleton="evidence-cards"></div>
+          </div>
+        </section>
+
+        <!-- Sketch Input Board (3-split) -->
+        <section id="board-sketch"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-sketch">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.sketch.title">{{ workspace.boards.sketch.title | default:"Sketch Input" }}</h2>
+          </div>
+          <div class="sketch-split-layout">
+            <!-- Original Panel -->
+            <div class="sketch-panel sketch-original">
+              <h3 data-i18n="workspace.boards.sketch.original">{{ workspace.boards.sketch.original | default:"Original" }}</h3>
+              <div id="sketch-upload-area" class="upload-area">
+                <div class="skeleton-image" data-skeleton="sketch-upload"></div>
+              </div>
+              <input type="file"
+                     id="sketch-file-input"
+                     accept="image/*"
+                     aria-label="{{ workspace.boards.sketch.upload }}"
+                     class="visually-hidden">
+            </div>
+
+            <!-- AI Interpretation Panel -->
+            <div class="sketch-panel sketch-interpretation">
+              <h3 data-i18n="workspace.boards.sketch.interpretation">{{ workspace.boards.sketch.interpretation | default:"AI Interpretation" }}</h3>
+              <div id="sketch-interpretation-content" class="interpretation-content">
+                <div class="skeleton-text" data-skeleton="sketch-interpretation"></div>
+              </div>
+            </div>
+
+            <!-- Refinement Actions Panel -->
+            <div class="sketch-panel sketch-actions">
+              <h3 data-i18n="workspace.boards.sketch.refinement">{{ workspace.boards.sketch.refinement | default:"Refinement Actions" }}</h3>
+              <div id="sketch-actions-grid" class="actions-grid">
+                <button class="action-btn" data-action="keep" data-i18n="workspace.boards.sketch.actions.keep">
+                  {{ workspace.boards.sketch.actions.keep | default:"Keep" }}
+                </button>
+                <button class="action-btn" data-action="clarify" data-i18n="workspace.boards.sketch.actions.clarify">
+                  {{ workspace.boards.sketch.actions.clarify | default:"Clarify" }}
+                </button>
+                <button class="action-btn" data-action="vary" data-i18n="workspace.boards.sketch.actions.vary">
+                  {{ workspace.boards.sketch.actions.vary | default:"Vary" }}
+                </button>
+                <button class="action-btn" data-action="refine" data-i18n="workspace.boards.sketch.actions.refine">
+                  {{ workspace.boards.sketch.actions.refine | default:"Refine" }}
+                </button>
+                <button class="action-btn" data-action="expand" data-i18n="workspace.boards.sketch.actions.expand">
+                  {{ workspace.boards.sketch.actions.expand | default:"Expand" }}
+                </button>
+                <button class="action-btn" data-action="use_as_evidence" data-i18n="workspace.boards.sketch.actions.useAsEvidence">
+                  {{ workspace.boards.sketch.actions.useAsEvidence | default:"Use as Evidence" }}
+                </button>
+                <button class="action-btn" data-action="run_sketch_search" data-i18n="workspace.boards.sketch.actions.runSearch">
+                  {{ workspace.boards.sketch.actions.runSearch | default:"Run Search" }}
+                </button>
+                <button class="action-btn" data-action="generate_refinement" data-i18n="workspace.boards.sketch.actions.generate">
+                  {{ workspace.boards.sketch.actions.generate | default:"Generate" }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reference Search Board (3-split) -->
+        <section id="board-reference"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-reference">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.reference.title">{{ workspace.boards.reference.title | default:"Reference Search" }}</h2>
+          </div>
+          <div class="reference-split-layout">
+            <!-- Source Clusters Panel -->
+            <div class="reference-panel reference-clusters">
+              <h3 data-i18n="workspace.boards.reference.clusters">{{ workspace.boards.reference.clusters | default:"Source Clusters" }}</h3>
+              <div id="reference-clusters-content" class="clusters-content">
+                <div class="skeleton-list" data-skeleton="reference-clusters"></div>
+              </div>
+            </div>
+
+            <!-- Reference Grid Panel -->
+            <div class="reference-panel reference-grid">
+              <h3 data-i18n="workspace.boards.reference.grid">{{ workspace.boards.reference.grid | default:"Reference Grid" }}</h3>
+              <div id="reference-grid-content" class="grid-content">
+                <div class="skeleton-grid" data-skeleton="reference-grid"></div>
+              </div>
+            </div>
+
+            <!-- Analysis Panel -->
+            <div class="reference-panel reference-analysis">
+              <h3 data-i18n="workspace.boards.reference.analysis">{{ workspace.boards.reference.analysis | default:"Analysis" }}</h3>
+              <div id="reference-analysis-content" class="analysis-content">
+                <div class="skeleton-text" data-skeleton="reference-analysis"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Abstraction Board -->
+        <section id="board-abstraction"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-abstraction">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.abstraction.title">{{ workspace.boards.abstraction.title | default:"Abstraction Rules" }}</h2>
+          </div>
+          <div id="abstraction-rules" class="abstraction-rules">
+            <div class="skeleton-cards" data-skeleton="abstraction-rules"></div>
+          </div>
+        </section>
+
+        <!-- Generation Board -->
+        <section id="board-generation"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-generation">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.generation.title">{{ workspace.boards.generation.title | default:"Generation Results" }}</h2>
+            <div class="board-actions">
+              <button id="generation-comparison" class="btn btn-secondary" data-i18n="workspace.boards.generation.comparison">
+                {{ workspace.boards.generation.comparison | default:"Comparison" }}
+              </button>
+            </div>
+          </div>
+          <div id="generation-results" class="generation-results">
+            <div class="skeleton-grid" data-skeleton="generation-results"></div>
+          </div>
+        </section>
+
+        <!-- Decision Board -->
+        <section id="board-decision"
+                 class="board-panel"
+                 role="tabpanel"
+                 aria-labelledby="tab-decision">
+          <div class="board-header">
+            <h2 data-i18n="workspace.boards.decision.title">{{ workspace.boards.decision.title | default:"Decision Board" }}</h2>
+          </div>
+          <div id="decision-candidates" class="decision-candidates">
+            <div class="skeleton-cards" data-skeleton="decision-candidates"></div>
+          </div>
+          <div id="decision-log" class="decision-log">
+            <h3 data-i18n="workspace.boards.decision.log">{{ workspace.boards.decision.log | default:"Decision Log" }}</h3>
+            <div class="skeleton-list" data-skeleton="decision-log"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- RIGHT: Decision Panel -->
+    <aside class="decision-panel" role="complementary" aria-label="{{ workspace.decisionPanel.title }}">
+      <div class="decision-panel-header">
+        <h2 data-i18n="workspace.decisionPanel.title">{{ workspace.decisionPanel.title | default:"Decision Panel" }}</h2>
+        <button id="toggle-decision-panel" class="toggle-btn" aria-label="{{ common.toggle }}" aria-expanded="true">
+          <span aria-hidden="true">◀</span>
+        </button>
+      </div>
+
+      <div class="decision-panel-content">
+        <!-- Current Step -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.currentStep">{{ workspace.decisionPanel.currentStep | default:"Current Step" }}</h3>
+          <p id="current-step-display" class="step-display">-</p>
+        </div>
+
+        <!-- Brief Score -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.briefScore">{{ workspace.decisionPanel.briefScore | default:"Brief Score" }}</h3>
+          <div class="score-bar">
+            <div id="brief-score-bar" class="score-fill" style="width: 0%"></div>
+          </div>
+          <p id="brief-score-value" class="score-value">0%</p>
+        </div>
+
+        <!-- Concept Scores -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.conceptScores">{{ workspace.decisionPanel.conceptScores | default:"Concept Scores" }}</h3>
+          <div id="concept-scores" class="concept-scores">
+            <div class="score-item">
+              <span data-i18n="workspace.boards.decision.scores.creativity">{{ workspace.boards.decision.scores.creativity | default:"Creativity" }}</span>
+              <div class="score-bar">
+                <div id="creativity-score-bar" class="score-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="score-item">
+              <span data-i18n="workspace.boards.decision.scores.feasibility">{{ workspace.boards.decision.scores.feasibility | default:"Feasibility" }}</span>
+              <div class="score-bar">
+                <div id="feasibility-score-bar" class="score-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="score-item">
+              <span data-i18n="workspace.boards.decision.scores.marketFit">{{ workspace.boards.decision.scores.marketFit | default:"Market Fit" }}</span>
+              <div class="score-bar">
+                <div id="marketfit-score-bar" class="score-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Sketch Reference -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.selectedSketch">{{ workspace.decisionPanel.selectedSketch | default:"Selected Sketch" }}</h3>
+          <div id="selected-sketch-preview" class="preview-box">
+            <div class="skeleton-image" data-skeleton="selected-sketch"></div>
+          </div>
+        </div>
+
+        <!-- Selected References -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.selectedReferences">{{ workspace.decisionPanel.selectedReferences | default:"Selected References" }}</h3>
+          <div id="selected-references-list" class="references-list">
+            <div class="skeleton-list" data-skeleton="selected-references"></div>
+          </div>
+        </div>
+
+        <!-- Next Decision -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.nextAction">{{ workspace.decisionPanel.nextAction | default:"Next Action" }}</h3>
+          <p id="next-action-reason" class="action-reason">-</p>
+          <button id="next-decision-btn" class="btn btn-primary w-full" data-i18n="workspace.decisionPanel.proceed">
+            {{ workspace.decisionPanel.proceed | default:"Proceed" }}
+          </button>
+        </div>
+
+        <!-- Step Progress -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.progress">{{ workspace.decisionPanel.progress | default:"Progress" }}</h3>
+          <div class="progress-bar">
+            <div id="step-progress-bar" class="progress-fill" style="width: 0%"></div>
+          </div>
+          <p id="step-progress-text" class="progress-text">0 / 17</p>
+        </div>
+
+        <!-- Notifications -->
+        <div class="decision-section">
+          <h3 data-i18n="workspace.decisionPanel.notifications">{{ workspace.decisionPanel.notifications | default:"Notifications" }}</h3>
+          <div id="workspace-notifications" class="notifications" aria-live="polite" aria-atomic="true">
+            <div class="skeleton-list" data-skeleton="notifications"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="/static/js/pages/workspace.js"></script>
+{% endblock %}

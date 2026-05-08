@@ -1,155 +1,146 @@
-# Fashion AI Generation System
+# Design Support System
 
-패션 트렌드 분석 및 AI 이미지 생성 통합 플랫폼
+근거 기반 디자인 창작 지원 플랫폼
 
 ## 빠른 시작
 
 ### 1. 실행 방법
 ```bash
-# 메인 실행 (권장)
-python main.py
+# 의존성 설치
+pip install -r requirements.txt
 
-# 또는 개발 모드 (자동 리로드)
-uvicorn main:app --reload --host 0.0.0.0 --port 8912
+# 데이터베이스 마이그레이션
+python manage.py migrate
+
+# 관리자 계정 생성
+python manage.py createsuperuser
+
+# 개발 서버 실행
+python manage.py runserver 0.0.0.0:8000
 ```
 
 ### 2. 접속 주소
-- 웹 애플리케이션: http://localhost:8912
-- API 문서: http://localhost:8912/docs
-- API 상태 확인: http://localhost:8912/api/v1/health
+- 웹 애플리케이션: http://localhost:8000
+- 관리자 콘솔: http://localhost:8000/admin/
 
 ### 3. 서버 관리
 ```bash
-# 서버 실행 (포트 8912)
-python main.py
-
-# 개발 모드 (자동 리로드)
-uvicorn main:app --reload --host 0.0.0.0 --port 8912
-
-# 서버 중지
-# 터미널에서 Ctrl+C 누르기
+# 개발 서버 실행
+python manage.py runserver 0.0.0.0:8000
 
 # 백그라운드 실행
-nohup python main.py > server.log 2>&1 &
+nohup python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
 
 # 백그라운드 프로세스 중지
-lsof -ti:8912 | xargs kill -9
+lsof -ti:8000 | xargs kill -9
 ```
 
 ### 4. 초기 설정
-1. 웹 접속 후 우측 상단 ⚙️ 설정 메뉴 클릭
-2. API 키 탭에서 필요한 API 키 입력:
-   - **Gemini API Key** (필수): https://makersuite.google.com/app/apikey
-   - **GLM API Key** (필수): https://open.bigmodel.cn/
-   - Z-Image, Seedream, Nano Banana (선택)
-3. 저장 후 '연결 테스트'로 확인
+1. 관리자 콘솔 접속 (`/admin/`)
+2. Model Catalog에서 AI Provider 및 모델 등록
+3. Trend Knowledge에서 트렌드 출처 등록
+4. `.env` 파일에 API 키 설정
+
+## 제품 정의
+
+편집툴이나 AI 이미지 생성기가 아닙니다. 이 시스템은 **근거 기반 디자인 발상 시스템**입니다.
+
+- 어떤 디자인 목적이 있는가.
+- 이 목적에 적합한 컨셉은 무엇인가.
+- 그 컨셉은 어떤 트렌드와 실제 자료에 근거하는가.
+- 레퍼런스를 어떤 디자인 문법으로 추상화할 수 있는가.
+- 사용자 스케치를 어떻게 구체화할 수 있는가.
+- 그 과정을 어떤 스펙 문서로 남길 것인가.
 
 ## 주요 기능
 
-### 🔍 트렌드 분석
-- 키워드 기반 패션 트렌드 분석
-- 여러 커뮤니티 데이터 수집 (FM코리아, 블라인드 등)
-- AI 기반 트렌드 인사이트 생성
+### 목적 → 브리프 → 컨셉
+- 자연어 목적 입력으로 구조화된 디자인 브리프 생성
+- 트렌드 근거 기반 컨셉 후보 생성 및 평가
+- 컨셉별 점수, 근거, 리스크 표시
 
-### 🎨 이미지 생성
-- 텍스트 설명으로 패션 디자인 생성
-- 참조 이미지 기반 디자인 제안
-- 다양한 스타일과 품질 옵션
-- 일관성 있는 시리즈 생성 (마스터 → 모델 → 도면)
+### 사용자 스케치 지원
+- 러프/구조/스타일 스케치 업로드
+- AI 스케치 의도 해석 (사용자 승인 필요)
+- 원본 보존형 구체화 및 변형 생성
 
-### 📐 패턴 생성
-- 기술 도면 자동 생성
-- 치수표 (KS, GB, ASTM, ISO)
-- 제작 지시문 포함
+### 레퍼런스 검색과 추상화
+- 키워드/이미지/스케치/문서 기반 검색
+- 출처, 라이선스, 저작권 위험 관리
+- 레퍼런스를 형태/구조/재질/상징/사용성 규칙으로 추상화
 
-### 🕷️ 데이터 수집
-- 다양한 소스에서 패션 데이터 수집
-- 실시간 트렌드 모니터링
-- 필터링 및 분석 기능
+### 스펙 문서화
+- 브리프, 근거, 결정, 레퍼런스, 추상화, 최종안을 포함한 스펙 문서
+- 버전 관리와 승인 워크플로우
+
+### 챗봇 협업 / 자동 진행
+- 챗봇 협업 모드: 디자이너와 AI가 단계별로 컨셉을 좁혀가는 모드
+- 자동 진행 모드: 목적과 제약만 입력하면 시스템이 끝까지 진행
+
+### 도메인팩
+- 산업디자인, 패션디자인, 시각디자인, 광고디자인 지원
+- 도메인별 특화 분석, 시각화, 스펙 필드
+
+### 관리자 시스템
+- 기능별 AI 모델 정책 관리
+- 트렌드 출처 등록 및 문서 수집 관리
+- 테넌트/사용자/권한 관리
+- 감사 로그
 
 ## 시스템 요구사항
 
-- Python 3.8 이상
+- Python 3.13 이상
+- PostgreSQL 15+
 - 8GB 이상 RAM
-- GPU 지원 (권장: NVIDIA CUDA 또는 Apple Silicon)
 
 ## 설치
 
 ```bash
 # 1. 저장소 클론
 git clone [repository-url]
-cd Fashion_Image_gen
+cd DesignSupport
 
-# 2. 의존성 설치
+# 2. 가상환경 생성 및 활성화
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# venv\Scripts\activate   # Windows
+
+# 3. 의존성 설치
 pip install -r requirements.txt
 
-# 3. 환경 설정
+# 4. 환경 설정
 cp .env.template .env
-# .env 파일에 API 키 설정
+# .env 파일에 API 키, DB 설정
 
-# 4. 실행
-python main.py
+# 5. 데이터베이스 마이그레이션
+python manage.py migrate
+
+# 6. 관리자 계정 생성
+python manage.py createsuperuser
+
+# 7. 실행
+python manage.py runserver 0.0.0.0:8000
 ```
-
-## API 문서
-
-FastAPI 자동 문서: http://localhost:8912/docs
-
-주요 엔드포인트:
-- `/api/v1/settings` - 설정 관리
-- `/api/v1/analysis` - 트렌드 분석
-- `/api/v1/generation` - 이미지 생성
-- `/api/v1/crawler` - 데이터 수집
-- `/api/v1/blueprint` - 패턴 생성
-- `/api/v1/projects` - 프로젝트 관리
-- `/api/v1/sessions` - 세션/파이프라인 관리
-
-## 보안
-
-- 모든 API 키는 AES-256 암호화로 저장
-- 로컬 저장소에만 보관
-- 설정 파일 내보내기/가져오기 지원
 
 ## 기술 스택
 
-- **Backend**: FastAPI, Python 3.8+
-- **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **AI**: Google Gemini, Zhipu GLM, Custom Image Models
-- **Database**: SQLite (기본), PostgreSQL (옵션)
-- **Caching**: Redis (옵션)
+- **Backend**: Django 5.2 LTS, Python 3.13+
+- **Frontend**: Vanilla HTML, Vanilla JS, Vanilla CSS
+- **Database**: PostgreSQL 15+
+- **AI**: 기능별 모델 정책 (관리자 페이지에서 관리)
+- **Architecture**: Clean Architecture (Domain/Application/Infrastructure/Presentation)
 
-## AI 모델 설정
+## 제품 원칙
 
-### 사용 가능한 모델
-
-**텍스트 생성 (Gemini)**
-- `gemini-2.5-flash` - 기본값, 빠르고 효율적
-- `gemini-2.5-flash-lite` - 경량 버전
-- `gemini-2.5-pro` - 고품질 분석용
-
-**텍스트 생성 폴백 (GLM)**
-- `glm-4.7` - 기본값
-- `glm-4-flash` - 빠른 응답용
-
-**이미지 생성**
-- `seedream-3.0` - Bytedance Seedream
-- `nano-banana-v1` - Nano Banana
-
-### 모델 설정 방법
-1. 웹 UI의 설정 페이지에서 모델 선택
-2. 설정 저장 후 자동 적용
-
-### 개발자 참고사항
-- 모델명은 절대 하드코딩하지 않음
-- `app/core/settings_storage.py`의 함수 사용:
-  - `get_gemini_model()` - Gemini 모델명 반환
-  - `get_glm_model()` - GLM 모델명 반환
-  - `get_fallback_model()` - 폴백 모델명 반환
+1. **편집보다 창작 지원이 우선** — 캔버스 편집, 레이어 조작, 세밀한 이미지 보정은 핵심 범위가 아님
+2. **근거 없는 제안 금지** — 출처가 없으면 "아이디어 가설"로 표시
+3. **레퍼런스 복제 금지** — 레퍼런스는 분석 대상, 모방 대상이 아님
+4. **디자이너의 판단 보존** — 모든 결정을 Decision Log로 남김
+5. **사용자 스케치 존중** — 원본 덮어쓰기 금지, AI 해석은 가설로 표시
+6. **자동화는 옵션** — 챗봇 협업 또는 자동 진행 선택 가능
+7. **도메인팩 기반 확장** — 공통 파이프라인 + 도메인별 템플릿
+8. **관리 가능한 AI 시스템** — 모델명/API 키 하드코딩 금지
 
 ## 라이선스
 
 MIT License
-
-## 지원
-
-문의: [이메일 주소]

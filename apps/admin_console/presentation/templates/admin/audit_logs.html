@@ -1,0 +1,187 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'admin.audit_logs.title'|i18n }}{% endblock %}
+{% block description %}View policy change history and audit trail{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page" data-i18n="admin.breadcrumb.audit_logs">
+    Audit Logs
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="audit-logs-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title" data-i18n="admin.audit_logs.title">Audit Logs</h1>
+        <p class="page-description" data-i18n="admin.audit_logs.description">
+            Track all policy changes and administrative actions
+        </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-group">
+            <label for="policy-type-filter" class="filter-label" data-i18n="admin.audit_logs.filter_policy_type">Policy Type</label>
+            <select id="policy-type-filter" name="policy_type" class="filter-select">
+                <option value="">All Types</option>
+                <option value="feature" {% if filters.policy_type == 'feature' %}selected{% endif %}>Feature Policy</option>
+                <option value="prompt" {% if filters.policy_type == 'prompt' %}selected{% endif %}>Prompt Policy</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="actor-filter" class="filter-label" data-i18n="admin.audit_logs.filter_actor">Actor</label>
+            <input
+                type="text"
+                id="actor-filter"
+                name="actor"
+                class="filter-input"
+                placeholder="User ID or email"
+                value="{{ filters.actor|default:'' }}">
+        </div>
+        <div class="filter-group">
+            <label for="start-date-filter" class="filter-label" data-i18n="admin.audit_logs.filter_start_date">Start Date</label>
+            <input
+                type="date"
+                id="start-date-filter"
+                name="start_date"
+                class="filter-input"
+                value="{{ filters.start_date|default:'' }}">
+        </div>
+        <div class="filter-group">
+            <label for="end-date-filter" class="filter-label" data-i18n="admin.audit_logs.filter_end_date">End Date</label>
+            <input
+                type="date"
+                id="end-date-filter"
+                name="end_date"
+                class="filter-input"
+                value="{{ filters.end_date|default:'' }}">
+        </div>
+        <button class="btn btn--primary" data-action="apply-filters">
+            <span data-i18n="admin.audit_logs.apply_filters">Apply Filters</span>
+        </button>
+    </div>
+
+    <!-- Skeleton Loading State -->
+    {% if skeleton %}
+    <div class="audit-logs-skeleton" aria-hidden="true">
+        {% for i in range(10) %}
+        <div class="skeleton-card">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+
+    <!-- Audit Logs Table -->
+    <section class="audit-logs-section" aria-label="Audit logs">
+        {% if audit_logs %}
+        <div class="audit-logs-table-wrapper">
+            <table class="audit-logs-table">
+                <thead>
+                    <tr>
+                        <th scope="col" data-i18n="admin.audit_logs.table.timestamp">Timestamp</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.actor">Actor</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.target">Target</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.type">Type</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.version">Version</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.summary">Summary</th>
+                        <th scope="col" data-i18n="admin.audit_logs.table.actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in audit_logs %}
+                    <tr class="log-entry log-entry--{{ log.change_type }}">
+                        <td class="log-timestamp">
+                            <time datetime="{{ log.timestamp }}">
+                                {{ log.timestamp|date:"Y-m-d H:i" }}
+                            </time>
+                        </td>
+                        <td class="log-actor">{{ log.changed_by }}</td>
+                        <td class="log-target">
+                            <span class="policy-badge">{{ log.policy_id }}</span>
+                            <span class="policy-type-badge">{{ log.policy_type }}</span>
+                        </td>
+                        <td class="log-type">
+                            <span class="change-type-badge change-type-badge--{{ log.change_type }}">
+                                {{ log.change_type|title }}
+                            </span>
+                        </td>
+                        <td class="log-version">
+                            {% if log.previous_version %}
+                            <span class="version-from">v{{ log.previous_version }}</span>
+                            <svg class="version-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                            <span class="version-to">v{{ log.version }}</span>
+                            {% else %}
+                            <span class="version-to">v{{ log.version }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="log-summary">{{ log.change_summary }}</td>
+                        <td class="log-actions">
+                            <button
+                                class="btn btn--icon btn--small"
+                                data-action="view-diff"
+                                data-log-id="{{ log.id }}"
+                                aria-label="View diff for {{ log.policy_id }}">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p data-i18n="admin.audit_logs.no_logs">No audit logs found</p>
+            <p class="empty-hint" data-i18n="admin.audit_logs.no_logs_hint">Try adjusting your filters or date range</p>
+        </div>
+        {% endif %}
+    </section>
+
+    {% endif %} {# End skeleton check #}
+</div>
+
+<!-- Diff View Modal -->
+<div class="modal" id="diff-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-content modal-content--large" role="document">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="admin.audit_logs.diff_title">Policy Change Diff</h2>
+            <button class="btn btn--icon" data-action="close-modal" aria-label="Close modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="diff-container">
+                <div class="diff-panel diff-panel--old">
+                    <h3 class="diff-panel-title" data-i18n="admin.audit_logs.old_version">Old Version</h3>
+                    <pre class="diff-content" id="diff-old-content"></pre>
+                </div>
+                <div class="diff-panel diff-panel--new">
+                    <h3 class="diff-panel-title" data-i18n="admin.audit_logs.new_version">New Version</h3>
+                    <pre class="diff-content" id="diff-new-content"></pre>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn--secondary" data-action="close-modal" data-i18n="common.close">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

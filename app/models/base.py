@@ -72,6 +72,8 @@ class BaseModel(Base, TimestampMixin):
         comment="비고"
     )
 
+    # @MX:ANCHOR: [AUTO] Core model serialization method used across all API responses
+    # @MX:REASON: Called from 10+ locations across the codebase as the primary model-to-dict converter
     def to_dict(self) -> Dict[str, Any]:
         """모델을 딕셔너리로 변환"""
         result = {}

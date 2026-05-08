@@ -171,6 +171,8 @@ class GenerationJob(BaseModel):
     def __repr__(self) -> str:
         return f"<GenerationJob(id={self.id}, model='{self.model_used}', status='{self.status.value}')>"
 
+    # @MX:ANCHOR: [AUTO] Generation job state machine - lifecycle management
+    # @MX:REASON: State transition methods called from 85+ locations across pipeline and API layers
     def start(self) -> None:
         """생성 시작"""
         self.status = GenerationStatus.GENERATING

@@ -38,6 +38,8 @@ class TrendAnalysisResponse(BaseModel):
     data: Optional[Dict[str, Any]] = None
 
 
+# @MX:ANCHOR: [AUTO] Trend analysis API endpoint - core trend analysis interface
+# @MX:REASON: Called from 5+ locations across frontend, workflow services, and test suites
 @router.post("/analyze-trends", response_model=TrendAnalysisResponse)
 async def analyze_trends(request: TrendAnalysisRequest):
     """Analyze fashion trends based on keywords"""
