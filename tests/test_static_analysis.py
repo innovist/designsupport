@@ -1,22 +1,17 @@
-"""Static validation for the current Django modular architecture."""
+"""Static validation for the current FastAPI architecture."""
+
 import importlib
-import os
 import py_compile
 from pathlib import Path
 
-import django
-
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.test")
-
 
 def test_python_sources_compile():
-    django.setup()
-    roots = [Path("apps"), Path("shared"), Path("config")]
+    roots = [Path("app"), Path("main.py")]
     failures = []
     for root in roots:
-        for path in root.rglob("*.py"):
-            if "__pycache__" in path.parts or "migrations" in path.parts:
+        paths = [root] if root.is_file() else root.rglob("*.py")
+        for path in paths:
+            if "__pycache__" in path.parts:
                 continue
             try:
                 py_compile.compile(str(path), doraise=True)
@@ -26,10 +21,9 @@ def test_python_sources_compile():
 
 
 def test_app_modules_import():
-    django.setup()
     failures = []
-    for path in Path("apps").rglob("*.py"):
-        if "__pycache__" in path.parts or "migrations" in path.parts or path.name == "admin.py":
+    for path in Path("app").rglob("*.py"):
+        if "__pycache__" in path.parts:
             continue
         module_name = ".".join(path.with_suffix("").parts)
         try:

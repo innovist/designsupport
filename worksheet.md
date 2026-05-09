@@ -1,5 +1,18 @@
 # worksheet.md
 
+166. 작업 완료(2026-05-09): 이미지 생성 모델 확장. zimage_client.py(DashScope multimodal API, prompt_extend 파라미터 제어), gemini_image_client.py(google-genai generate_content+response_modalities=["IMAGE"], base64 data URL 반환). 카탈로그: OpenAI gpt-image-1, Gemini 이미지 3종(3.1-flash/3-pro/2.5-flash), z-image-turbo 2종(standard/think). factory.py: Alibaba z-image-turbo→ZImageTurboClient, Gemini 이미지→GeminiImageClient 분기. 총 37개 모델, 이미지 7종 확인.
+165. 작업 시작(2026-05-09): z-image-turbo think/standard 구분, OpenAI gpt-image-1, Gemini 이미지 모델 추가. 정확한 엔드포인트·호출 방법 리서치 후 반영.
+164. 작업 완료(2026-05-09): _MODEL_CATALOG 전면 수정(.env 실제 모델ID 반영): OpenAI gpt-5.4/mini/nano, Gemini gemini-3.1-pro-preview/3-flash-preview/3.1-flash-lite, DeepSeek deepseek-chat/v4-pro/v4-flash, Alibaba qwen3.6-flash/Max-non/Plus-Non 등 9종+z-image-turbo, Xiaomi mimo-v2.5/pro-non 등 7종, MiniMax M2.7/highspeed, Kimi k2.6/k2.5 +non 4종, Seedream 4.5-251128. factory.py: -non 변환테이블(_QWEN/_MIMO/_KIMI_MODEL_MAP), .env base URL 사용, Minimax temp≥0.01 강제, Kimi thinking flag 필수. 8개 제공자 모두 configured=true 확인.
+163. 작업 시작(2026-05-09): _MODEL_CATALOG 모든 모델ID가 .env와 불일치. factory.py base URL 하드코딩+-non variants 미처리. .env 실제값 기반 수정.
+162. 작업 완료(2026-05-09 15:30): AI 모델 설정 전면 재설계. config.py에 8개 제공자(openai/gemini/deepseek/alibaba/xiaomi/minimax/kimi/seedream) 추가, DB에 fallback_provider/fallback_model/retry_count/fallback_retry_count 컬럼 추가+마이그레이션, /api/workspace/available-models 신규 엔드포인트, 기능별 기본+대체 모델 선택 UI, 이미지생성/멀티모달 capability 배지, factory에 OpenAI-compatible 제공자 지원. 8개 제공자 모두 configured=True 확인.
+161. 작업 시작(2026-05-09 15:10): AI 모델 설정 UI 전면 재설계. 3개 제공자 → 8개(openai/gemini/deepseek/alibaba/xiaomi/minimax/kimi/seedream), 기능별 기본+대체 모델 선택, 역할별 capability 배지(이미지생성/멀티모달) 추가.
+
+159. 작업 완료(2026-05-09 14:45): 홈 화면 대시보드 재설계. 히어로+파이프라인 시각물 제거, 통계 요약(프로젝트/진행세션/완료세션/생성이미지), 최근 세션 목록(파이프라인 단계 배지), 동적 AI 제공자 상태(설정된 것만 표시) 구현. GET /api/dashboard 엔드포인트 추가. 전체 "패션 트렌드 AI" → "디자인 발상 시스템" 용어 일괄 수정.
+158. 작업 시작(2026-05-09 14:30): 홈 화면 정체성 재정의(랜딩→대시보드), 패션 용어 전수 교체.
+157. 작업 완료(2026-05-09 14:20): 파이프라인 엔드-투-엔드 검증 완료. 3개 버그 수정(NoOpSearchClient 파라미터명 불일치, OpenAI temperature 중복 전달, generate_concepts 트렌드 미설정 시 강제 오류). review_ready 달성, 컨셉 3건·스펙 v1 생성 확인.
+156. 작업 완료(2026-05-09 14:00): SPEC-02 자동 파이프라인 구현 완료. DesignPipelineOrchestrator, POST /auto, GET /progress 엔드포인트, 프론트엔드 진행바·폴링 추가. 레퍼런스 카드 분석 요약 및 스케치 기반 검색(use_sketch_context) 구현.
+155. 작업 시작(2026-05-09 13:00): 요구사항-User_Needs_v01 갭 분석 기반 파이프라인 오케스트레이터·증거 링크·레퍼런스 분석 카드·스케치 기반 검색 구현.
+
 154. 작업 완료(2026-05-07 18:08): 요청-사용자 스케치 업로드 및 구체화 지원 반영.
 작업-User_Needs_v01.md에 UserSketchAsset/SketchAnalysis, 스케치 기반 챗봇 참고·구체화, UX Sketch Input Board, ERD/시퀀스/성공기준 반영. 결과-스케치가 외부 레퍼런스와 분리된 창작 입력 자산으로 정리됨.
 153. 작업 시작(2026-05-07 18:05): 요구사항-사용자가 자신의 스케치를 업로드해 챗봇 참고 및 구체화에 활용.

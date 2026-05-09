@@ -39,6 +39,8 @@ def _safe_safety_ratings(response: Any) -> Optional[List[Dict[str, str]]]:
 
 class GeminiClientCore:
     """Core Gemini client"""
+    # @MX:ANCHOR: [AUTO] Core Gemini API client with caching and retry logic. Used by all Gemini image generation endpoints.
+    # @MX:REASON: High fan_in (3+ Gemini client variants). Client caching, timeout handling, and safety rating extraction shared across Gemini operations.
 
     def __init__(self):
         self._client_cache: Dict[str, Any] = {}
@@ -101,6 +103,8 @@ class GeminiClientCore:
         generation_config: Optional[GenerationConfig] = None,
         system_instruction: Optional[str] = None
     ) -> GenerationResponse:
+        # @MX:WARN: [AUTO] Retry loop with exponential backoff (2^attempt seconds). Quota/rate limit errors break early without retry.
+        # @MX:REASON: Handles transient API failures with 3 retry attempts. Rate limit errors detected via string matching on error messages.
         max_retries = 3
         last_error = None
         for attempt in range(max_retries):

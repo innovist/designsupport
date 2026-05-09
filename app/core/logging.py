@@ -1,342 +1,252 @@
+"""
+Logging infrastructure for the Design Ideation System.
+
+Feature-specific log files with 3000-line rotating limit.
+Old lines are deleted (not archived) when the limit is reached.
+"""
+
+from __future__ import annotations
+
 import logging
-import logging.handlers
-import os
+import re
 import sys
-from datetime import datetime
+import threading
+from collections import deque
 from pathlib import Path
-from typing import Optional, Dict, Any
-# structlog is optional - only used in production
-try:
-    import structlog
-    from structlog.stdlib import LoggerFactory
-    STRUCTLOG_AVAILABLE = True
-except ImportError:
-    STRUCTLOG_AVAILABLE = False
-    structlog = None
-    LoggerFactory = None
+from typing import Any, Dict, Optional
+
+# ── Constants ────────────────────────────────────────────────────────────────
+
+_PROJECT_ROOT = Path(__file__).parent.parent.parent
+_LOG_DIR = _PROJECT_ROOT / "logs"
+# @MX:NOTE: [AUTO] Log file rotation limit - old lines are deleted (not archived) when exceeded
+_LOG_LINE_LIMIT = 3000
+_LOG_TRIM_TO = 2700  # keep this many lines after trimming
+
+# Feature → log file name mapping
+_FEATURE_LOG_FILES: Dict[str, str] = {
+    "workspace":   "workspace.log",
+    "session":     "session.log",
+    "sketch":      "sketch.log",
+    "trend":       "trend.log",
+    "concept":     "concept.log",
+    "reference":   "reference.log",
+    "abstraction": "abstraction.log",
+    "generation":  "generation.log",
+    "spec":        "spec.log",
+    "pipeline":    "pipeline.log",
+    "api":         "api.log",
+    "error":       "error.log",
+    "system":      "system.log",
+}
+
+_handler_registry: Dict[str, logging.Handler] = {}
+_registry_lock = threading.Lock()
 
 
-class SensitiveDataFilter(logging.Filter):
-    """민감정보 마스킹 필터"""
+# ── Line-rotating file handler ────────────────────────────────────────────────
 
-    SENSITIVE_KEYS = [
-        'api_key', 'password', 'secret', 'token', 'key',
-        'authorization', 'cookie', 'session', 'credential'
-    ]
+class LineRotatingFileHandler(logging.FileHandler):
+    """
+    File handler that trims the log file when it exceeds _LOG_LINE_LIMIT lines.
+    Oldest lines are removed to keep the file at _LOG_TRIM_TO lines.
+    Thread-safe via a per-instance lock.
+    """
 
+    def __init__(self, filename: str, limit: int = _LOG_LINE_LIMIT, trim_to: int = _LOG_TRIM_TO, **kwargs):
+        super().__init__(filename, encoding="utf-8", **kwargs)
+        self._limit = limit
+        self._trim_to = trim_to
+        self._line_count: Optional[int] = None
+        self._trim_lock = threading.Lock()
+
+    def _count_lines(self) -> int:
+        try:
+            with open(self.baseFilename, "r", encoding="utf-8", errors="replace") as f:
+                return sum(1 for _ in f)
+        except (OSError, IOError):
+            return 0
+
+    def _trim_file(self) -> None:
+        try:
+            with open(self.baseFilename, "r", encoding="utf-8", errors="replace") as f:
+                lines = deque(f, maxlen=self._trim_to)
+            with open(self.baseFilename, "w", encoding="utf-8") as f:
+                f.writelines(lines)
+            self._line_count = self._trim_to
+        except (OSError, IOError):
+            pass
+
+    # @MX:WARN: [AUTO] Thread-safe log rotation with file trimming
+    # @MX:REASON: File I/O + lock management - risk of log loss if exceptions occur silently
+
+    def emit(self, record: logging.LogRecord) -> None:
+        with self._trim_lock:
+            if self._line_count is None:
+                self._line_count = self._count_lines()
+            super().emit(record)
+            self._line_count += 1
+            if self._line_count >= self._limit:
+                self.flush()
+                self._trim_file()
+
+
+# ── Formatters ───────────────────────────────────────────────────────────────
+
+_FILE_FMT = logging.Formatter(
+    fmt="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+_CONSOLE_FMT = logging.Formatter(
+    fmt="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+    datefmt="%H:%M:%S",
+)
+
+
+# ── Sensitive data filter ─────────────────────────────────────────────────────
+
+_SENSITIVE_RE = re.compile(
+    r"(api[_\-]?key|password|secret|token|authorization|credential)[=:\s]+\S+",
+    re.IGNORECASE,
+)
+
+
+class _SensitiveFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
-        """로그 레코드의 민감정보 마스킹"""
-        if hasattr(record, 'msg'):
-            record.msg = self._mask_sensitive_data(str(record.msg))
+        if isinstance(record.msg, str):
+            record.msg = _SENSITIVE_RE.sub(r"\1=***", record.msg)
         return True
 
-    def _mask_sensitive_data(self, message: str) -> str:
-        """메시지 내의 민감정보 마스킹"""
-        import re
 
-        for key in self.SENSITIVE_KEYS:
-            # key=value 형태 마스킹
-            pattern = rf'({key}[=\s]+)[\w\-\.+/=]+'
-            message = re.sub(pattern, r'\1***MASKED***', message, flags=re.IGNORECASE)
+# ── Public setup API ──────────────────────────────────────────────────────────
 
-            # Bearer token 마스킹
-            pattern = r'(bearer\s+)[\w\-\.+/=]+'
-            message = re.sub(pattern, r'\1***MASKED***', message, flags=re.IGNORECASE)
+def setup_logging(level: str = "INFO") -> None:
+    """Configure root logger with console output and a system.log file."""
+    _LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-        return message
+    numeric = getattr(logging, level.upper(), logging.INFO)
+    root = logging.getLogger()
+    root.setLevel(numeric)
+    root.handlers.clear()
 
+    # Console handler
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(numeric)
+    ch.setFormatter(_CONSOLE_FMT)
+    ch.addFilter(_SensitiveFilter())
+    root.addHandler(ch)
 
-class JSONFormatter(logging.Formatter):
-    """JSON 형식 로그 포매터"""
-
-    def format(self, record: logging.LogRecord) -> str:
-        """로그 레코드를 JSON 형식으로 포맷팅"""
-        import json
-
-        log_data = {
-            'timestamp': datetime.fromtimestamp(record.created).isoformat(),
-            'level': record.levelname,
-            'logger': record.name,
-            'message': record.getMessage(),
-            'module': record.module,
-            'function': record.funcName,
-            'line': record.lineno,
-        }
-
-        # 예외 정보 추가
-        if record.exc_info:
-            log_data['exception'] = self.formatException(record.exc_info)
-
-        # 추가 필드 추가
-        for key, value in record.__dict__.items():
-            if key not in {
-                'name', 'msg', 'args', 'levelname', 'levelno', 'pathname',
-                'filename', 'module', 'lineno', 'funcName', 'created',
-                'msecs', 'relativeCreated', 'thread', 'threadName',
-                'processName', 'process', 'getMessage', 'exc_info',
-                'exc_text', 'stack_info'
-            }:
-                log_data[key] = value
-
-        return json.dumps(log_data, ensure_ascii=False)
+    # System-wide log file
+    _ensure_feature_handler("system", numeric)
 
 
-class ColoredFormatter(logging.Formatter):
-    """콘솔 출력용 컬러 포매터"""
+def _ensure_feature_handler(feature: str, level: int = logging.INFO) -> logging.Handler:
+    """Return (creating if needed) the file handler for a feature area."""
+    with _registry_lock:
+        if feature in _handler_registry:
+            return _handler_registry[feature]
 
-    # ANSI 컬러 코드
-    COLORS = {
-        'DEBUG': '\033[36m',      # 청록색
-        'INFO': '\033[32m',       # 녹색
-        'WARNING': '\033[33m',    # 노란색
-        'ERROR': '\033[31m',      # 빨간색
-        'CRITICAL': '\033[35m',   # 보라색
-        'RESET': '\033[0m'        # 리셋
-    }
-
-    def format(self, record: logging.LogRecord) -> str:
-        """로그 레코드에 컬러 적용"""
-        color = self.COLORS.get(record.levelname, self.COLORS['RESET'])
-        reset = self.COLORS['RESET']
-
-        # 시간 포맷팅
-        timestamp = datetime.fromtimestamp(record.created).strftime('%H:%M:%S')
-
-        # 레벨에 컬러 적용
-        record.levelname = f"{color}{record.levelname}{reset}"
-
-        # 포맷팅
-        formatted = super().format(record)
-
-        # 타임스탬프 추가
-        return f"{timestamp} - {formatted}"
+        _LOG_DIR.mkdir(parents=True, exist_ok=True)
+        log_file = _LOG_DIR / _FEATURE_LOG_FILES.get(feature, f"{feature}.log")
+        handler = LineRotatingFileHandler(str(log_file))
+        handler.setLevel(level)
+        handler.setFormatter(_FILE_FMT)
+        handler.addFilter(_SensitiveFilter())
+        _handler_registry[feature] = handler
+        return handler
 
 
-def setup_logging(
-    level: str = "INFO",
-    log_file: Optional[str] = None,
-    log_rotation: str = "daily",
-    log_retention_days: int = 30,
-    json_logs: bool = False,
-    enable_console: bool = True
-) -> None:
-    """로깅 시스템 설정"""
-
-    # 로그 레벨 설정
-    numeric_level = getattr(logging, level.upper(), logging.INFO)
-
-    # 루트 로거 설정
-    root_logger = logging.getLogger()
-    root_logger.setLevel(numeric_level)
-
-    # 기존 핸들러 제거
-    root_logger.handlers.clear()
-
-    # 포매터 생성
-    if json_logs:
-        formatter = JSONFormatter()
-    else:
-        formatter = logging.Formatter(
-            fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
-
-    # 콘솔 핸들러
-    if enable_console:
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(numeric_level)
-
-        if json_logs:
-            console_handler.setFormatter(formatter)
-        else:
-            console_handler.setFormatter(ColoredFormatter())
-
-        console_handler.addFilter(SensitiveDataFilter())
-        root_logger.addHandler(console_handler)
-
-    # 파일 핸들러
-    if log_file:
-        # 로그 디렉토리 생성
-        log_path = Path(log_file)
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-
-        if log_rotation == "daily":
-            file_handler = logging.handlers.TimedRotatingFileHandler(
-                filename=log_file,
-                when='midnight',
-                interval=1,
-                backupCount=log_retention_days,
-                encoding='utf-8'
-            )
-        else:
-            file_handler = logging.handlers.RotatingFileHandler(
-                filename=log_file,
-                maxBytes=10 * 1024 * 1024,  # 10MB
-                backupCount=5,
-                encoding='utf-8'
-            )
-
-        file_handler.setLevel(numeric_level)
-        file_handler.setFormatter(formatter)
-        file_handler.addFilter(SensitiveDataFilter())
-        root_logger.addHandler(file_handler)
-
-
-def setup_structlog() -> None:
-    """structlog 설정"""
-    if not STRUCTLOG_AVAILABLE or structlog is None:
-        return
-    structlog.configure(
-        processors=[
-            structlog.stdlib.filter_by_level,
-            structlog.stdlib.add_logger_name,
-            structlog.stdlib.add_log_level,
-            structlog.stdlib.PositionalArgumentsFormatter(),
-            structlog.processors.TimeStamper(fmt="iso"),
-            structlog.processors.StackInfoRenderer(),
-            structlog.processors.format_exc_info,
-            structlog.processors.UnicodeDecoder(),
-            structlog.processors.JSONRenderer()
-        ],
-        context_class=dict,
-        logger_factory=LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
-        cache_logger_on_first_use=True,
-    )
-
+# @MX:ANCHOR: [AUTO] Feature-based logger provider used throughout the application
+# @MX:REASON: High fan_in (40+ callers) - central logging entry point with feature inference
 
 def get_logger(name: str) -> logging.Logger:
-    """로거 인스턴스 반환"""
-    return logging.getLogger(name)
+    """
+    Return a logger attached to the appropriate feature log file.
+
+    The feature is inferred from the module name:
+      app.application.use_cases.sketch.* → sketch.log
+      app.api.routes.trends              → trend.log
+      etc.
+    """
+    logger = logging.getLogger(name)
+
+    feature = _infer_feature(name)
+    if feature:
+        handler = _ensure_feature_handler(feature)
+        # Avoid duplicate handlers when the same logger is requested multiple times
+        if not any(isinstance(h, LineRotatingFileHandler) for h in logger.handlers):
+            logger.addHandler(handler)
+        logger.propagate = True  # also goes to root (console + system.log)
+
+    return logger
 
 
-def log_performance(func_name: str, duration: float, details: Optional[Dict[str, Any]] = None) -> None:
-    """성능 로그 기록"""
-    logger = get_logger("performance")
-
-    log_data = {
-        "function": func_name,
-        "duration_ms": round(duration * 1000, 2),
+def _infer_feature(name: str) -> Optional[str]:
+    """Map a dotted module name to a feature category."""
+    _MAP = {
+        "abstraction": "abstraction",
+        "assets":      "sketch",
+        "sketch":      "sketch",
+        "concept":     "concept",
+        "conversation": "session",
+        "reference":   "reference",
+        "generation":  "generation",
+        "spec":        "spec",
+        "trend":       "trend",
+        "workspace":   "workspace",
+        "session":     "session",
+        "pipeline":    "pipeline",
     }
-
-    if details:
-        log_data.update(details)
-
-    logger.info(f"Performance: {func_name} completed", extra=log_data)
-
-
-def log_api_request(
-    method: str,
-    endpoint: str,
-    user_id: Optional[str] = None,
-    duration: Optional[float] = None,
-    status_code: Optional[int] = None
-) -> None:
-    """API 요청 로그 기록"""
-    logger = get_logger("api")
-
-    log_data = {
-        "method": method,
-        "endpoint": endpoint,
-        "user_id": user_id,
-    }
-
-    if duration:
-        log_data["duration_ms"] = round(duration * 1000, 2)
-
-    if status_code:
-        log_data["status_code"] = status_code
-
-    logger.info(f"API Request: {method} {endpoint}", extra=log_data)
+    lower = name.lower()
+    for key, feature in _MAP.items():
+        if key in lower:
+            return feature
+    if "api" in lower or "route" in lower:
+        return "api"
+    if "error" in lower:
+        return "error"
+    return "system"
 
 
-def log_error(
-    error: Exception,
-    context: Optional[Dict[str, Any]] = None,
-    user_id: Optional[str] = None
-) -> None:
-    """에러 로그 기록"""
-    logger = get_logger("error")
+# ── Structured log helpers (called from use cases / routes) ──────────────────
 
-    log_data = {
-        "error_type": type(error).__name__,
-        "error_message": str(error),
-        "user_id": user_id,
-    }
-
-    if context:
-        log_data.update(context)
-
-    logger.error(
-        f"Error occurred: {type(error).__name__}",
-        exc_info=True,
-        extra=log_data
-    )
+def log_pipeline_stage(session_id: str, stage: str, detail: str = "") -> None:
+    """Record a pipeline stage transition to pipeline.log."""
+    logger = logging.getLogger("pipeline")
+    _ensure_feature_handler("pipeline")
+    handler = _handler_registry.get("pipeline")
+    if handler and handler not in logger.handlers:
+        logger.addHandler(handler)
+    logger.info("[PIPELINE] session=%s stage=%s %s", session_id, stage, detail)
 
 
-def log_crawl_progress(
-    job_id: str,
-    total: int,
-    completed: int,
-    failed: int = 0,
-    source: Optional[str] = None
-) -> None:
-    """크롤링 진행률 로그 기록"""
-    logger = get_logger("crawler")
-
-    progress = round((completed / total) * 100, 2) if total > 0 else 0
-
-    log_data = {
-        "job_id": job_id,
-        "total": total,
-        "completed": completed,
-        "failed": failed,
-        "progress_percent": progress,
-        "source": source,
-    }
-
-    logger.info(f"Crawl Progress: {progress}%", extra=log_data)
+def log_ai_call(feature: str, provider: str, model: str, prompt_tokens: int = 0, result: str = "ok") -> None:
+    """Record an AI API call to the feature log."""
+    logger = get_logger(f"ai.{feature}")
+    logger.info("[AI] feature=%s provider=%s model=%s tokens=%d result=%s",
+                feature, provider, model, prompt_tokens, result)
 
 
-def log_generation_progress(
-    job_id: str,
-    stage: str,
-    total_steps: int,
-    current_step: int,
-    model: Optional[str] = None
-) -> None:
-    """생성 진행률 로그 기록"""
-    logger = get_logger("generation")
-
-    progress = round((current_step / total_steps) * 100, 2) if total_steps > 0 else 0
-
-    log_data = {
-        "job_id": job_id,
-        "stage": stage,
-        "total_steps": total_steps,
-        "current_step": current_step,
-        "progress_percent": progress,
-        "model": model,
-    }
-
-    logger.info(f"Generation Progress: {stage} - {progress}%", extra=log_data)
+def log_api_request(method: str, path: str, status: int, duration_ms: float = 0.0) -> None:
+    """Record an API request to api.log."""
+    logger = logging.getLogger("api.requests")
+    _ensure_feature_handler("api")
+    handler = _handler_registry.get("api")
+    if handler and handler not in logger.handlers:
+        logger.addHandler(handler)
+    level = logging.WARNING if status >= 400 else logging.INFO
+    logger.log(level, "[API] %s %s → %d (%.1fms)", method, path, status, duration_ms)
 
 
-# 환경 변수에서 로깅 설정 로드
-def load_logging_config() -> None:
-    """환경 변수에서 로깅 설정 로드 및 적용"""
-    from dotenv import load_dotenv
+def log_error(feature: str, error: Exception, context: Optional[Dict[str, Any]] = None) -> None:
+    """Record an error to both error.log and the feature log."""
+    _ensure_feature_handler("error")
+    err_logger = logging.getLogger("error")
+    if _handler_registry.get("error") not in err_logger.handlers:
+        err_logger.addHandler(_handler_registry["error"])
+    ctx_str = " ".join(f"{k}={v}" for k, v in (context or {}).items())
+    err_logger.error("[ERROR] feature=%s %s %s", feature, type(error).__name__, ctx_str, exc_info=error)
 
-    load_dotenv()
-
-    setup_logging(
-        level=os.getenv("LOG_LEVEL", "INFO"),
-        log_file=os.getenv("LOG_FILE"),
-        log_rotation=os.getenv("LOG_ROTATION", "daily"),
-        log_retention_days=int(os.getenv("LOG_RETENTION_DAYS", "30")),
-        json_logs=os.getenv("ENVIRONMENT") == "production",
-        enable_console=True
-    )
-
-    if os.getenv("ENVIRONMENT") == "production":
-        setup_structlog()
+    feat_logger = get_logger(feature)
+    feat_logger.error("[ERROR] %s: %s %s", type(error).__name__, error, ctx_str)

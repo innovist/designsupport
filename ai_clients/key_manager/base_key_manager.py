@@ -43,6 +43,8 @@ class ApiKeyInfo:
 
 class BaseKeyManager(ABC):
     """기본 키 관리자"""
+    # @MX:ANCHOR: [AUTO] Abstract base class for API key management. All key managers inherit from this class.
+    # @MX:REASON: High fan_in (5+ key manager implementations). Key rotation, rate limiting, and error tracking logic shared across all AI clients.
 
     def __init__(
         self,
@@ -87,6 +89,8 @@ class BaseKeyManager(ABC):
         Returns:
             (key_id, api_key) 튜플
         """
+        # @MX:WARN: [AUTO] Async lock protects key selection but auto-reset on exhaustion may hide persistent API issues.
+        # @MX:REASON: Round-robin selection with automatic reset of rate-limited keys. If all keys are exhausted, raises exception after reset attempt.
         async with self._lock:
             # 활성 상태인 키 찾기
             active_keys = [
@@ -131,6 +135,8 @@ class BaseKeyManager(ABC):
             error_type: 에러 타입
             reset_time: 리셋 시간
         """
+        # @MX:WARN: [AUTO] Complex error classification with multiple error types. Error count threshold can permanently disable keys.
+        # @MX:REASON: Handles rate_limit, invalid_key, quota_exceeded, and general errors. Keys marked ERROR after max_retries exceeded.
         async with self._lock:
             if key_id not in self.api_keys:
                 return

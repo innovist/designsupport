@@ -1,8 +1,6 @@
 // Dashboard shared state and helpers
 const _t = (key, params) => window.t ? window.t(key, params) : key;
 
-// @MX:ANCHOR: [AUTO] Global shared state object for all dashboard sub-pages
-// @MX:REASON: Single source of truth for current project, session, and cached data - accessed by all dashboard modules
 const dashboardState = {
     currentProjectId: null,
     currentSessionId: null,
@@ -29,8 +27,6 @@ function getCurrentLanguage() {
     return window.i18n?.currentLanguage || 'ko';
 }
 
-// @MX:ANCHOR: [AUTO] Security-critical HTML escaping function used across all dashboard pages
-// @MX:REASON: Prevents XSS vulnerabilities when rendering user-generated content - called from all render functions
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text || '';

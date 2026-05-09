@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.dashboard{% endblock %}
-{% block title %}대시보드 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}대시보드 - 디자인 발상 시스템{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/pages/dashboard.css">
@@ -70,7 +70,7 @@
                     <span style="margin: 0 6px; color: var(--border);">|</span>
                     <span><span data-i18n="dashboard.inlineStats.designs">디자인</span> <strong id="stat-designs-inline">0</strong></span>
                     <span style="margin: 0 6px; color: var(--border);">|</span>
-                    <span><span data-i18n="dashboard.inlineStats.models">착장</span> <strong id="stat-models-inline">0</strong></span>
+                    <span><span data-i18n="dashboard.inlineStats.models">적용</span> <strong id="stat-models-inline">0</strong></span>
                 </div>
                 <div id="session-actions" style="display: none; gap: 8px;">
                     <button class="btn btn-primary" id="run-analysis-btn" onclick="runAnalysis()" data-i18n="dashboard.actions.startAnalysis">분석 시작</button>
@@ -96,8 +96,8 @@
                 <button class="report-tab active" data-tab="overview" data-i18n="dashboard.tabs.overview">개요</button>
                 <button class="report-tab" data-tab="data" data-i18n="dashboard.tabs.data">수집 데이터</button>
                 <button class="report-tab" data-tab="analysis" data-i18n="dashboard.tabs.analysis">분석 보고서</button>
-                <button class="report-tab" data-tab="design" data-i18n="dashboard.tabs.design">의상 이미지</button>
-                <button class="report-tab" data-tab="model" data-i18n="dashboard.tabs.model">착장 이미지</button>
+                <button class="report-tab" data-tab="design" data-i18n="dashboard.tabs.design">디자인 이미지</button>
+                <button class="report-tab" data-tab="model" data-i18n="dashboard.tabs.model">적용 이미지</button>
                 <button class="report-tab" data-tab="blueprint" data-i18n="dashboard.tabs.blueprint">블루프린트</button>
             </div>
 
@@ -122,14 +122,14 @@
                 </div>
             </div>
 
-            <!-- 의상 이미지 탭 -->
+            <!-- 디자인 이미지 탭 -->
             <div id="tab-design" class="tab-content">
                 <div id="design-content" class="image-grid">
                     <div class="image-card"><div class="image-placeholder">👗</div></div>
                 </div>
             </div>
 
-            <!-- 착장 이미지 탭 -->
+            <!-- 적용 이미지 탭 -->
             <div id="tab-model" class="tab-content">
                 <div id="model-content" class="image-grid">
                     <div class="image-card"><div class="image-placeholder">🧍</div></div>

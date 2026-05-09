@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.newProject{% endblock %}
-{% block title %}새 프로젝트 생성 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}새 프로젝트 생성 - 디자인 발상 시스템{% endblock %}
 
 {% block content %}
 <div style="max-width: 700px; margin: 0 auto; padding: 2rem 0;">
@@ -9,35 +9,41 @@
         <a href="/projects" style="color: var(--text-secondary); font-size: var(--font-sm); text-decoration: none;" data-i18n="newProject.backToList">
             ← 프로젝트 목록
         </a>
-        <h2 style="font-size: 2rem; font-weight: 700; margin: 1rem 0 0.5rem; color: var(--text-primary);" data-i18n="newProject.title">새 프로젝트 생성</h2>
-        <p style="font-size: 1rem; color: var(--text-secondary);" data-i18n="newProject.subtitle">프로젝트 기본 정보를 입력하세요</p>
+        <h2 style="font-size: 1.75rem; font-weight: 700; margin: 1rem 0 0.5rem; color: var(--text-primary);" data-i18n="newProject.title">새 프로젝트 생성</h2>
+        <p style="font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.6;" data-i18n="newProject.subtitle">
+            프로젝트는 하나의 디자인 과제와 기준 브리프를 묶는 단위입니다. 프로젝트 안에서 여러 디자인안, 초안, 버전을 만들고 비교합니다.
+        </p>
     </header>
 
     <div class="card">
         <form id="project-form">
             <div style="margin-bottom: 1.5rem;">
                 <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">
-                    <span data-i18n="newProject.form.titleLabel">프로젝트 제목</span> <span style="color: var(--color-danger);">*</span>
-                </label>
-                <input type="text" id="project-title" placeholder="예: 2025 SS 미니멀 룩 분석" data-i18n-placeholder="newProject.form.titlePlaceholder" required style="width: 100%;">
-            </div>
+	                    <span data-i18n="newProject.form.titleLabel">프로젝트 이름</span> <span style="color: var(--color-danger);">*</span>
+	                </label>
+	                <input type="text" id="project-title" placeholder="예: 접이식 데스크 조명 디자인" data-i18n-placeholder="newProject.form.titlePlaceholder" required style="width: 100%;">
+	            </div>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="newProject.form.descriptionLabel">
-                    프로젝트 설명 (선택사항)
-                </label>
-                <textarea id="project-description" rows="4" placeholder="프로젝트 배경과 기대 결과를 입력하세요" data-i18n-placeholder="newProject.form.descriptionPlaceholder" style="width: 100%; resize: vertical;"></textarea>
-            </div>
+	            <div style="margin-bottom: 1.5rem;">
+	                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="newProject.form.descriptionLabel">
+	                    프로젝트 브리프
+	                </label>
+	                <textarea id="project-description" rows="5" placeholder="요구 조건, 목표, 제약, 원하는 결과를 한 번에 입력하세요. 이 브리프가 프로젝트 안의 모든 디자인안 생성 기준이 됩니다." data-i18n-placeholder="newProject.form.descriptionPlaceholder" style="width: 100%; resize: vertical;"></textarea>
+	            </div>
 
-            <div style="margin-bottom: 2rem;">
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">
-                    <span data-i18n="newProject.form.promptLabel">분석 목표/지시사항</span> <span style="color: var(--color-danger);">*</span>
-                </label>
-                <textarea id="project-prompt" rows="4" placeholder="예: 유니섹스 캐주얼 라인의 기능성 니즈 분석" data-i18n-placeholder="newProject.form.promptPlaceholder" required style="width: 100%; resize: vertical;"></textarea>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;" data-i18n="newProject.form.promptHint">
-                    분석 범위, 제외 항목, 기대 결과 등을 구체적으로 작성하세요.
-                </p>
-            </div>
+	            <div style="margin-bottom: 2rem;">
+	                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">
+	                    <span data-i18n="newProject.form.promptLabel">도메인</span>
+	                </label>
+	                <select id="project-domain" style="width: 100%; max-width: 320px;">
+	                    <option value="">미정</option>
+	                    <option value="industrial">산업디자인</option>
+	                    <option value="product_service">제품·서비스</option>
+	                    <option value="visual">시각디자인</option>
+	                    <option value="advertising">광고·브랜딩</option>
+	                    <option value="general">일반</option>
+	                </select>
+	            </div>
 
             <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                 <a href="/projects" class="btn btn-outline" data-i18n="common.cancel">취소</a>
@@ -51,25 +57,25 @@
 document.getElementById('project-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const title = document.getElementById('project-title').value.trim();
-    const description = document.getElementById('project-description').value.trim();
-    const prompt = document.getElementById('project-prompt').value.trim();
+	    const name = document.getElementById('project-title').value.trim();
+	    const purpose = document.getElementById('project-description').value.trim();
+	    const domain = document.getElementById('project-domain').value;
 
-    if (!title || !prompt) {
-        alert(window.t('newProject.messages.required'));
-        return;
-    }
+	    if (!name) {
+	        alert(window.t('newProject.messages.required'));
+	        return;
+	    }
 
-    try {
-        const res = await fetch('/api/projects/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title,
-                domain: 'fashion',
-                prompt: prompt || description
-            })
-        });
+	    try {
+	        const res = await fetch('/api/projects', {
+	            method: 'POST',
+	            headers: { 'Content-Type': 'application/json' },
+	            body: JSON.stringify({
+	                name,
+	                purpose: purpose || null,
+	                domain: domain || null
+	            })
+	        });
 
         if (res.ok) {
             const project = await res.json();

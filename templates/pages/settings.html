@@ -1,566 +1,188 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.settings{% endblock %}
-{% block title %}설정 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}AI 모델 설정 - 디자인 발상 시스템{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ─── Provider badges ─────────────────────────────────────── */
+.provider-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 6px;
+    font-size: var(--font-sm); font-weight: 600;
+}
+.provider-badge.active   { background: #d1fae5; color: #065f46; }
+.provider-badge.inactive { background: #f3f4f6; color: #9ca3af; }
+.provider-dot { font-size: 1rem; }
+.provider-status-txt { font-weight: 400; font-size: var(--font-xs); }
+
+/* ─── Feature model rows ──────────────────────────────────── */
+.fm-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+    align-items: start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.fm-row:last-child { border-bottom: none; }
+.fm-label-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.2rem; }
+.fm-label { font-weight: 700; font-size: var(--font-sm); }
+.fm-desc  { font-size: var(--font-xs); color: var(--text-muted); }
+.fm-status { font-size: var(--font-xs); font-weight: 600; padding: 2px 8px; border-radius: 12px; }
+.fm-status.ok   { background: #d1fae5; color: #065f46; }
+.fm-status.warn { background: #fef3c7; color: #92400e; }
+
+/* Capability badges */
+.cap-badge {
+    font-size: 0.68rem; font-weight: 600; padding: 2px 7px;
+    border-radius: 4px; white-space: nowrap;
+}
+.cap-image { background: #ede9fe; color: #6d28d9; }
+.cap-multi { background: #e0f2fe; color: #0369a1; }
+
+/* Controls layout */
+.fm-controls {
+    display: grid; grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) auto auto;
+    align-items: end; gap: 0.5rem;
+    justify-content: flex-end;
+}
+.fm-group { display: flex; flex-direction: column; gap: 0.25rem; }
+.fm-group-label { font-size: var(--font-xs); color: var(--text-muted); font-weight: 600; }
+.fm-row-controls { display: flex; align-items: center; gap: 0.4rem; }
+.fm-select {
+    font-size: var(--font-xs); padding: 5px 8px; border-radius: 5px;
+    border: 1px solid var(--border-color); background: var(--bg-primary);
+    color: var(--text-primary); width: 100%; min-width: 0;
+}
+.fm-retry-wrap { display: flex; align-items: center; gap: 4px; }
+.fm-retry-label { font-size: var(--font-xs); color: var(--text-muted); white-space: nowrap; }
+.fm-retry {
+    width: 46px; font-size: var(--font-xs); text-align: center;
+    padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 4px;
+    background: var(--bg-primary); color: var(--text-primary);
+}
+.fm-save-btn { white-space: nowrap; }
+
+/* Source list */
+.source-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.6rem 0.75rem; border-radius: 6px;
+    background: var(--bg-secondary); margin-bottom: 0.5rem;
+}
+.domain-badge {
+    font-size: var(--font-xs); padding: 2px 8px; border-radius: 12px;
+    background: var(--bg-primary); border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+    .fm-row { grid-template-columns: 1fr; }
+    .fm-controls { grid-template-columns: 1fr; justify-content: flex-start; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<header style="margin-bottom: 2rem;">
-    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="settings.title">설정</h2>
-    <p style="font-size: 1rem; color: var(--text-secondary);" data-i18n="settingsPage.subtitle">API 키와 크롤러 설정을 관리합니다</p>
+<div id="toast" style="position:fixed;top:80px;right:24px;z-index:9999;display:none;padding:12px 20px;border-radius:8px;font-size:var(--font-sm);font-weight:600;box-shadow:var(--shadow-lg);min-width:220px;"></div>
+
+<header style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+    <div>
+        <h2 style="font-size:1.75rem;font-weight:700;margin-bottom:0.25rem;color:var(--text-primary);">AI 모델 연결</h2>
+        <p style="font-size:var(--font-sm);color:var(--text-secondary);">실제 업무 단계별로 사용할 AI 모델을 지정합니다. 기본 모델이 실패하면 대체 모델이 자동으로 사용됩니다.</p>
+    </div>
 </header>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-    <div class="card">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="settingsPage.apiKeysTitle">API 키 관리</h3>
-        <div id="api-status" style="font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1rem;" data-i18n="settingsPage.apiStatusLoading">
-            상태 로딩 중...
-        </div>
-
-        <div style="display: grid; gap: 0.75rem;">
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settings.apiKeys.gemini">Gemini API Key</label>
-                <input type="password" id="gemini-key" placeholder="AIza..." data-i18n-placeholder="settings.apiKeys.placeholder" style="width: 100%;">
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settings.apiKeys.glm">GLM API Key</label>
-                <input type="password" id="glm-key" placeholder="zhipu..." data-i18n-placeholder="settings.apiKeys.placeholder" style="width: 100%;">
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.seedreamKey">Seedream API Key (Bytedance)</label>
-                <input type="password" id="seedream-key" placeholder="Bytedance API key" data-i18n-placeholder="settings.apiKeys.placeholder" style="width: 100%;">
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settings.apiKeys.nanoBanana">Nano Banana API Key</label>
-                <input type="password" id="nano-key" placeholder="Nano Banana API key" data-i18n-placeholder="settings.apiKeys.placeholder" style="width: 100%;">
-            </div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-            <button class="btn btn-primary" onclick="saveApiKeys()" data-i18n="common.save">저장</button>
-        </div>
+<!-- API 제공자 상태 -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3 class="card-title">API 제공자 상태</h3>
+        <span style="font-size:var(--font-xs);color:var(--text-muted);">API 키는 .env 파일에서 관리됩니다</span>
     </div>
-
-    <div class="card">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="settingsPage.modelSettingsTitle">AI 모델 설정</h3>
-        <div style="display: grid; gap: 0.75rem;">
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.models.geminiLabel">Gemini 모델</label>
-                <select id="gemini-model" style="width: 100%;">
-                    <option value="gemini-2.5-flash" data-i18n="settingsPage.models.geminiFlash">gemini-2.5-flash (기본)</option>
-                    <option value="gemini-2.5-flash-lite" data-i18n="settingsPage.models.geminiFlashLite">gemini-2.5-flash-lite</option>
-                    <option value="gemini-2.5-pro" data-i18n="settingsPage.models.geminiPro">gemini-2.5-pro</option>
-                </select>
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.models.glmLabel">GLM 모델 (폴백)</label>
-                <select id="glm-model" style="width: 100%;">
-                    <option value="glm-4.7" data-i18n="settingsPage.models.glm46">glm-4.7 (기본)</option>
-                    <option value="glm-4-flash" data-i18n="settingsPage.models.glm4Flash">glm-4-flash</option>
-                </select>
-            </div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-            <button class="btn btn-primary" onclick="saveModelSettings()" data-i18n="common.save">저장</button>
-        </div>
+    <div id="provider-status-list" style="display:flex;gap:0.5rem;flex-wrap:wrap;padding:0.5rem 0;">
+        <div class="skeleton" style="height:32px;width:120px;border-radius:6px;"></div>
+        <div class="skeleton" style="height:32px;width:120px;border-radius:6px;"></div>
+        <div class="skeleton" style="height:32px;width:120px;border-radius:6px;"></div>
     </div>
-
-    <div class="card">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="settingsPage.crawlerSettingsTitle">크롤러 설정</h3>
-        <div style="display: grid; gap: 0.75rem;">
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.crawlerWorkers">동시 작업 수</label>
-                <input type="number" id="crawler-workers" value="5" min="1" max="20" style="width: 100%;">
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.crawlerTimeout">크롤링 타임아웃 (초)</label>
-                <input type="number" id="crawler-timeout" value="30" min="10" max="120" style="width: 100%;">
-            </div>
-            <div>
-                <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.searxngUrlLabel">SearXNG API URL</label>
-                <input type="text" id="searxng-api-url" placeholder="http://localhost:8888" data-i18n-placeholder="settingsPage.searxngUrlPlaceholder" style="width: 100%;">
-                <p style="font-size: var(--font-xs); color: var(--text-muted); margin-top: 0.25rem;" data-i18n="settingsPage.searxngUrlHint">SearXNG 서버 주소를 입력하세요. 이 앱은 8912 포트를 사용하므로 다른 포트로 실행해야 합니다.</p>
-            </div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-            <button class="btn btn-primary" onclick="saveCrawlerSettings()" data-i18n="common.save">저장</button>
-        </div>
-    </div>
-
-    <!-- AI 조사 설정 -->
-    <div class="card">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="settingsPage.aiResearch.title">AI 조사 설정</h3>
-
-        <!-- 전체 활성화 토글 -->
-        <div style="margin-bottom: 1rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: var(--font-sm); cursor: pointer;">
-                <input type="checkbox" id="ai-research-enabled" style="width: auto;">
-                <span data-i18n="settingsPage.aiResearch.enable">AI 직접 조사 활성화</span>
-            </label>
-            <p style="font-size: var(--font-xs); color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.25rem;" data-i18n="settingsPage.aiResearch.hint">
-                크롤러 수집 후 AI가 추가로 웹 검색하여 트렌드를 조사합니다
-            </p>
-        </div>
-
-        <!-- 모델 선택 (체크박스) -->
-        <div style="margin-bottom: 1rem;" id="research-models-group">
-            <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.5rem;" data-i18n="settingsPage.aiResearch.selectModels">조사에 사용할 모델</label>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: var(--font-sm); cursor: pointer;">
-                    <input type="checkbox" id="research-gemini" value="gemini_search" style="width: auto;">
-                    <span>Gemini (Google Search)</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: var(--font-sm); cursor: pointer;">
-                    <input type="checkbox" id="research-perplexity" value="perplexity" style="width: auto;">
-                    <span>Perplexity (Sonar)</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: var(--font-sm); cursor: pointer;">
-                    <input type="checkbox" id="research-glm" value="glm_research" style="width: auto;">
-                    <span>GLM (웹 리서치)</span>
-                </label>
-            </div>
-        </div>
-
-        <!-- Perplexity API 키 입력 -->
-        <div style="margin-bottom: 1rem;" id="perplexity-key-group">
-            <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.aiResearch.perplexityKey">Perplexity API Key</label>
-            <input type="password" id="perplexity-api-key" placeholder="pplx-..." data-i18n-placeholder="settings.apiKeys.placeholder" style="width: 100%;">
-        </div>
-
-        <!-- Perplexity 모델 선택 -->
-        <div style="margin-bottom: 1rem;" id="perplexity-model-group">
-            <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.aiResearch.perplexityModel">Perplexity 모델</label>
-            <select id="perplexity-model" style="width: 100%;">
-                <option value="sonar">Sonar (기본)</option>
-                <option value="sonar-pro">Sonar Pro (고급)</option>
-            </select>
-        </div>
-
-        <!-- 조사 깊이 설정 -->
-        <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: var(--font-sm); font-weight: 600; margin-bottom: 0.25rem;" data-i18n="settingsPage.aiResearch.researchDepth">조사 깊이</label>
-            <select id="research-depth" style="width: 100%;">
-                <option value="standard" data-i18n="settingsPage.aiResearch.depthStandard">표준 (빠른 조사)</option>
-                <option value="deep" data-i18n="settingsPage.aiResearch.depthDeep">심층 (다중 검색)</option>
-            </select>
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-            <button class="btn btn-primary" onclick="saveAIResearchSettings()" data-i18n="common.save">저장</button>
-        </div>
-    </div>
-</div>
-
-<!-- 유튜브 채널 관리 (전체 너비) -->
-<div class="card" style="margin-top: 1.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin: 0;"><span aria-hidden="true">📺</span> <span data-i18n="youtube.manageTitle">유튜브 채널 관리</span></h3>
-        <button class="btn btn-primary btn-sm" onclick="addYoutubeChannel()" data-i18n="youtube.addChannel">+ 채널 추가</button>
-    </div>
-    <p style="font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1rem;" data-i18n="youtube.manageDescription">
-        여기서 등록한 채널은 세션 생성 시 선택 가능합니다. 유튜브 크롤러 사용 시 체크된 채널만 수집됩니다.
+    <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:0.75rem;">
+        API 키를 추가하거나 변경하려면 서버의 <code style="background:var(--bg-secondary);padding:2px 6px;border-radius:3px;">.env</code> 파일을 직접 수정하고 서버를 재시작하세요.
     </p>
-    <div id="youtube-channels-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; max-height: 250px; overflow-y: auto; padding: 0.5rem; background: var(--bg-secondary); border-radius: 6px;">
-        <p style="color: var(--text-muted); font-size: var(--font-sm); text-align: center; grid-column: 1/-1;" data-i18n="common.loading">로딩 중...</p>
+</div>
+
+<!-- 기능별 AI 모델 설정 -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3 class="card-title">기능별 AI 모델 설정</h3>
+    </div>
+    <div id="feature-models-container">
+        <div style="display:grid;gap:0.75rem;">
+            <div class="skeleton" style="height:80px;border-radius:6px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:6px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:6px;"></div>
+        </div>
     </div>
 </div>
 
-<div class="card" style="margin-top: 1.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-        <h3 style="font-size: var(--font-xl); font-weight: 600; margin: 0;" data-i18n="settingsPage.crawlerStatusTitle">크롤러 상태</h3>
-        <button class="btn btn-secondary btn-sm" onclick="loadCrawlerStatus()" data-i18n="common.refresh">새로고침</button>
+<!-- 트렌드 설정 -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3 class="card-title">트렌드 설정</h3>
+        <button class="btn btn-primary btn-sm" onclick="saveTrendSettings()">저장</button>
     </div>
-    <div id="crawler-status-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem;">
-        <div style="color: var(--text-muted); font-size: var(--font-sm);" data-i18n="common.loading">로딩 중...</div>
+    <div id="trend-settings-container">
+        <div class="skeleton" style="height:100px;border-radius:6px;"></div>
+    </div>
+</div>
+
+<!-- 트렌드 소스 관리 -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3 class="card-title">트렌드 소스 관리</h3>
+        <button class="btn btn-primary btn-sm" onclick="openAddSourceModal()">+ 소스 추가</button>
+    </div>
+    <div id="trend-sources-list">
+        <div style="display:grid;gap:0.5rem;">
+            <div class="skeleton" style="height:52px;border-radius:6px;"></div>
+            <div class="skeleton" style="height:52px;border-radius:6px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 소스 추가 모달 -->
+<div id="add-source-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+    <div class="card" style="width:480px;max-width:90vw;margin:0;">
+        <div class="card-header">
+            <h4 class="card-title" style="font-size:var(--font-lg);">트렌드 소스 추가</h4>
+            <button onclick="closeAddSourceModal()" style="background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--text-secondary);">×</button>
+        </div>
+        <div style="display:grid;gap:0.75rem;margin-top:0.5rem;">
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:0.25rem;">이름</label>
+                <input type="text" id="new-source-name" placeholder="소스 이름">
+            </div>
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:0.25rem;">URL</label>
+                <input type="url" id="new-source-url" placeholder="https://example.com">
+            </div>
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:0.25rem;">도메인</label>
+                <select id="new-source-domain">
+                    <option value="general">일반</option>
+                    <option value="industrial">산업디자인</option>
+                    <option value="product_service">제품·서비스</option>
+                    <option value="visual">시각디자인</option>
+                    <option value="advertising">광고·브랜딩</option>
+                </select>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1rem;">
+            <button class="btn btn-secondary" onclick="closeAddSourceModal()">취소</button>
+            <button class="btn btn-primary" onclick="addTrendSource()">추가</button>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-// Use _t to avoid conflict with i18n.js global t
-const _t = (key, params) => window.t ? window.t(key, params) : key;
-
-function getTranslatedValue(key, fallback) {
-    const value = _t(key);
-    return value === key ? fallback : value;
-}
-
-function getCrawlerLabel(crawler) {
-    return getTranslatedValue(`crawlers.names.${crawler.id}`, crawler.name || crawler.id);
-}
-
-function renderApiStatus(status) {
-    const keyLabels = {
-        gemini: _t('settings.apiKeys.gemini'),
-        glm: _t('settings.apiKeys.glm'),
-        seedream: _t('settings.apiKeys.seedream'),
-        nano_banana: _t('settings.apiKeys.nanoBanana'),
-        zimage: _t('settings.apiKeys.zimage'),
-        perplexity: _t('settings.apiKeys.perplexity')
-    };
-    const items = Object.entries(status).map(([key, ok]) => {
-        const label = keyLabels[key] || key;
-        return `${label}: ${ok ? '✅' : '❌'}`;
-    });
-    document.getElementById('api-status').textContent = items.join(' | ');
-}
-
-async function loadSettings() {
-    try {
-        document.getElementById('api-status').textContent = _t('settingsPage.apiStatusLoading');
-        const res = await fetch('/api/v1/settings/');
-        if (res.ok) {
-            const data = await res.json();
-            renderApiStatus(data.status || {});
-            if (data.config) {
-                document.getElementById('crawler-workers').value = data.config.crawler_workers || 5;
-                document.getElementById('crawler-timeout').value = data.config.crawler_timeout || 30;
-                document.getElementById('searxng-api-url').value = data.config.searxng_api_url || '';
-            }
-            if (data.models) {
-                document.getElementById('gemini-model').value = data.models.gemini_text || 'gemini-2.5-flash';
-                document.getElementById('glm-model').value = data.models.glm_text || 'glm-4.7';
-            }
-        }
-    } catch (error) {
-        console.error('설정 로드 실패:', error);
-    }
-}
-
-async function saveModelSettings() {
-    const payload = {
-        models: {
-            gemini_text: document.getElementById('gemini-model').value,
-            glm_text: document.getElementById('glm-model').value
-        }
-    };
-
-    try {
-        const res = await fetch('/api/v1/settings/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            alert(_t('settingsPage.models.saved'));
-            loadSettings();
-        } else {
-            const error = await res.json();
-            alert(error.detail || _t('settingsPage.models.saveFailed'));
-        }
-    } catch (error) {
-        console.error('모델 설정 저장 실패:', error);
-        alert(_t('settingsPage.models.saveError'));
-    }
-}
-
-async function saveApiKeys() {
-    const payload = {
-        api_keys: {
-            gemini: document.getElementById('gemini-key').value || null,
-            glm: document.getElementById('glm-key').value || null,
-            seedream: document.getElementById('seedream-key').value || null,
-            nano_banana: document.getElementById('nano-key').value || null,
-            perplexity: document.getElementById('perplexity-api-key').value || null
-        }
-    };
-
-    try {
-        const res = await fetch('/api/v1/settings/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            alert(_t('settingsPage.messages.apiKeysSaved'));
-            loadSettings();
-        } else {
-            const error = await res.json();
-            alert(error.detail || _t('settingsPage.messages.saveFailed'));
-        }
-    } catch (error) {
-        console.error('API 키 저장 실패:', error);
-        alert(_t('settingsPage.messages.saveError'));
-    }
-}
-
-async function saveCrawlerSettings() {
-    const searxngUrlInput = document.getElementById('searxng-api-url');
-    const searxngApiUrl = searxngUrlInput ? searxngUrlInput.value.trim() : '';
-    const payload = {
-        config: {
-            crawler_workers: parseInt(document.getElementById('crawler-workers').value, 10) || 5,
-            crawler_timeout: parseInt(document.getElementById('crawler-timeout').value, 10) || 30,
-            searxng_api_url: searxngApiUrl || null
-        }
-    };
-
-    try {
-        const res = await fetch('/api/v1/settings/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            alert(_t('settingsPage.messages.crawlerSaved'));
-            loadSettings();
-        } else {
-            const error = await res.json();
-            alert(error.detail || _t('settingsPage.messages.saveFailed'));
-        }
-    } catch (error) {
-        console.error('설정 저장 실패:', error);
-        alert(_t('settingsPage.messages.saveError'));
-    }
-}
-
-// AI 조사 설정 관련 함수
-async function loadAIResearchSettings() {
-    try {
-        const res = await fetch('/api/v1/settings/ai-research');
-        if (res.ok) {
-            const data = await res.json();
-            const config = data.config || {};
-
-            document.getElementById('ai-research-enabled').checked = config.enabled || false;
-
-            if (config.models) {
-                document.getElementById('research-gemini').checked = config.models.gemini_search || false;
-                document.getElementById('research-perplexity').checked = config.models.perplexity || false;
-                document.getElementById('research-glm').checked = config.models.glm_research || false;
-            }
-
-            document.getElementById('perplexity-model').value = config.perplexity_model || 'sonar';
-            document.getElementById('research-depth').value = config.research_depth || 'standard';
-        }
-    } catch (error) {
-        console.error('AI 조사 설정 로드 실패:', error);
-    }
-}
-
-async function saveAIResearchSettings() {
-    // 먼저 Perplexity API 키 저장 (값이 있는 경우)
-    const perplexityKey = document.getElementById('perplexity-api-key').value || null;
-    if (perplexityKey) {
-        try {
-            const keyRes = await fetch('/api/v1/settings/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    api_keys: {
-                        perplexity: perplexityKey
-                    }
-                })
-            });
-            if (!keyRes.ok) {
-                alert(_t('settingsPage.messages.saveFailed'));
-                return;
-            }
-        } catch (error) {
-            console.error('Perplexity API 키 저장 실패:', error);
-            alert(_t('settingsPage.messages.saveError'));
-            return;
-        }
-    }
-
-    const payload = {
-        enabled: document.getElementById('ai-research-enabled').checked,
-        models: {
-            gemini_search: document.getElementById('research-gemini').checked,
-            perplexity: document.getElementById('research-perplexity').checked,
-            glm_research: document.getElementById('research-glm').checked
-        },
-        perplexity_model: document.getElementById('perplexity-model').value,
-        research_depth: document.getElementById('research-depth').value
-    };
-
-    try {
-        const res = await fetch('/api/v1/settings/ai-research', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-            alert(_t('settingsPage.messages.aiResearchSaved'));
-            loadAIResearchSettings();
-            loadSettings(); // API 상태도 갱신
-        } else {
-            const error = await res.json();
-            alert(error.detail || _t('settingsPage.messages.saveFailed'));
-        }
-    } catch (error) {
-        console.error('AI 조사 설정 저장 실패:', error);
-        alert(_t('settingsPage.messages.saveError'));
-    }
-}
-
-async function loadCrawlerStatus() {
-    const grid = document.getElementById('crawler-status-grid');
-    grid.innerHTML = `<div style="color: var(--text-muted); font-size: var(--font-sm);">${_t('common.loading')}</div>`;
-
-    try {
-        const res = await fetch('/api/v1/crawlers/list');
-        if (!res.ok) throw new Error(_t('settingsPage.crawlerStatus.loadFailed'));
-        const data = await res.json();
-        const crawlers = [];
-        if (data.categorized) {
-            Object.values(data.categorized).forEach(cat => crawlers.push(...cat.crawlers));
-        }
-
-        grid.innerHTML = crawlers.map(crawler => `
-            <div style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-secondary);">
-                <div style="font-size: 0.8rem; font-weight: 600;">${getCrawlerLabel(crawler)}</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">${crawler.enabled ? _t('settingsPage.crawlerStatus.active') : _t('settingsPage.crawlerStatus.inactive')}</div>
-            </div>
-        `).join('') || `<div style="color: var(--text-muted);">${_t('settingsPage.crawlerStatus.empty')}</div>`;
-    } catch (error) {
-        console.error('크롤러 상태 로드 실패:', error);
-        grid.innerHTML = `<div style="color: var(--color-danger);">${_t('settingsPage.crawlerStatus.loadFailed')}</div>`;
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const init = () => {
-        loadSettings();
-        loadCrawlerStatus();
-        loadYoutubeChannels();
-        loadAIResearchSettings();
-    };
-    if (window.i18n && window.i18n.ready) {
-        init();
-    } else {
-        window.addEventListener('i18nReady', () => init(), { once: true });
-    }
-});
-
-window.addEventListener('languageChanged', () => {
-    loadSettings();
-    loadCrawlerStatus();
-    loadYoutubeChannels();
-    loadAIResearchSettings();
-});
-
-// ====== 유튜브 채널 관리 ======
-let youtubeChannels = [];
-
-async function loadYoutubeChannels() {
-    const container = document.getElementById('youtube-channels-container');
-    try {
-        const res = await fetch('/api/v1/youtube-channels/');
-        if (!res.ok) throw new Error(_t('youtube.loadFailed'));
-        youtubeChannels = await res.json();
-        renderYoutubeChannels();
-    } catch (err) {
-        console.error('유튜브 채널 로드 오류:', err);
-        container.innerHTML = `<p style="color: var(--color-danger); font-size: var(--font-sm); text-align: center; grid-column: 1/-1;">${_t('youtube.loadFailed')}</p>`;
-    }
-}
-
-function renderYoutubeChannels() {
-    const container = document.getElementById('youtube-channels-container');
-    if (youtubeChannels.length === 0) {
-        container.innerHTML = `<p style="color: var(--text-muted); font-size: var(--font-sm); text-align: center; grid-column: 1/-1;">${_t('youtube.empty')}</p>`;
-        return;
-    }
-
-    container.innerHTML = youtubeChannels.map(ch => `
-        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: white; border: 1px solid var(--border-color); border-radius: 4px;">
-            <span style="flex: 1; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${ch.channel_url || ch.channel_id}">${ch.channel_name || ch.channel_handle || ch.channel_id}</span>
-            <button onclick="removeYoutubeChannel('${ch.channel_id}')" style="padding: 2px 6px; font-size: 0.7rem; background: #fee2e2; color: #b91c1c; border: none; border-radius: 3px; cursor: pointer;" title="${_t('common.delete')}" aria-label="${_t('common.delete')}">×</button>
-        </div>
-    `).join('');
-}
-
-async function addYoutubeChannel() {
-    const url = prompt(_t('youtube.prompt'));
-    if (!url) return;
-
-    if (!url.includes('youtube.com/') && !url.includes('youtu.be/')) {
-        alert(_t('youtube.invalidUrl'));
-        return;
-    }
-
-    let channelId = '';
-    let channelHandle = '';
-    let channelName = '';
-
-    if (url.includes('@')) {
-        channelHandle = '@' + url.split('@')[1].split('/')[0].split('?')[0];
-        channelName = channelHandle;
-        channelId = channelHandle;
-    } else if (url.includes('/channel/')) {
-        channelId = url.split('/channel/')[1].split('/')[0].split('?')[0];
-        channelName = channelId;
-    } else if (url.includes('/c/')) {
-        channelName = url.split('/c/')[1].split('/')[0].split('?')[0];
-        channelId = channelName;
-    } else {
-        alert(_t('youtube.invalidFormat'));
-        return;
-    }
-
-    if (youtubeChannels.some(ch => ch.channel_id === channelId || ch.channel_url === url)) {
-        alert(_t('youtube.duplicate'));
-        return;
-    }
-
-    try {
-        const res = await fetch('/api/v1/youtube-channels/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                channel_id: channelId,
-                channel_handle: channelHandle || null,
-                channel_name: channelName,
-                channel_url: url,
-                category: '패션'
-            })
-        });
-
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.detail || _t('common.unknownError'));
-        }
-
-        await loadYoutubeChannels();
-        alert(_t('youtube.added', { name: channelName }));
-    } catch (err) {
-        console.error('채널 등록 오류:', err);
-        alert(_t('youtube.addFailed', { error: err.message || _t('common.unknownError') }));
-    }
-}
-
-async function removeYoutubeChannel(channelId) {
-    if (!confirm(_t('youtube.deleteConfirm'))) return;
-
-    try {
-        const res = await fetch(`/api/v1/youtube-channels/${encodeURIComponent(channelId)}`, {
-            method: 'DELETE'
-        });
-
-        if (!res.ok) {
-            let detail = _t('common.unknownError');
-            try {
-                const err = await res.json();
-                detail = err.detail || detail;
-            } catch (error) {
-                console.error('Delete response parse error:', error);
-            }
-            throw new Error(detail);
-        }
-        await loadYoutubeChannels();
-    } catch (err) {
-        console.error('채널 삭제 오류:', err);
-        alert(_t('youtube.deleteFailed', { error: err.message || _t('common.unknownError') }));
-    }
-}
-
-// Expose functions to global scope for onclick handlers
-window.saveApiKeys = saveApiKeys;
-window.saveCrawlerSettings = saveCrawlerSettings;
-window.saveModelSettings = saveModelSettings;
-window.saveAIResearchSettings = saveAIResearchSettings;
-window.loadCrawlerStatus = loadCrawlerStatus;
-window.addYoutubeChannel = addYoutubeChannel;
-window.removeYoutubeChannel = removeYoutubeChannel;
-</script>
+<script src="/static/js/pages/settings.js"></script>
 {% endblock %}

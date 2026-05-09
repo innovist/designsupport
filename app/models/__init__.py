@@ -1,40 +1,15 @@
 """
-Database models for Fashion AI Generator
+ORM models package. Import all models here so Alembic can discover them.
 """
 
-from .base import Base
-from .user import User
-from .project import Project
-from .session import Session
-from .version import Version
-from .crawler import CrawlJob, RawData, Comment
-from .analysis import TrendAnalysis, TrendInsight
-from .design import DesignConcept, PromptSpec
-from .generation import GenerationJob, ImageAsset, PatternDraft
-from .report import Report
-from .size import SizeStandard, SizeTable
-from .audit import AuditLog
-from .youtube_channel import YoutubeChannel
-
-__all__ = [
-    "Base",
-    "User",
-    "Project",
-    "Session",
-    "Version",
-    "CrawlJob",
-    "RawData",
-    "Comment",
-    "TrendAnalysis",
-    "TrendInsight",
-    "DesignConcept",
-    "PromptSpec",
-    "GenerationJob",
-    "ImageAsset",
-    "PatternDraft",
-    "Report",
-    "SizeStandard",
-    "SizeTable",
-    "AuditLog",
-    "YoutubeChannel",
-]
+from app.models.base import Base, TimestampMixin  # noqa: F401
+from app.models.workspace import Workspace, WorkspaceSetting, FeatureModelSetting, WorkspaceTrendSetting  # noqa: F401
+from app.models.project import DesignProject  # noqa: F401
+from app.models.session import DesignSession, DesignBrief, ChatMessage  # noqa: F401
+from app.models.assets import UserSketchAsset, SketchAnalysis  # noqa: F401
+from app.models.concepts import ConceptCandidate, ConceptDecision  # noqa: F401
+from app.models.references import ReferenceAsset, ReferenceAnalysis  # noqa: F401
+from app.models.abstraction import AbstractionRule  # noqa: F401
+from app.models.generation import GeneratedDesign, DesignEvaluation  # noqa: F401
+from app.models.specs import SpecDocument  # noqa: F401
+from app.models.trends import TrendSource, TrendDocument, TrendInsight  # noqa: F401

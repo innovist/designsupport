@@ -72,6 +72,7 @@ class NetworkUtils:
         Returns:
             응답 객체 또는 None
         """
+        # @MX:NOTE: [AUTO] Implements exponential backoff retry logic (delay * 2^attempt). Default: 3 retries with 1s base delay.
         session = NetworkUtils.get_session(headers=headers)
 
         for attempt in range(retries + 1):
@@ -211,6 +212,7 @@ class DateUtils:
         Returns:
             datetime 객체 또는 None
         """
+        # @MX:NOTE: [AUTO] Multi-format date parser supporting ISO (YYYY-MM-DD), Korean (YYYY년 MM월 DD일), US (MM/DD/YYYY), and relative (MM월 DD일) formats.
         if not date_str:
             return None
 
@@ -345,6 +347,7 @@ class NumberUtils:
         Returns:
             변환된 숫자
         """
+        # @MX:NOTE: [AUTO] Korean number parser supporting units: 만(10000), 천(1000), 백(100), 십(10), 개(1). Handles decimal notation (e.g., "7.3천" = 7300).
         if not number_str:
             return 0
 

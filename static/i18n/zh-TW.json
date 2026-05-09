@@ -1,6 +1,6 @@
 {
   "nav": {
-    "title": "時尚趨勢AI",
+    "title": "設計趨勢AI",
     "home": "首頁",
     "projects": "專案",
     "dashboard": "儀表板",
@@ -12,21 +12,21 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Fashion Trend AI",
-      "title": "分析時尚趨勢並生成新設計",
-      "description": "自動收集並分析最新時尚趨勢，生成 AI 設計圖像與版型。",
-      "searchPlaceholder": "想分析哪種時尚趨勢？",
+      "eyebrow": "Design Creative AI",
+      "title": "分析設計趨勢並生成新設計",
+      "description": "自動收集並分析最新設計趨勢，生成 AI 設計圖像與版型。",
+      "searchPlaceholder": "想分析哪種設計趨勢？",
       "startButton": "開始分析",
       "chips": {
         "casual": "女性休閒",
         "street": "街頭風",
-        "sustainable": "永續時尚",
+        "sustainable": "永續設計",
         "luxury": "奢華正裝"
       },
       "chipsData": {
         "casual": "2025 S/S 女裝休閒趨勢",
         "street": "極簡街頭男裝",
-        "sustainable": "永續時尚材質趨勢",
+        "sustainable": "永續設計材質趨勢",
         "luxury": "奢華正裝配色趨勢"
       },
       "links": {
@@ -47,7 +47,7 @@
       "cards": {
         "trend": {
           "title": "趨勢分析",
-          "desc": "蒐集並分析時尚趨勢資料",
+          "desc": "蒐集並分析設計趨勢資料",
           "action": "前往專案"
         },
         "designs": {
@@ -93,7 +93,7 @@
     }
   },
   "common": {
-    "appSubtitle": "時尚趨勢分析與圖像生成系統",
+    "appSubtitle": "設計趨勢分析與圖像生成系統",
     "loading": "載入中...",
     "error": "錯誤",
     "success": "成功",
@@ -146,7 +146,7 @@
     "crawler": "資料收集"
   },
   "trendAnalysis": {
-    "title": "時尚趨勢分析",
+    "title": "設計趨勢分析",
     "keywords": "關鍵詞",
     "keywordsPlaceholder": "例如：oversized、極簡、復古",
     "keywordsHelp": "用逗號分隔多個關鍵詞",
@@ -168,10 +168,10 @@
     }
   },
   "imageGeneration": {
-    "title": "時尚設計圖像生成",
+    "title": "設計設計圖像生成",
     "designPrompt": {
       "label": "設計描述",
-      "placeholder": "詳細描述您想要生成的時尚設計"
+      "placeholder": "詳細描述您想要生成的設計設計"
     },
     "garmentType": {
       "label": "服裝類型",
@@ -288,25 +288,25 @@
     }
   },
   "crawler": {
-    "title": "時尚資料收集",
+    "title": "設計資料收集",
     "sources": {
       "label": "資料源",
-      "fashion_news": "時尚新聞",
-      "fashion_insta": "時尚Instagram",
-      "musinsa": "Musinsa",
-      "wgsn": "WGSN",
-      "pinterest": "Pinterest",
+      "fashion_news": "設計新聞",
+      "fashion_insta": "社群參考",
+      "musinsa": "設計社群",
+      "wgsn": "趨勢報告",
+      "pinterest": "視覺參考",
       "options": {
-        "fashion_news": "時尚新聞",
-        "fashion_insta": "時尚Instagram",
-        "musinsa": "Musinsa",
-        "wgsn": "WGSN",
-        "pinterest": "Pinterest"
+        "fashion_news": "設計新聞",
+        "fashion_insta": "社群參考",
+        "musinsa": "設計社群",
+        "wgsn": "趨勢報告",
+        "pinterest": "視覺參考"
       }
     },
     "keywords": {
       "label": "收集關鍵詞",
-      "placeholder": "例如：2024時尚趨勢、oversized"
+      "placeholder": "例如：2024設計趨勢、oversized"
     },
     "maxItems": {
       "label": "最大收集量"
@@ -337,7 +337,7 @@
   },
   "crawlers": {
     "categories": {
-      "fashion": "時尚平台",
+      "fashion": "設計平台",
       "community": "社群",
       "portal": "入口網站/部落格",
       "media": "媒體",
@@ -345,9 +345,9 @@
       "search": "搜尋"
     },
     "names": {
-      "musinsa": "Musinsa",
-      "fashion_insta": "Instagram",
-      "pinterest": "Pinterest",
+      "musinsa": "設計社群",
+      "fashion_insta": "社群參考",
+      "pinterest": "視覺參考",
       "dcinside": "DC Inside",
       "theqoo": "Theqoo",
       "fmkorea": "FMKorea",
@@ -362,8 +362,8 @@
       "naver_cafe": "Naver Cafe",
       "daum_cafe": "Daum Cafe",
       "youtube": "YouTube",
-      "fashion_news": "Fashion N",
-      "wgsn": "WGSN",
+      "fashion_news": "設計新聞",
+      "wgsn": "趨勢報告",
       "natenews": "Nate News",
       "searxng": "SearXNG"
     }
@@ -373,25 +373,25 @@
       "title": "圖像生成模型",
       "zimage": {
         "name": "Z-Image",
-        "description": "專業時尚圖像生成",
+        "description": "專業設計圖像生成",
         "capabilities": [
-          "fashion_design",
-          "model_fitting",
+          "design_generation",
+          "application_visualization",
           "upscale"
         ]
       },
       "seedream": {
         "name": "Seedream（字節跳動）",
-        "description": "高級時尚系列生成",
+        "description": "進階設計系列生成",
         "capabilities": [
-          "fashion_collection",
+          "design_series",
           "patterns",
           "textures"
         ]
       },
       "nano_banana": {
         "name": "Nano Banana",
-        "description": "技術時尚插圖",
+        "description": "技術設計插圖",
         "capabilities": [
           "sketch",
           "flat_lay",
@@ -574,18 +574,18 @@
     }
   },
   "pageTitles": {
-    "home": "首頁 - 時尚趨勢AI生成系統",
-    "dashboard": "儀表板 - 時尚趨勢AI生成系統",
-    "projects": "專案管理 - 時尚趨勢AI生成系統",
-    "newProject": "建立專案 - 時尚趨勢AI生成系統",
-    "projectDetail": "專案詳情 - 時尚趨勢AI生成系統",
-    "newSession": "建立會話 - 時尚趨勢AI生成系統",
-    "sessionDetail": "會話詳情 - 時尚趨勢AI生成系統",
-    "history": "會話管理 - 時尚趨勢AI生成系統",
-    "ideas": "創意管理 - 時尚趨勢AI生成系統",
-    "chatbot": "AI 聊天機器人 - 時尚趨勢AI生成系統",
-    "library": "圖庫 - 時尚趨勢AI生成系統",
-    "settings": "設定 - 時尚趨勢AI生成系統"
+    "home": "首頁 - 設計趨勢AI生成系統",
+    "dashboard": "儀表板 - 設計趨勢AI生成系統",
+    "projects": "專案管理 - 設計趨勢AI生成系統",
+    "newProject": "建立專案 - 設計趨勢AI生成系統",
+    "projectDetail": "專案詳情 - 設計趨勢AI生成系統",
+    "newSession": "建立會話 - 設計趨勢AI生成系統",
+    "sessionDetail": "會話詳情 - 設計趨勢AI生成系統",
+    "history": "會話管理 - 設計趨勢AI生成系統",
+    "ideas": "創意管理 - 設計趨勢AI生成系統",
+    "chatbot": "AI 聊天機器人 - 設計趨勢AI生成系統",
+    "library": "圖庫 - 設計趨勢AI生成系統",
+    "settings": "設定 - 設計趨勢AI生成系統"
   },
   "dashboard": {
     "panels": {
@@ -754,7 +754,7 @@
   },
   "projects": {
     "title": "專案管理",
-    "subtitle": "管理並追蹤時尚分析專案",
+    "subtitle": "管理並追蹤設計分析專案",
     "actions": {
       "new": "新專案",
       "newStart": "開始新專案"
@@ -805,7 +805,7 @@
     "subtitle": "設定趨勢分析與設計生成條件",
     "sections": {
       "sessionInfo": "會話資訊",
-      "filters": "時尚分析條件",
+      "filters": "設計分析條件",
       "filtersHelp": "按需選擇（均為可選）",
       "inputs": "輸入資料（可選）",
       "inputsHelp": "文字、檔案、URL 會參與分析",
@@ -934,7 +934,7 @@
     },
     "header": {
       "title": "AI 聊天機器人",
-      "subtitle": "自由提問時尚創意"
+      "subtitle": "自由提問設計創意"
     },
     "empty": {
       "state": "請選擇或建立對話會話"
@@ -1199,197 +1199,5 @@
   "currency": {
     "symbol": "NT$",
     "code": "TWD"
-  },
-  "workspace": {
-    "stepBar": {
-      "title": "進度步驟",
-      "steps": {
-        "step1": "輸入分析",
-        "step2": "關鍵詞提取",
-        "step3": "資料收集",
-        "step4": "趨勢分析",
-        "step5": "證據收集",
-        "step6": "草圖輸入",
-        "step7": "AI 解讀",
-        "step8": "參考搜尋",
-        "step9": "抽象規則",
-        "step10": "設計生成",
-        "step11": "結果檢視",
-        "step12": "決定日誌",
-        "step13": "改善迭代",
-        "step14": "最終選擇",
-        "step15": "匯出",
-        "step16": "文件化",
-        "step17": "完成"
-      }
-    },
-    "boards": {
-      "chat": {
-        "title": "聊天",
-        "placeholder": "輸入您的訊息...",
-        "sendButton": "傳送",
-        "hypothesis": "假設",
-        "evidenceRef": "證據",
-        "user": "使用者",
-        "ai": "AI"
-      },
-      "evidence": {
-        "title": "證據",
-        "filterBySource": "按來源篩選",
-        "sortBy": "排序",
-        "credibility": "可信度",
-        "recency": "時效性",
-        "source": "來源",
-        "date": "日期",
-        "expand": "展開"
-      },
-      "sketch": {
-        "title": "草圖輸入",
-        "original": "原始",
-        "interpretation": "AI 解讀",
-        "refinement": "改善",
-        "upload": "上傳",
-        "intent": "意圖",
-        "form": "形態",
-        "structure": "結構",
-        "uncertain": "不確定元素",
-        "questions": "使用者問題",
-        "actions": {
-          "keep": "保持",
-          "clarify": "釐清",
-          "vary": "變化",
-          "refine": "改善",
-          "expand": "擴展",
-          "useAsEvidence": "作為證據使用",
-          "runSearch": "執行搜尋",
-          "generate": "生成"
-        },
-        "saveAsNew": "儲存為新版本"
-      },
-      "reference": {
-        "title": "參考搜尋",
-        "clusters": "來源集群",
-        "grid": "參考網格",
-        "analysis": "分析",
-        "categories": {
-          "nature": "自然",
-          "product": "產品",
-          "architecture": "建築",
-          "fashion": "時尚",
-          "graphic": "圖形",
-          "advertising": "廣告",
-          "material": "材料"
-        },
-        "basedOnSketch": "基於草圖",
-        "similarity": "相似度",
-        "license": "授權",
-        "risk": "風險等級",
-        "directApply": "直接套用風格",
-        "riskReason": "由於授權風險,直接套用受到限制"
-      },
-      "abstraction": {
-        "title": "抽象",
-        "axes": {
-          "form": "形態",
-          "structure": "結構",
-          "surface": "表面",
-          "colorMaterial": "色彩/材料",
-          "meaning": "意義",
-          "usability": "可用性"
-        },
-        "observation": "觀察",
-        "appliedRule": "應用規則",
-        "riskLevel": "風險等級"
-      },
-      "generation": {
-        "title": "生成",
-        "kinds": {
-          "refinement": "改善",
-          "variation": "變化",
-          "domainApplication": "領域應用"
-        },
-        "parentSketch": "父草圖",
-        "aiGenerated": "AI 生成",
-        "modelPolicy": "模型策略",
-        "comparison": "比較",
-        "download": "下載",
-        "select": "選擇"
-      },
-      "decision": {
-        "title": "決定",
-        "candidates": "候選",
-        "scores": {
-          "creativity": "創意性",
-          "feasibility": "可行性",
-          "marketFit": "市場適配度"
-        },
-        "actions": {
-          "select": "選擇",
-          "reject": "拒絕",
-          "requestRevision": "請求修訂"
-        },
-        "log": "決定日誌"
-      }
-    },
-    "decisionPanel": {
-      "title": "決定面板",
-      "currentStep": "目前步驟",
-      "briefScore": "簡報得分",
-      "conceptScores": "概念得分",
-      "selectedSketch": "選取的草圖",
-      "selectedReferences": "選取的參考",
-      "nextAction": "下一步行動",
-      "nextActionReason": "原因",
-      "progress": "進度",
-      "notifications": "通知"
-    },
-    "emptyStates": {
-      "noTrendData": {
-        "title": "趨勢資料不足",
-        "description": "未能收集足夠的趨勢資料"
-      },
-      "noReferences": {
-        "title": "無參考",
-        "description": "未找到參考內容"
-      },
-      "licenseRisk": {
-        "title": "授權風險",
-        "description": "此參考內容有使用限制"
-      },
-      "modelFailure": {
-        "title": "模型失敗",
-        "description": "AI 模型失敗。請重試"
-      },
-      "autoUncertainty": {
-        "title": "不確定性",
-        "description": "AI 對此內容不確定"
-      },
-      "parseFailure": {
-        "title": "解析失敗",
-        "description": "無法解析內容"
-      },
-      "networkError": {
-        "title": "網路錯誤",
-        "description": "請檢查連線後重試"
-      },
-      "quotaExceeded": {
-        "title": "配額超限",
-        "description": "已超過 API 配額"
-      },
-      "insufficientEvidence": {
-        "title": "證據不足",
-        "description": "未能收集足夠的證據"
-      },
-      "permissionDenied": {
-        "title": "權限拒絕",
-        "description": "您無權執行此操作"
-      }
-    },
-    "skeleton": {
-      "loading": "載入中...",
-      "processing": "處理中...",
-      "analyzing": "分析中...",
-      "generating": "生成中..."
-    }
   }
 }

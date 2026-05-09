@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.history{% endblock %}
-{% block title %}세션 관리 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}세션 관리 - 디자인 발상 시스템{% endblock %}
 
 {% block content %}
 <header style="margin-bottom: 2rem;">
@@ -42,7 +42,9 @@
 
 {% block extra_js %}
 <script>
-const t = window.t;
+function tr(key, params) {
+    return window.t ? window.t(key, params) : key;
+}
 let projects = [];
 let sessions = [];
 
@@ -54,14 +56,14 @@ function escapeHtml(text) {
 
 function getStatusText(status) {
     const map = {
-        created: t('status.created'),
-        running: t('status.running'),
-        analyzing: t('status.analyzing'),
-        completed: t('status.completed'),
-        failed: t('status.failed'),
-        cancelled: t('status.cancelled')
+        created: tr('status.created'),
+        running: tr('status.running'),
+        analyzing: tr('status.analyzing'),
+        completed: tr('status.completed'),
+        failed: tr('status.failed'),
+        cancelled: tr('status.cancelled')
     };
-    return map[status] || t('status.unknown');
+    return map[status] || tr('status.unknown');
 }
 
 function formatDate(dateStr) {
@@ -83,7 +85,7 @@ async function loadProjects() {
 
 function renderProjectFilter() {
     const select = document.getElementById('project-filter');
-    select.innerHTML = `<option value="">${t('history.filters.projectAll')}</option>`;
+    select.innerHTML = `<option value="">${tr('history.filters.projectAll')}</option>`;
     projects.forEach(project => {
         select.innerHTML += `<option value="${project.id}">${escapeHtml(project.title)}</option>`;
     });
@@ -126,9 +128,9 @@ function renderSessions() {
         container.innerHTML = `
             <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('history.empty.title')}</h4>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('history.empty.subtitle')}</p>
-                <a href="/projects" class="btn btn-primary">${t('history.empty.action')}</a>
+                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${tr('history.empty.title')}</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${tr('history.empty.subtitle')}</p>
+                <a href="/projects" class="btn btn-primary">${tr('history.empty.action')}</a>
             </div>
         `;
         return;
@@ -140,11 +142,11 @@ function renderSessions() {
                 <span class="badge">${getStatusText(session.status)}</span>
                 <span style="font-size: var(--font-xs); color: var(--text-muted);">${formatDate(session.created_at)}</span>
             </div>
-            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">${escapeHtml(session.session_title || t('common.noTitle'))}</h4>
-            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 0.75rem;">${escapeHtml(session.description || t('common.noDescription'))}</p>
+            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">${escapeHtml(session.session_title || tr('common.noTitle'))}</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 0.75rem;">${escapeHtml(session.description || tr('common.noDescription'))}</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: var(--font-xs); color: var(--text-muted);">${t('history.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
-                <a href="/sessions/${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">${tr('history.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
+                <a href="/sessions/${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${tr('common.open')}</a>
             </div>
         </div>
     `).join('');

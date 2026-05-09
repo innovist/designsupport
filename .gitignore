@@ -82,6 +82,7 @@ uploads/
 logs/
 *.tmp
 *.temp
+tmp/
 *.bak
 *.backup
 *.zip

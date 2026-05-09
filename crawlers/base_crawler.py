@@ -94,6 +94,8 @@ class CrawledItem:
 
 class BaseCrawler(ABC):
     """크롤러 기본 클래스"""
+    # @MX:ANCHOR: [AUTO] Abstract base class for all crawler implementations. All crawlers inherit from this class.
+    # @MX:REASON: High fan_in (20+ crawlers inherit from BaseCrawler). Changes to this interface affect all crawler implementations.
 
     def __init__(self, config: Dict[str, Any] = None):
         """
@@ -150,6 +152,7 @@ class BaseCrawler(ABC):
         Returns:
             품질 점수
         """
+        # @MX:NOTE: [AUTO] Quality scoring algorithm with weighted criteria (title: 20%, content: 30%, author: 10%, date: 10%, engagement: 15%, images: 15%)
         score = 0.0
 
         # 제목이 있음 (20점)
@@ -191,6 +194,7 @@ class BaseCrawler(ABC):
         Returns:
             유효성 여부
         """
+        # @MX:NOTE: [AUTO] Spam filtering with Korean spam patterns. Threshold: >3 spam keywords triggers rejection.
         # 기본 필드 확인
         if not item.url:
             return False

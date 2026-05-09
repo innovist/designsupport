@@ -2,6 +2,109 @@
 
 This file records schema-affecting specification changes that must be reflected when implementation migrations are created.
 
+## 2026-05-08 — SPEC-02 Tier 3 Direct Style Guard
+
+### references.ReferenceAsset.direct_style_apply
+
+**Source**: `apps/references/infrastructure/orm/models.py`
+
+**Purpose**: Persist whether a reference can be directly used for style application in the UI and generation workflow.
+
+**Field**:
+- direct_style_apply: BooleanField (default=True, indexed)
+
+**Behavior**:
+- Pipeline-created Tier 3 references are stored with `direct_style_apply=False`.
+- Workspace reference board disables direct style application when this flag is false.
+
+**Migration**:
+- `apps/references/infrastructure/orm/migrations/0003_referenceasset_direct_style_apply.py`
+
+## 2026-05-08 — Rerun Artifact Supersession
+
+### Artifact `is_superseded` flags
+
+**Source**: `apps/design_sessions/infrastructure/artifact_supersession.py`
+
+**Purpose**: Preserve historical artifacts when a session is rerun from a step while keeping workspace APIs focused on the current artifact set.
+
+**Fields**:
+- `references.ReferenceAsset.is_superseded`: BooleanField (default=False, indexed)
+- `concepts.ConceptCandidateModel.is_superseded`: BooleanField (default=False, indexed)
+- `abstraction.AbstractionRuleModel.is_superseded`: BooleanField (default=False, indexed)
+- `abstraction.SketchPromptModel.is_superseded`: BooleanField (default=False, indexed)
+- `generation.GenerationJobModel.is_superseded`: BooleanField (default=False, indexed)
+- `generation.GeneratedDesignModel.is_superseded`: BooleanField (default=False, indexed)
+- `specs.SpecDocumentModel.is_superseded`: BooleanField (default=False, indexed)
+
+**Behavior**:
+- `rerun_from_step` marks downstream artifacts as superseded instead of deleting them.
+- Workspace board queries exclude superseded artifacts by default.
+- Historical rows remain available for audit and future history views.
+
+**Migrations**:
+- `apps/references/infrastructure/orm/migrations/0002_referenceasset_is_superseded_and_more.py`
+- `apps/concepts/infrastructure/orm/migrations/0004_conceptcandidatemodel_is_superseded_and_more.py`
+- `apps/abstraction/infrastructure/orm/migrations/0003_abstractionrulemodel_is_superseded_and_more.py`
+- `apps/generation/infrastructure/orm/migrations/0004_generateddesignmodel_is_superseded_and_more.py`
+- `apps/specs/infrastructure/orm/migrations/0002_specdocumentmodel_is_superseded_and_more.py`
+
+## 2026-05-08 — FR-13 Project Preferred Image Model
+
+### design_projects.DesignProject.preferred_image_model
+
+**Source**: `apps/design_projects/infrastructure/orm/models.py`
+
+**Purpose**: Persist the user's selected image-capable model for project-level generation routing.
+
+**Field**:
+- preferred_image_model: CharField (max_length=255, null=True, blank=True)
+
+**Behavior**:
+- Stores a `model_catalog.ModelCatalog.id` value only after API validation confirms the model is active and image-capable.
+- Empty value means the ImageGeneration feature policy fallback chain is used.
+- During generation, a non-empty value is passed to the model router as the preferred first model; existing policy fallback models remain available after it.
+
+**Migration**:
+- `apps/design_projects/infrastructure/orm/migrations/0002_designproject_preferred_image_model_and_more.py`
+
+## 2026-05-08 — Tenant API Key Persistence
+
+### admin_console.TenantORM.settings.api_keys
+
+**Source**: `config/api_v1_views.py`, `apps/model_catalog/infrastructure/api_key_resolver.py`
+
+**Purpose**: Persist tenant-scoped provider API keys across server restarts without falling back to another tenant.
+
+**Storage**:
+- `settings["api_keys"][ENV_NAME] = "signed:<django-signed-value>"`
+
+**Behavior**:
+- The runtime resolver reads process environment first, then the active tenant's signed DB value.
+- Comma-separated or list input values are normalized and rotated in process memory for provider key rotation.
+- Existing plaintext values remain readable for backward compatibility and are replaced with signed values on the next settings save.
+
+## 2026-05-08 — SPEC-01 Session Input Configuration
+
+### design_sessions.DesignSession.input_config
+
+**Source**: `apps/design_sessions/infrastructure/orm/models.py`
+
+**Purpose**: Persist the user-selected session runtime inputs that affect pipeline execution and dashboard display.
+
+**Field**:
+- input_config: JSONField (default=dict, blank=True)
+
+**Stored keys**:
+- filters: User-selected filters such as gender, age, season, and category.
+- crawler_config: User-selected crawler sources, date range, and provider limits.
+- auto_start: Whether the user requested immediate analysis start after session creation.
+- generate_images: Whether image generation should be requested by the pipeline.
+- generate_blueprints: Whether blueprint generation should be requested by the pipeline.
+
+**Migration**:
+- `apps/design_sessions/infrastructure/orm/migrations/0003_designsession_input_config.py`
+
 ## 2026-05-08 — SPEC-04-MODEL-ADMIN Model Catalog
 
 ### model_catalog.ModelProvider
@@ -944,3 +1047,60 @@ The workspace board API now reads persisted rows from:
 - `spec_documents`
 
 No new DB fields were added for these runtime API endpoints.
+
+---
+
+## 2026-05-08 — SPEC-06 Admin Console Policy Versioning
+
+### admin_console.FeaturePolicyORM / admin_console.PromptPolicyORM
+
+**Source**: `apps/admin_console/infrastructure/orm/models.py`
+
+**Change**:
+- `feature_key` is no longer globally unique.
+- `(feature_key, version)` is now unique.
+
+**Reason**: SPEC-06 policy editing creates a new immutable version for each save while keeping only one active policy per feature. A single `feature_key` unique constraint prevented version history from being stored.
+
+**Migration**: `apps/admin_console/infrastructure/orm/migrations/0002_alter_featurepolicyorm_feature_key_and_more.py`
+
+### model_catalog.FeatureModelPolicyModel
+
+**Source**: `apps/model_catalog/infrastructure/orm/models.py`
+
+**Change**:
+- `feature_key` is no longer globally unique.
+- `(feature_key, version)` is now unique.
+
+**Reason**: Admin console policy changes must be reflected in the runtime model router. The router reads `feature_model_policies`, so this table also needs version history support with one active policy per feature.
+
+**Migration**: `apps/model_catalog/infrastructure/orm/migrations/0003_alter_featuremodelpolicymodel_feature_key_and_more.py`
+
+---
+
+## 2026-05-09 — FastAPI Design Tool Initial Schema Alignment
+
+### trend_insight
+
+**Source**: `app/models/trends.py`
+
+**Change**:
+- Added nullable `session_id` foreign key to `design_session.id`.
+
+**Reason**: Trend insights are generated from a specific design session search. Without `session_id`, concept generation and spec documents could mix trend evidence from unrelated sessions, violating the evidence-based pipeline contract.
+
+**Migration**: `alembic/versions/482a29aee870_initial_schema.py`
+
+### feature_model_setting
+
+**Source**: `app/models/workspace.py`, `app/infrastructure/repositories/workspace_repository.py`
+
+**Required/default behavior**:
+- Default workspace initialization now creates one `FeatureModelSetting` row for each canonical feature key:
+  `abstraction`, `sketch_analysis`, `concept_generation`, `chat`, `image_generation`, `reference_analysis`, `brief_structuring`, `spec_writing`, `trend_analysis`.
+- Provider/model defaults are editable in the user workspace settings page.
+- API key values remain `.env`-only and are not stored in this table.
+
+**Reason**: Runtime AI routes must resolve feature-specific models consistently and must fail clearly when provider API keys are missing.
+
+**Migration**: `alembic/versions/482a29aee870_initial_schema.py`

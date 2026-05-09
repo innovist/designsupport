@@ -1,6 +1,6 @@
 {
   "nav": {
-    "title": "时尚趋势AI",
+    "title": "设计趋势AI",
     "home": "首页",
     "projects": "项目",
     "dashboard": "仪表板",
@@ -12,21 +12,21 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Fashion Trend AI",
-      "title": "分析时尚趋势并生成新设计",
-      "description": "自动收集并分析最新时尚趋势，生成 AI 设计图像与版型。",
-      "searchPlaceholder": "想分析哪种时尚趋势？",
+      "eyebrow": "Design Creative AI",
+      "title": "分析设计趋势并生成新设计",
+      "description": "自动收集并分析最新设计趋势，生成 AI 设计图像与版型。",
+      "searchPlaceholder": "想分析哪种设计趋势？",
       "startButton": "开始分析",
       "chips": {
         "casual": "女性休闲",
         "street": "街头风",
-        "sustainable": "可持续时尚",
+        "sustainable": "可持续设计",
         "luxury": "奢华正装"
       },
       "chipsData": {
         "casual": "2025 S/S 女装休闲趋势",
         "street": "极简街头男装",
-        "sustainable": "可持续时尚材质趋势",
+        "sustainable": "可持续设计材质趋势",
         "luxury": "奢华正装配色趋势"
       },
       "links": {
@@ -47,7 +47,7 @@
       "cards": {
         "trend": {
           "title": "趋势分析",
-          "desc": "采集并分析时尚趋势数据",
+          "desc": "采集并分析设计趋势数据",
           "action": "前往项目"
         },
         "designs": {
@@ -93,7 +93,7 @@
     }
   },
   "common": {
-    "appSubtitle": "时尚趋势分析与图像生成系统",
+    "appSubtitle": "设计趋势分析与图像生成系统",
     "loading": "加载中...",
     "error": "错误",
     "success": "成功",
@@ -146,7 +146,7 @@
     "crawler": "数据收集"
   },
   "trendAnalysis": {
-    "title": "时尚趋势分析",
+    "title": "设计趋势分析",
     "keywords": "关键词",
     "keywordsPlaceholder": "例如：oversized、极简主义、复古",
     "keywordsHelp": "用逗号分隔多个关键词",
@@ -168,10 +168,10 @@
     }
   },
   "imageGeneration": {
-    "title": "时尚设计图像生成",
+    "title": "设计设计图像生成",
     "designPrompt": {
       "label": "设计描述",
-      "placeholder": "详细描述您想要生成的时尚设计"
+      "placeholder": "详细描述您想要生成的设计设计"
     },
     "garmentType": {
       "label": "服装类型",
@@ -288,25 +288,25 @@
     }
   },
   "crawler": {
-    "title": "时尚数据收集",
+    "title": "设计数据收集",
     "sources": {
       "label": "数据源",
-      "fashion_news": "时尚新闻",
-      "fashion_insta": "时尚Instagram",
-      "musinsa": "Musinsa",
-      "wgsn": "WGSN",
-      "pinterest": "Pinterest",
+      "fashion_news": "设计新闻",
+      "fashion_insta": "社交参考",
+      "musinsa": "设计社区",
+      "wgsn": "趋势报告",
+      "pinterest": "视觉参考",
       "options": {
-        "fashion_news": "时尚新闻",
-        "fashion_insta": "时尚Instagram",
-        "musinsa": "Musinsa",
-        "wgsn": "WGSN",
-        "pinterest": "Pinterest"
+        "fashion_news": "设计新闻",
+        "fashion_insta": "社交参考",
+        "musinsa": "设计社区",
+        "wgsn": "趋势报告",
+        "pinterest": "视觉参考"
       }
     },
     "keywords": {
       "label": "收集关键词",
-      "placeholder": "例如：2024时尚趋势、oversized"
+      "placeholder": "例如：2024设计趋势、oversized"
     },
     "maxItems": {
       "label": "最大收集量"
@@ -337,7 +337,7 @@
   },
   "crawlers": {
     "categories": {
-      "fashion": "时尚平台",
+      "fashion": "设计平台",
       "community": "社区",
       "portal": "门户/博客",
       "media": "媒体",
@@ -345,9 +345,9 @@
       "search": "搜索"
     },
     "names": {
-      "musinsa": "Musinsa",
-      "fashion_insta": "Instagram",
-      "pinterest": "Pinterest",
+      "musinsa": "设计社区",
+      "fashion_insta": "社交参考",
+      "pinterest": "视觉参考",
       "dcinside": "DC Inside",
       "theqoo": "Theqoo",
       "fmkorea": "FMKorea",
@@ -362,8 +362,8 @@
       "naver_cafe": "Naver Cafe",
       "daum_cafe": "Daum Cafe",
       "youtube": "YouTube",
-      "fashion_news": "Fashion N",
-      "wgsn": "WGSN",
+      "fashion_news": "设计新闻",
+      "wgsn": "趋势报告",
       "natenews": "Nate News",
       "searxng": "SearXNG"
     }
@@ -373,25 +373,25 @@
       "title": "图像生成模型",
       "zimage": {
         "name": "Z-Image",
-        "description": "专业时尚图像生成",
+        "description": "专业设计图像生成",
         "capabilities": [
-          "fashion_design",
-          "model_fitting",
+          "design_generation",
+          "application_visualization",
           "upscale"
         ]
       },
       "seedream": {
         "name": "Seedream（字节跳动）",
-        "description": "高级时尚系列生成",
+        "description": "高级设计系列生成",
         "capabilities": [
-          "fashion_collection",
+          "design_series",
           "patterns",
           "textures"
         ]
       },
       "nano_banana": {
         "name": "Nano Banana",
-        "description": "技术时尚插画",
+        "description": "技术设计插图",
         "capabilities": [
           "sketch",
           "flat_lay",
@@ -456,198 +456,6 @@
   "currency": {
     "symbol": "¥",
     "code": "CNY"
-  },
-  "workspace": {
-    "stepBar": {
-      "title": "进度步骤",
-      "steps": {
-        "step1": "输入分析",
-        "step2": "关键词提取",
-        "step3": "数据收集",
-        "step4": "趋势分析",
-        "step5": "证据收集",
-        "step6": "草图输入",
-        "step7": "AI解读",
-        "step8": "参考搜索",
-        "step9": "抽象规则",
-        "step10": "设计生成",
-        "step11": "结果审查",
-        "step12": "决策日志",
-        "step13": "改进迭代",
-        "step14": "最终选择",
-        "step15": "导出",
-        "step16": "文档化",
-        "step17": "完成"
-      }
-    },
-    "boards": {
-      "chat": {
-        "title": "聊天",
-        "placeholder": "输入您的消息...",
-        "sendButton": "发送",
-        "hypothesis": "假设",
-        "evidenceRef": "证据",
-        "user": "用户",
-        "ai": "AI"
-      },
-      "evidence": {
-        "title": "证据",
-        "filterBySource": "按来源过滤",
-        "sortBy": "排序",
-        "credibility": "可信度",
-        "recency": "时效性",
-        "source": "来源",
-        "date": "日期",
-        "expand": "展开"
-      },
-      "sketch": {
-        "title": "草图输入",
-        "original": "原始",
-        "interpretation": "AI解读",
-        "refinement": "优化",
-        "upload": "上传",
-        "intent": "意图",
-        "form": "形态",
-        "structure": "结构",
-        "uncertain": "不确定元素",
-        "questions": "用户问题",
-        "actions": {
-          "keep": "保持",
-          "clarify": "澄清",
-          "vary": "变化",
-          "refine": "优化",
-          "expand": "扩展",
-          "useAsEvidence": "作为证据使用",
-          "runSearch": "运行搜索",
-          "generate": "生成"
-        },
-        "saveAsNew": "保存为新版本"
-      },
-      "reference": {
-        "title": "参考搜索",
-        "clusters": "来源聚类",
-        "grid": "参考网格",
-        "analysis": "分析",
-        "categories": {
-          "nature": "自然",
-          "product": "产品",
-          "architecture": "建筑",
-          "fashion": "时尚",
-          "graphic": "图形",
-          "advertising": "广告",
-          "material": "材料"
-        },
-        "basedOnSketch": "基于草图",
-        "similarity": "相似度",
-        "license": "许可证",
-        "risk": "风险等级",
-        "directApply": "直接应用风格",
-        "riskReason": "由于许可证风险,直接应用受到限制"
-      },
-      "abstraction": {
-        "title": "抽象",
-        "axes": {
-          "form": "形态",
-          "structure": "结构",
-          "surface": "表面",
-          "colorMaterial": "色彩/材料",
-          "meaning": "意义",
-          "usability": "可用性"
-        },
-        "observation": "观察",
-        "appliedRule": "应用规则",
-        "riskLevel": "风险等级"
-      },
-      "generation": {
-        "title": "生成",
-        "kinds": {
-          "refinement": "优化",
-          "variation": "变化",
-          "domainApplication": "领域应用"
-        },
-        "parentSketch": "父草图",
-        "aiGenerated": "AI生成",
-        "modelPolicy": "模型策略",
-        "comparison": "比较",
-        "download": "下载",
-        "select": "选择"
-      },
-      "decision": {
-        "title": "决策",
-        "candidates": "候选",
-        "scores": {
-          "creativity": "创意性",
-          "feasibility": "可行性",
-          "marketFit": "市场适配度"
-        },
-        "actions": {
-          "select": "选择",
-          "reject": "拒绝",
-          "requestRevision": "请求修订"
-        },
-        "log": "决策日志"
-      }
-    },
-    "decisionPanel": {
-      "title": "决策面板",
-      "currentStep": "当前步骤",
-      "briefScore": "简报得分",
-      "conceptScores": "概念得分",
-      "selectedSketch": "选中的草图",
-      "selectedReferences": "选中的参考",
-      "nextAction": "下一步行动",
-      "nextActionReason": "原因",
-      "progress": "进度",
-      "notifications": "通知"
-    },
-    "emptyStates": {
-      "noTrendData": {
-        "title": "趋势数据不足",
-        "description": "未能收集足够的趋势数据"
-      },
-      "noReferences": {
-        "title": "无参考",
-        "description": "未找到参考内容"
-      },
-      "licenseRisk": {
-        "title": "许可证风险",
-        "description": "此参考内容有使用限制"
-      },
-      "modelFailure": {
-        "title": "模型失败",
-        "description": "AI模型失败。请重试"
-      },
-      "autoUncertainty": {
-        "title": "不确定性",
-        "description": "AI对此内容不确定"
-      },
-      "parseFailure": {
-        "title": "解析失败",
-        "description": "无法解析内容"
-      },
-      "networkError": {
-        "title": "网络错误",
-        "description": "请检查连接后重试"
-      },
-      "quotaExceeded": {
-        "title": "配额超限",
-        "description": "已超过API配额"
-      },
-      "insufficientEvidence": {
-        "title": "证据不足",
-        "description": "未能收集足够的证据"
-      },
-      "permissionDenied": {
-        "title": "权限拒绝",
-        "description": "您无权执行此操作"
-      }
-    },
-    "skeleton": {
-      "loading": "加载中...",
-      "processing": "处理中...",
-      "analyzing": "分析中...",
-      "generating": "生成中..."
-    }
   },
   "settings": {
     "title": "设置",
@@ -785,18 +593,18 @@
     }
   },
   "pageTitles": {
-    "home": "首页 - 时尚趋势AI生成系统",
-    "dashboard": "仪表板 - 时尚趋势AI生成系统",
-    "projects": "项目管理 - 时尚趋势AI生成系统",
-    "newProject": "创建项目 - 时尚趋势AI生成系统",
-    "projectDetail": "项目详情 - 时尚趋势AI生成系统",
-    "newSession": "创建会话 - 时尚趋势AI生成系统",
-    "sessionDetail": "会话详情 - 时尚趋势AI生成系统",
-    "history": "会话管理 - 时尚趋势AI生成系统",
-    "ideas": "创意管理 - 时尚趋势AI生成系统",
-    "chatbot": "AI聊天机器人 - 时尚趋势AI生成系统",
-    "library": "图库 - 时尚趋势AI生成系统",
-    "settings": "设置 - 时尚趋势AI生成系统"
+    "home": "首页 - 设计趋势AI生成系统",
+    "dashboard": "仪表板 - 设计趋势AI生成系统",
+    "projects": "项目管理 - 设计趋势AI生成系统",
+    "newProject": "创建项目 - 设计趋势AI生成系统",
+    "projectDetail": "项目详情 - 设计趋势AI生成系统",
+    "newSession": "创建会话 - 设计趋势AI生成系统",
+    "sessionDetail": "会话详情 - 设计趋势AI生成系统",
+    "history": "会话管理 - 设计趋势AI生成系统",
+    "ideas": "创意管理 - 设计趋势AI生成系统",
+    "chatbot": "AI聊天机器人 - 设计趋势AI生成系统",
+    "library": "图库 - 设计趋势AI生成系统",
+    "settings": "设置 - 设计趋势AI生成系统"
   },
   "dashboard": {
     "panels": {
@@ -965,7 +773,7 @@
   },
   "projects": {
     "title": "项目管理",
-    "subtitle": "管理并跟踪时尚分析项目",
+    "subtitle": "管理并跟踪设计分析项目",
     "actions": {
       "new": "新项目",
       "newStart": "开始新项目"
@@ -1016,7 +824,7 @@
     "subtitle": "设置趋势分析与设计生成条件",
     "sections": {
       "sessionInfo": "会话信息",
-      "filters": "时尚分析条件",
+      "filters": "设计分析条件",
       "filtersHelp": "按需选择（均为可选）",
       "inputs": "输入数据（可选）",
       "inputsHelp": "文本、文件、URL 会参与分析",
@@ -1145,7 +953,7 @@
     },
     "header": {
       "title": "AI 聊天机器人",
-      "subtitle": "自由提问时尚创意"
+      "subtitle": "自由提问设计创意"
     },
     "empty": {
       "state": "请选择或创建对话会话"

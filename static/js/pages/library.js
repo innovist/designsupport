@@ -8,8 +8,6 @@ let totalPages = 1;
 let currentImage = null;
 const PAGE_SIZE = 24;
 
-// @MX:WARN: [AUTO] Promise.all with no error handling - any single failure rejects entire promise
-// @MX:REASON: If loadProjects() fails, loadSessions() and loadImages() won't execute, leaving page in broken state
 async function initLibrary() {
     await Promise.all([loadProjects(), loadSessions()]);
     await loadImages();
@@ -225,8 +223,6 @@ function closeModal() {
     currentImage = null;
 }
 
-// @MX:WARN: [AUTO] Image download with memory leak - URL object not always revoked on error paths
-// @MX:REASON: If fetch fails or user cancels, created object URL may persist in memory
 async function downloadImage() {
     if (!currentImage) return;
 

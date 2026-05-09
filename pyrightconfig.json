@@ -1,16 +1,16 @@
 {
   "include": [
-    "apps",
-    "shared",
-    "config"
+    "app",
+    "main.py"
   ],
   "exclude": [
     "**/__pycache__",
-    "app",
     "archive",
-    "crawlers"
+    "crawlers",
+    "tests"
   ],
   "pythonVersion": "3.13",
+  "pythonPath": "/opt/anaconda3/envs/agent01/bin/python",
   "executionEnvironments": [
     {
       "root": "."

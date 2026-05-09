@@ -1,91 +1,105 @@
-"""Runtime smoke tests for the Django user-facing workflow."""
+"""Runtime smoke tests for the FastAPI user-facing workflow."""
+
 import os
+import importlib
+from pathlib import Path
 
-import django
-from django.core.management import call_command
-from django.test import Client
+from fastapi.testclient import TestClient
+
+os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///./test_runtime_smoke.db")
+os.environ.setdefault("UPLOAD_DIR", "./test_uploads")
+
+from main import app  # noqa: E402
+from app.core.database import engine  # noqa: E402
+from app.models.base import Base  # noqa: E402
+importlib.import_module("app.models")
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.test")
-django.setup()
-
-
-def _client() -> Client:
-    call_command("migrate", verbosity=0, interactive=False)
-    return Client()
+# @MX:NOTE: [AUTO] Test fixture factory - creates clean database schema for each test
+def _client() -> TestClient:
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    return TestClient(app)
 
 
 def test_public_pages_render():
-    client = _client()
-    paths = [
-        "/",
-        "/workspace",
-        "/dashboard",
-        "/projects",
-        "/projects/new",
-        "/sessions/new",
-        "/history",
-        "/ideas",
-        "/library",
-        "/settings",
-        "/chatbot",
-    ]
-    for path in paths:
-        response = client.get(path)
-        assert response.status_code == 200, path
+    with _client() as client:
+        paths = ["/", "/workspace", "/workspace/settings", "/projects", "/library"]
+        for path in paths:
+            response = client.get(path)
+            assert response.status_code == 200, path
 
 
-def test_signup_project_session_message_flow():
-    client = _client()
-    register = client.post(
-        "/api/auth/register/",
-        {
-            "email": "flow@example.com",
-            "password": "Testpass123",
-            "display_name": "Flow User",
-        },
-        content_type="application/json",
-    )
-    assert register.status_code == 201
-    assert register.json()["user"]["default_workspace_id"]
+def test_project_session_brief_spec_flow():
+    with _client() as client:
+        project = client.post(
+            "/api/projects",
+            json={
+                "name": "Runtime Project",
+                "domain": "industrial",
+                "purpose": "Compact desk phone stand",
+            },
+        )
+        assert project.status_code == 201
+        project_id = project.json()["id"]
 
-    workspaces = client.get("/api/workspaces/")
-    assert workspaces.status_code == 200
-    assert len(workspaces.json()) == 1
+        session = client.post(
+            "/api/sessions",
+            json={"project_id": project_id, "mode": "chatbot"},
+        )
+        assert session.status_code == 201
+        session_id = session.json()["id"]
 
-    project = client.post(
-        "/api/projects/",
-        {"title": "Runtime Project", "domain": "fashion"},
-        content_type="application/json",
-    )
-    assert project.status_code == 201
-    project_id = project.json()["id"]
+        brief = client.post(
+            f"/api/sessions/{session_id}/brief",
+            json={
+                "purpose": "Compact desk phone stand",
+                "domain": "industrial",
+                "target_user": "Office workers",
+                "context": "Small work desk",
+                "constraints": "Ceramic or recycled plastic",
+                "use_case": "Vertical and horizontal phone support",
+                "result_form": "concept sketch",
+            },
+        )
+        assert brief.status_code == 200
+        assert brief.json()["is_complete"] is True
 
-    session = client.post(
-        f"/api/design-projects/{project_id}/sessions/",
-        {
-            "mode": "guided",
-            "purpose": "Backpack concept",
-            "audience": "Students",
-            "result_form": "image",
-        },
-        content_type="application/json",
-    )
-    assert session.status_code == 201
-    session_id = session.json()["id"]
+        detail = client.get(f"/api/sessions/{session_id}")
+        assert detail.status_code == 200
+        assert detail.json()["brief"]["purpose"] == "Compact desk phone stand"
 
-    detail = client.get(f"/api/sessions/{session_id}/")
-    assert detail.status_code == 200
-    assert detail.json()["brief"]["purpose"] == "Backpack concept"
+        spec = client.post(f"/api/sessions/{session_id}/specs")
+        assert spec.status_code == 201
+        content = spec.json()["content_json"]
+        assert content["brief"]["purpose"] == "Compact desk phone stand"
+        assert "discarded_alternatives" in content
+        assert "sources" in content
 
-    message = client.post(
-        f"/api/sessions/{session_id}/messages",
-        {"content": "Keep the silhouette compact."},
-        content_type="application/json",
-    )
-    assert message.status_code == 201
-    assert message.json()["role"] == "user"
 
-    messages = client.get(f"/api/sessions/{session_id}/messages")
-    assert messages.status_code == 200
-    assert len(messages.json()) == 1
+def test_settings_api_does_not_expose_raw_keys():
+    with _client() as client:
+        aliases = client.get("/api/workspace/api-key-aliases")
+        assert aliases.status_code == 200
+        payload = aliases.json()
+        assert "configured_providers" in payload
+        assert "api_key" not in str(payload).lower()
+
+        models = client.get("/api/workspace/feature-models")
+        assert models.status_code == 200
+        keys = {item["feature_key"] for item in models.json()}
+        assert {
+            "abstraction",
+            "sketch_analysis",
+            "concept_generation",
+            "chat",
+            "image_generation",
+            "reference_analysis",
+            "brief_structuring",
+            "spec_writing",
+            "trend_analysis",
+        } <= keys
+
+
+def teardown_module():
+    Path("test_runtime_smoke.db").unlink(missing_ok=True)

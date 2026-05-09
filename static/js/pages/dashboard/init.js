@@ -1,8 +1,6 @@
 // Dashboard initialization
 const initState = window.dashboardState;
 
-// @MX:ANCHOR: [AUTO] Dashboard entry point that orchestrates all initialization sequences
-// @MX:REASON: Called once on page load and coordinates form handlers, modal setup, and initial data loading
 function setupFormHandlers() {
     document.getElementById('project-form').addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -46,8 +44,6 @@ function loadInitialData() {
     window.loadImageModelStatus();
 }
 
-// @MX:ANCHOR: [AUTO] Global language change handler that re-renders all UI components
-// @MX:REASON: Attached to window-level 'languageChanged' event, triggers cascade of UI updates across all dashboard sub-pages
 function handleLanguageChange() {
     window.renderProjects();
     window.renderSessions();

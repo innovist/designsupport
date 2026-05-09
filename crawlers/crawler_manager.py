@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 
 class CrawlerGUI:
     """크롤러 GUI"""
+    # @MX:WARN: [AUTO] Large monolithic GUI class (500+ lines) with mixed concerns: UI rendering, async execution, file I/O, state management.
+    # @MX:REASON: Violates Single Responsibility Principle. Combines tkinter UI, async threading, data persistence, and crawler orchestration. Consider extracting UI state manager and async bridge.
 
     def __init__(self):
         self.root = tk.Tk()
@@ -303,6 +305,8 @@ class CrawlerGUI:
         progress_callback: ProgressCallback
     ):
         """크롤링 스레드 실행"""
+        # @MX:WARN: [AUTO] Creates new event loop in thread without proper cleanup. May cause resource leaks on repeated crawling.
+        # @MX:REASON: asyncio.new_event_loop() creates loop but loop.close() is never called. Thread exits without cleanup.
         import asyncio
 
         try:

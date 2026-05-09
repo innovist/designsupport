@@ -3,8 +3,7 @@
 <head data-i18n-title="{% block title_key %}{% endblock %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token }}">
-    <title>{% block title %}패션 트렌드 AI 생성 시스템{% endblock %}</title>
+    <title>{% block title %}디자인 발상 시스템{% endblock %}</title>
 
     <link rel="stylesheet" href="/static/css/design-system.css">
     {% block extra_css %}{% endblock %}
@@ -15,13 +14,12 @@
         <div style="max-width: 100%; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 2rem;">
                 <h1 style="font-size: 20px; font-weight: 700; margin: 0; color: var(--color-primary);">
-                    👗 <span data-i18n="nav.title">패션 트렌드 AI</span>
+                    ✏️ <span data-i18n="nav.title">디자인 발상 시스템</span>
                 </h1>
                 <nav class="nav">
-                    <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}" data-i18n="nav.home">홈</a>
                     <a href="/projects" class="nav-link {% if '/projects' in request.path %}active{% endif %}" data-i18n="nav.projects">프로젝트</a>
                     <a href="/library" class="nav-link {% if '/library' in request.path %}active{% endif %}" data-i18n="nav.library">라이브러리</a>
-                    <a href="/settings" class="nav-link {% if '/settings' in request.path %}active{% endif %}" data-i18n="nav.settings">설정</a>
+                    <a href="/workspace/settings" class="nav-link {% if '/workspace/settings' in request.path %}active{% endif %}" data-i18n="nav.settings">설정</a>
                 </nav>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -35,7 +33,7 @@
                     </select>
                 </div>
                 <span style="font-size: 12px; color: var(--text-muted);">
-                    {% now "Y-m-d H:i" %}
+                    {% if now %}{{ now().strftime('%Y-%m-%d %H:%M') }}{% endif %}
                 </span>
             </div>
         </div>
@@ -50,7 +48,6 @@
 
     <!-- i18n Script -->
     <script src="/static/js/i18n.js"></script>
-    <script src="/static/js/csrf-fetch.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

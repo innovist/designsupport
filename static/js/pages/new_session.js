@@ -1,9 +1,7 @@
-// @MX:NOTE: [AUTO] New session creation page with multi-input form for URLs, keywords, and file uploads
-// @MX:REASON: Handles complex session configuration including crawler selection, filters, and blueprint generation options
 // Use _t to avoid conflict with i18n.js global t
 const _t = (key, params) => window.t ? window.t(key, params) : key;
 const pageElement = document.getElementById('new-session-page');
-const projectId = pageElement?.dataset.projectId || '';
+const projectId = parseInt(pageElement?.dataset.projectId || '0', 10);
 
 function addUrlInput() {
     const container = document.getElementById('url-inputs-container');
@@ -76,8 +74,6 @@ function updateUrlInputsLocale() {
 
 document.getElementById('generate-blueprints').addEventListener('change', toggleBlueprintOptions);
 
-// @MX:WARN: [AUTO] Multi-step async operation without transaction - partial failures leave orphaned sessions
-// @MX:REASON: If session creation succeeds but file upload fails, session exists without files
 document.getElementById('session-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -97,16 +93,13 @@ document.getElementById('session-form').addEventListener('submit', async (e) => 
     const crawlerConfig = collectCrawlerConfig();
 
     try {
-        const res = await fetch(`/api/design-projects/${projectId}/sessions/`, {
+        const res = await fetch('/api/v1/sessions/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                mode: document.getElementById('auto-start').checked ? 'auto' : 'guided',
-                purpose: sessionTitle,
-                audience: sessionDescription,
-                usage_context: inputText || '',
-                constraints: userKeywords.join(', '),
-                result_form: document.getElementById('generate-images').checked ? 'image' : 'spec',
+                project_id: projectId,
+                session_title: sessionTitle,
+                description: sessionDescription,
                 user_keywords: userKeywords.length > 0 ? userKeywords : null,
                 filters: collectFilters(),
                 input_text: inputText || null,
@@ -133,22 +126,18 @@ document.getElementById('session-form').addEventListener('submit', async (e) => 
             for (const file of files) {
                 formData.append('files', file);
             }
-            await fetch(`/api/sessions/${session.id}/sketches`, {
+            await fetch(`/api/v1/sessions/${session.id}/upload-files`, {
                 method: 'POST',
                 body: formData
             });
         }
 
         if (document.getElementById('auto-start').checked) {
-            await fetch(`/api/sessions/${session.id}/transitions/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target_state: 'researching', rationale: 'auto_start' })
-            });
+            await fetch(`/api/v1/sessions/${session.id}/run-analysis`, { method: 'POST' });
         }
 
         alert(_t('newSession.messages.created'));
-        window.location.href = `/workspace?session=${session.id}`;
+        window.location.href = `/sessions/${session.id}`;
     } catch (error) {
         console.error('Session create error:', error);
         alert(_t('newSession.messages.createError', { error: error.message }));

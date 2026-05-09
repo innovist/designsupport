@@ -1,1 +1,0 @@
-"""Accounts signal handlers."""

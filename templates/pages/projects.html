@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.projects{% endblock %}
-{% block title %}프로젝트 관리 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}프로젝트 관리 - 디자인 발상 시스템{% endblock %}
 
 {% block content %}
-<header style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+<header style="margin-bottom: 1.25rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
         <div>
-            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="projects.title">프로젝트 관리</h2>
-            <p style="font-size: 1rem; color: var(--text-secondary);" data-i18n="projects.subtitle">패션 분석 프로젝트를 관리하고 추적합니다</p>
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="projects.title">프로젝트</h2>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.6;" data-i18n="projects.subtitle">
+                프로젝트는 하나의 디자인 과제입니다. 프로젝트 상세에서 여러 디자인안, 초안, 버전을 만들고 비교합니다.
+            </p>
         </div>
-        <a href="/projects/new" class="btn btn-primary" data-i18n="projects.actions.new">새 프로젝트</a>
+        <button type="button" class="btn btn-primary" onclick="openProjectModal()" data-i18n="projects.actions.new">새 프로젝트</button>
     </div>
 </header>
 
 <!-- 검색 및 필터 -->
-<section class="card" style="margin-bottom: 2rem;">
+<section class="card" style="margin-bottom: 1.25rem;">
     <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
         <input type="text" id="search-projects" placeholder="프로젝트 검색..." data-i18n-placeholder="projects.filters.searchPlaceholder">
         <select id="filter-status">
@@ -38,21 +40,118 @@
         <p style="color: var(--text-muted);" data-i18n="projects.loading">프로젝트 로딩 중...</p>
     </div>
 </div>
+
+<div id="project-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:1rem;">
+    <div class="card" style="width:560px;max-width:100%;margin:0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title" style="margin:0;">새 프로젝트</h3>
+                <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:4px;">프로젝트는 하나의 디자인 과제와 기준 브리프를 묶는 단위입니다.</p>
+            </div>
+            <button type="button" onclick="closeProjectModal()" style="background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--text-secondary);">×</button>
+        </div>
+        <form id="project-create-form" style="display:grid;gap:0.875rem;">
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:700;margin-bottom:0.35rem;">프로젝트 이름 <span style="color:var(--color-danger);">*</span></label>
+                <input id="modal-project-name" type="text" placeholder="예: 접이식 데스크 조명 디자인" required>
+            </div>
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:700;margin-bottom:0.35rem;">프로젝트 브리프</label>
+                <textarea id="modal-project-purpose" rows="4" placeholder="요구 조건, 목표, 제약, 원하는 결과를 한 번에 입력하세요. 이 브리프가 디자인안 생성 기준이 됩니다." style="resize:vertical;"></textarea>
+            </div>
+            <div>
+                <label style="display:block;font-size:var(--font-sm);font-weight:700;margin-bottom:0.35rem;">도메인</label>
+                <select id="modal-project-domain" style="width:100%;">
+                    <option value="">미정</option>
+                    <option value="industrial">산업디자인</option>
+                    <option value="product_service">제품·서비스</option>
+                    <option value="visual">시각디자인</option>
+                    <option value="advertising">광고·브랜딩</option>
+                    <option value="general">일반</option>
+                </select>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.25rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">취소</button>
+                <button type="submit" class="btn btn-primary" id="project-create-submit">생성</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-const t = window.t;
+function tr(key, params) {
+    return window.t ? window.t(key, params) : key;
+}
+
 let projects = [];
-async function loadProjects() {
+let visibleProjects = [];
+
+function openProjectModal() {
+    const modal = document.getElementById('project-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.getElementById('modal-project-name').focus();
+}
+
+function closeProjectModal() {
+    const modal = document.getElementById('project-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.getElementById('project-create-form').reset();
+}
+
+async function createProjectFromModal(event) {
+    event.preventDefault();
+    const btn = document.getElementById('project-create-submit');
+    const name = document.getElementById('modal-project-name').value.trim();
+    const purpose = document.getElementById('modal-project-purpose').value.trim();
+    const domain = document.getElementById('modal-project-domain').value;
+    if (!name) return;
+
+    btn.disabled = true;
+    btn.textContent = '생성 중...';
     try {
-        const res = await fetch('/api/v1/projects/');
-        if (res.ok) {
-            projects = await res.json();
-            renderProjects(projects || []);
-        }
+        const res = await fetch('/api/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name,
+                purpose: purpose || null,
+                domain: domain || null
+            })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const project = await res.json();
+        closeProjectModal();
+        await loadProjects();
+        window.location.href = `/projects/${project.id}`;
+    } catch (error) {
+        console.error('Project create error:', error);
+        alert('프로젝트를 생성하지 못했습니다.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '생성';
+    }
+}
+
+async function loadProjects() {
+    const container = document.getElementById('projects-container');
+    try {
+        const res = await fetch('/api/projects');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        projects = await res.json();
+        applyProjectFilters();
     } catch (error) {
         console.error('Projects load error:', error);
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <h4 style="font-size: var(--font-lg); margin-bottom: 0.5rem; color: var(--color-danger);">프로젝트를 불러오지 못했습니다</h4>
+                <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 1rem;">API 연결 또는 서버 로그를 확인해 주세요.</p>
+                <button class="btn btn-secondary" onclick="loadProjects()">다시 시도</button>
+            </div>
+        `;
     }
 }
 
@@ -63,9 +162,9 @@ function renderProjects(projects) {
         container.innerHTML = `
             <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('projects.empty.title')}</h4>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('projects.empty.subtitle')}</p>
-                <a href="/projects/new" class="btn btn-primary">${t('projects.actions.newStart')}</a>
+	                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${tr('projects.empty.title')}</h4>
+	                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${tr('projects.empty.subtitle')}</p>
+		                <button type="button" onclick="openProjectModal()" class="btn btn-primary">${tr('projects.actions.newStart')}</button>
             </div>
         `;
         return;
@@ -77,28 +176,51 @@ function renderProjects(projects) {
                 <span class="badge">${getStatusText(project.status)}</span>
                 <span style="font-size: var(--font-sm); color: var(--text-muted);">${formatDate(project.created_at)}</span>
             </div>
-            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${escapeHtml(project.title)}</h4>
-            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-md); line-height: 1.6;">${escapeHtml(project.description || t('common.noDescription'))}</p>
+            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${escapeHtml(project.name || project.title || tr('common.noTitle'))}</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: var(--spacing-md); line-height: 1.6;">${escapeHtml(project.purpose || project.description || tr('common.noDescription'))}</p>
 
             <div style="display: flex; gap: var(--spacing-sm);">
-                <a href="/projects/${project.id}" class="btn btn-primary" style="flex: 1; text-align: center;">${t('common.open')}</a>
-                <button onclick="deleteProject('${project.id}')" class="btn btn-outline" style="padding: 0.75rem 1rem;">${t('common.delete')}</button>
+                <a href="/projects/${project.id}" class="btn btn-primary" style="flex: 1; text-align: center;">${tr('common.open')}</a>
+                <button onclick="deleteProject('${project.id}')" class="btn btn-outline" style="padding: 0.75rem 1rem;">${tr('common.delete')}</button>
             </div>
         </div>
     `).join('');
 }
 
+function applyProjectFilters() {
+    const query = document.getElementById('search-projects').value.trim().toLowerCase();
+    const status = document.getElementById('filter-status').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    visibleProjects = (projects || []).filter(project => {
+        const name = (project.name || project.title || '').toLowerCase();
+        const purpose = (project.purpose || project.description || '').toLowerCase();
+        const matchesQuery = !query || name.includes(query) || purpose.includes(query);
+        const matchesStatus = !status || project.status === status;
+        return matchesQuery && matchesStatus;
+    });
+
+    visibleProjects.sort((a, b) => {
+        if (sortBy === 'title') {
+            return (a.name || a.title || '').localeCompare(b.name || b.title || '');
+        }
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
+
+    renderProjects(visibleProjects);
+}
+
 function getStatusText(status) {
     const statusMap = {
-        'created': t('status.created'),
-        'running': t('status.running'),
-        'analyzing': t('status.analyzing'),
-        'completed': t('status.completed'),
-        'failed': t('status.failed'),
-        'draft': t('status.draft'),
-        'active': t('status.active')
+        'created': tr('status.created'),
+        'running': tr('status.running'),
+        'analyzing': tr('status.analyzing'),
+        'completed': tr('status.completed'),
+        'failed': tr('status.failed'),
+        'draft': tr('status.draft'),
+        'active': tr('status.active')
     };
-    return statusMap[status] || t('status.unknown');
+    return statusMap[status] || tr('status.unknown');
 }
 
 function formatDate(dateStr) {
@@ -107,18 +229,18 @@ function formatDate(dateStr) {
 }
 
 async function deleteProject(id) {
-    if (!confirm(t('projects.confirmDelete'))) return;
+    if (!confirm(tr('projects.confirmDelete'))) return;
 
     try {
-        const res = await fetch(`/api/v1/projects/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
         if (res.ok) {
             loadProjects();
         } else {
-            alert(t('projects.messages.deleteFailed'));
+            alert(tr('projects.messages.deleteFailed'));
         }
     } catch (error) {
         console.error('Delete error:', error);
-        alert(t('projects.messages.deleteError'));
+        alert(tr('projects.messages.deleteError'));
     }
 }
 
@@ -128,7 +250,13 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-document.addEventListener('DOMContentLoaded', loadProjects);
-window.addEventListener('languageChanged', () => renderProjects(projects || []));
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('project-create-form').addEventListener('submit', createProjectFromModal);
+    document.getElementById('search-projects').addEventListener('input', applyProjectFilters);
+    document.getElementById('filter-status').addEventListener('change', applyProjectFilters);
+    document.getElementById('sort-by').addEventListener('change', applyProjectFilters);
+    loadProjects();
+});
+window.addEventListener('languageChanged', () => renderProjects(visibleProjects || projects || []));
 </script>
 {% endblock %}

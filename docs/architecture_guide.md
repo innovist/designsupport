@@ -1,56 +1,59 @@
-# Design Support System - Architecture Guide
-**Version:** 2.0.0
-**Last Updated:** 2026-05-07
+# Fashion AI Generator - Architecture Guide
+**Version:** 1.0.0
+**Last Updated:** 2025-12-21
 
 ---
 
 ## 1. 시스템 개요
 
-Design Support System은 근거 기반 디자인 창작을 지원하는 SaaS 플랫폼입니다. 편집툴이나 AI 이미지 생성기가 아니라, 디자인 목적을 구조화하고 트렌드 근거로 컨셉을 결정하며, 레퍼런스를 추상화해 시각화하고, 스펙 문서로 남기는 시스템입니다.
+Fashion AI Generator는 AI 기반 패션 트렌드 분석 및 이미지 생성을 위한 통합 플랫폼입니다. 마이크로서비스 아키텍처 기반으로 구축되어 확장성과 안정성을 확보했습니다.
 
 ### 1.1. 핵심 기능
-- **브리프 구조화**: 자연어 목적을 구조화된 디자인 브리프로 변환
-- **트렌드 근거 조사**: 출처 기반 트렌드 인사이트 수집
-- **컨셉 후보 관리**: 근거 기반 컨셉 생성, 평가, 결정 기록
-- **레퍼런스 검색과 추상화**: 레퍼런스를 디자인 문법으로 변환
-- **사용자 스케치 지원**: 원본 보존, AI 해석, 구체화
-- **이미지 생성**: 추상화 규칙 기반 스케치/변형 생성
-- **스펙 문서화**: 모든 결정 근거를 포함한 문서 생성
-- **관리자 시스템**: 트렌드 지식, AI 모델, 테넌트 관리
+- **데이터 수집**: 다양한 패션 소스에서 실시간 데이터 수집
+- **트렌드 분석**: AI 기반 패션 트렌드 예측 및 인사이트 도출
+- **디자인 생성**: 텍스트/이미지 기반 패션 디자인 생성
+- **패턴 생성**: 디자인을 실제 제작용 패턴으로 변환
+- **다국어 지원**: 4개 국어(한국어, 영어, 중국어 간체/번체) 지원
 
 ### 1.2. 기술 스택
-- **Backend**: Django 5.2 LTS (Python 3.13+)
-- **Frontend**: Vanilla HTML + Vanilla JS + Vanilla CSS
-- **Database**: PostgreSQL 15+
-- **Cache/Queue**: Redis 7
+- **Backend**: FastAPI (Python 3.10+)
+- **Frontend**: Vanilla JavaScript + CSS3
+- **Database**: PostgreSQL 15
+- **Cache**: Redis 7
 - **Container**: Docker + Docker Compose
 - **Monitoring**: Prometheus + Grafana
+- **Logging**: Elasticsearch + Kibana
+- **Proxy**: Nginx
 
 ---
 
 ## 2. 아키텍처 원칙
 
-### 2.1. 클린 아키텍처
+### 2.1. 설계 원칙
 
-모든 기능은 독립 모듈로 구성하며, 4계층 레이어를 따릅니다.
+#### 2.1.1. 마이크로서비스 아키텍처
+- 각 서비스는 독립적으로 배포 및 확장 가능
+- API Gateway를 통한 통신 관리
+- 서비스 디스커버리 및 로드 밸런싱
 
-| 계층 | 책임 | 규칙 |
-|------|------|------|
-| Domain | Entity, Value Object, Domain Service | Django ORM에 의존하지 않음 |
-| Application | UseCase, DTO, Command, Query, Port | 인프라 구현체에 의존하지 않음 |
-| Infrastructure | Django ORM Repository, 외부 API, 크롤러, RAG | 구체적인 기술 구현 |
-| Presentation | Django View, Template, Vanilla JS, CSS | 사용자 인터페이스 |
+#### 2.1.2. 이벤트 기반 아키텍처
+- 비동기 메시지 큐를 통한 느슨한 결합
+- 이벤트 소싱 패턴 적용
+- CQRS (Command Query Responsibility Segregation)
 
-모듈 간 직접 ORM 접근은 금지합니다. 다른 모듈 데이터가 필요하면 Application Port 또는 Query Service를 통해 접근합니다.
+#### 2.1.3. 도메인 기반 설계
+- 명확한 경계 컨텍스트 정의
+- 비즈니스 로직과 인프라 분리
+- 포트와 어댑터 패턴 적용
 
 ### 2.2. 품질 속성
 
 | 속성 | 목표 | 구현 전략 |
 |------|------|-----------|
-| 확장성 | 도메인팩 추가 용이 | 공통 파이프라인 + 도메인별 템플릿 |
-| 가용성 | 99.5% | 헬스 체크, Failover |
-| 보안 | 테넌트 격리 | Tenant/Workspace 접근 제어, AuditLog |
-| 추적성 | 모든 결정 기록 | Decision Log, 출처 연결 |
+| 확장성 | 1000+ 동시 사용자 | 수평적 확장, 로드 밸런싱 |
+| 가용성 | 99.5% | 재해 복구, 헬스 체크 |
+| 성능 | 응답시간 < 3초 | 캐싱, 최적화 |
+| 보안 | 데이터 보호 | 암호화, 인증/인가 |
 
 ---
 
@@ -61,206 +64,407 @@ Design Support System은 근거 기반 디자인 창작을 지원하는 SaaS 플
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        Client Layer                        │
-│  ┌─────────────────┐  ┌─────────────────┐                  │
-│  │ User Workspace  │  │ Admin Console   │                  │
-│  │ Vanilla HTML/JS │  │ Vanilla HTML/JS │                  │
-│  └─────────────────┘  └─────────────────┘                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │ Web Browser │  │ Mobile App  │  │ Third Party │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
 └─────────────────────────────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    Presentation Layer                       │
-│  Django Views + Templates + Static Files                    │
-│  REST API Endpoints                                          │
+│                    API Gateway (Nginx)                     │
+│  - SSL Termination                                         │
+│  - Rate Limiting                                          │
+│  - Load Balancing                                         │
+│  - Static File Serving                                    │
+└─────────────────────────────────────────────────────────────┘
+                               │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│ Web Service │    │ API Service │    │ Admin Panel │
+│   (UI)      │    │   (Core)    │    │             │
+└─────────────┘    └─────────────┘    └─────────────┘
+        │                     │
+        ▼                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   Service Layer                            │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
+│  │   Crawler   │ │  Analysis   │ │ Generation  │           │
+│  │   Service   │ │   Service   │ │   Service   │           │
+│  └─────────────┘ └─────────────┘ └─────────────┘           │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
+│  │   Blueprint │ │   User Mgmt │ │  Notific.   │           │
+│  │   Service   │ │   Service   │ │   Service   │           │
+│  └─────────────┘ └─────────────┘ └─────────────┘           │
 └─────────────────────────────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                         │
-│  UseCases: BriefBuilder, TrendResearcher, ConceptGenerator  │
-│  ReferenceSearcher, AbstractionEngine, SketchRefiner        │
-│  SpecWriter, GenerationOrchestrator                         │
-│  Ports: Repository, Gateway, Indexer Interfaces             │
+│                    Data Layer                              │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
+│  │ PostgreSQL  │ │    Redis    │ │ File Storage│           │
+│  │(Primary DB) │ │   (Cache)   │ │   (Images)  │           │
+│  └─────────────┘ └─────────────┘ └─────────────┘           │
 └─────────────────────────────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     Domain Layer                            │
-│  Entities: Brief, Concept, Reference, AbstractionRule       │
-│  Sketch, GeneratedDesign, SpecDocument, TrendInsight        │
-│  Value Objects: Decision, Score, Source, License            │
-└─────────────────────────────────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Infrastructure Layer                       │
-│  Django ORM Repositories │ AI Model Router                  │
-│  Web Crawlers            │ File/Object Storage              │
-│  RAG / Search Index      │ Background Jobs (Celery)         │
-└─────────────────────────────────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    External Services                        │
-│  AI Providers (Gemini, GLM, OpenAI) │ Web Search APIs       │
-│  Image Generation Models            │ Trend Source Websites  │
+│               External Services                            │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
+│  │  AI Models  │ │  Social API │ │ Payment API │           │
+│  │ (Gemini,..) │ │ (Instagram) │ │   (Stripe)  │           │
+│  └─────────────┘ └─────────────┘ └─────────────┘           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 3.2. 모듈 구조
+### 3.2. 서비스 상세 설계
 
-```text
-apps/
-  accounts/         domain/ application/ infrastructure/ presentation/
-  workspaces/       domain/ application/ infrastructure/ presentation/
-  design_projects/  domain/ application/ infrastructure/ presentation/
-  design_sessions/  domain/ application/ infrastructure/ presentation/
-  conversations/    domain/ application/ infrastructure/ presentation/
-  user_assets/      domain/ application/ infrastructure/ presentation/
-  trend_knowledge/  domain/ application/ infrastructure/ presentation/
-  references/       domain/ application/ infrastructure/ presentation/
-  concepts/         domain/ application/ infrastructure/ presentation/
-  abstraction/      domain/ application/ infrastructure/ presentation/
-  generation/       domain/ application/ infrastructure/ presentation/
-  specs/            domain/ application/ infrastructure/ presentation/
-  model_catalog/    domain/ application/ infrastructure/ presentation/
-  admin_console/    domain/ application/ infrastructure/ presentation/
-  audit_logs/       domain/ application/ infrastructure/ presentation/
-shared/
-  domain/ application/ infrastructure/ presentation/
-```
+#### 3.2.1. Web Service (UI)
+- 역할: 정적 파일 서빙, SSR (Server-Side Rendering)
+- 기술: FastAPI + Jinja2
+- 특징:
+  - CDN 통합
+  - 압축 및 캐싱
+  - i18n 지원
+
+#### 3.2.2. API Service (Core)
+- 역할: 비즈니스 로직 처리, API 엔드포인트 제공
+- 기술: FastAPI + Pydantic
+- 특징:
+  - 자동 API 문서화 (Swagger)
+  - 요청/응답 검증
+  - 인증/인가 미들웨어
+
+#### 3.2.3. Crawler Service
+- 역할: 패션 데이터 수집
+- 기술: Playwright + BeautifulSoup
+- 특징:
+  - 다중 소스 지원
+  - 실시간 크롤링
+  - 중복 제거
+
+#### 3.2.4. Analysis Service
+- 역할: 트렌드 분석 및 인사이트 도출
+- 기술: Gemini 2.5 + GLM-4.7
+- 특징:
+  - 병렬 처리
+  - 결과 캐싱
+  - 실시간 분석
+
+#### 3.2.5. Generation Service
+- 역할: 이미지 및 패턴 생성
+- 기술: Z-Image, Seedream, Nano Banana
+- 특징:
+  - 다중 모델 지원
+  - 큐 기반 처리
+  - 진행률 추적
 
 ---
 
 ## 4. 데이터베이스 설계
 
-### 4.1. 핵심 엔티티 관계
+### 4.1. 데이터베이스 스키마
 
+```sql
+-- Users 테이블
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Projects 테이블
+CREATE TABLE projects (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id INTEGER REFERENCES users(id),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CrawlJobs 테이블
+CREATE TABLE crawl_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    sources JSONB NOT NULL,
+    keywords TEXT[],
+    status VARCHAR(20) DEFAULT 'pending',
+    progress INTEGER DEFAULT 0,
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- RawData 테이블
+CREATE TABLE raw_data (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_id UUID REFERENCES crawl_jobs(id),
+    source VARCHAR(50) NOT NULL,
+    url TEXT NOT NULL,
+    title TEXT,
+    content TEXT,
+    metadata JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TrendAnalysis 테이블
+CREATE TABLE trend_analyses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    keywords TEXT[],
+    time_range VARCHAR(10),
+    analysis_result JSONB,
+    trend_score DECIMAL(5,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ImageAssets 테이블
+CREATE TABLE image_assets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    generation_id VARCHAR(255),
+    image_url TEXT,
+    metadata JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- PatternDrafts 테이블
+CREATE TABLE pattern_drafts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    garment_type VARCHAR(50),
+    size_system VARCHAR(10),
+    size VARCHAR(10),
+    pattern_data JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
-Tenant 1--* User
-Tenant 1--* Workspace
-Workspace 1--* DesignProject
-DesignProject 1--* DesignSession
-DesignSession 1--1 DesignBrief
-DesignSession 1--* UserSketchAsset
-UserSketchAsset 1--* SketchAnalysis
-DesignSession 1--* ConceptCandidate
-ConceptCandidate 1--* ConceptDecision
-DesignSession 1--* ReferenceAsset
-ReferenceAsset 1--* ReferenceAnalysis
-DesignSession 1--* AbstractionRule
-SketchAnalysis 1--* AbstractionRule
-AbstractionRule 1--* GeneratedDesign
-DesignSession 1--* DesignEvaluation
-DesignSession 1--* SpecDocument
-TrendSource 1--* TrendDocument
-TrendDocument 1--* TrendInsight
-ModelProvider 1--* ModelCatalog
-ModelCatalog 1--* FeatureModelPolicy
-DesignSession 1--* GenerationJob
-User 1--* AuditLog
+
+### 4.2. 인덱스 전략
+
+```sql
+-- 검색 최적화 인덱스
+CREATE INDEX idx_raw_data_source ON raw_data(source);
+CREATE INDEX idx_raw_data_created_at ON raw_data(created_at);
+CREATE INDEX idx_crawl_jobs_status ON crawl_jobs(status);
+CREATE INDEX idx_trend_analyses_keywords ON trend_analyses USING GIN(keywords);
+
+--全文検索 인덱스 (PostgreSQL)
+CREATE INDEX idx_raw_data_content_gin ON raw_data USING GIN(to_tsvector('korean', content));
 ```
 
-### 4.2. 주요 테이블
+### 4.3. 파티셔닝
 
-| 테이블 | 설명 | 주요 필드 |
-|--------|------|----------|
-| DesignBrief | 목적, 도메인, 타깃, 제약 | purpose, domain, target, context, constraints |
-| UserSketchAsset | 사용자 원본 스케치 | file_path, sketch_type, description, uploaded_by |
-| SketchAnalysis | 스케치 AI 해석 | intent, form_elements, structure, unclear_points |
-| ConceptCandidate | 컨셉 후보 | name, description, score, evidence, risks, status |
-| ConceptDecision | 컨셉 결정 기록 | decision, reason, decided_by, alternatives |
-| ReferenceAsset | 레퍼런스 자료 | url, title, category, source_type, license |
-| ReferenceAnalysis | 레퍼런스 분석 | form_grammar, structure_grammar, copyright_risk |
-| AbstractionRule | 추상화 규칙 | axis, observation, application, source_refs |
-| GeneratedDesign | 생성 이미지 | image_url, type, linked_rules, linked_concept |
-| SpecDocument | 스펙 문서 | content, version, status, approved_by |
-| TrendSource | 트렌드 출처 | name, url, domain, crawl_interval, reliability |
-| TrendDocument | 트렌드 문서 | title, url, published_at, parsed_text, hash |
-| TrendInsight | 트렌드 인사이트 | summary, keywords, evidence_quote, confidence |
-| FeatureModelPolicy | 기능별 모델 정책 | feature_key, model, parameters, fallback_policy |
+```sql
+-- 시계열 데이터 파티셔닝
+CREATE TABLE raw_data_partitioned (
+    LIKE raw_data INCLUDING ALL
+) PARTITION BY RANGE (created_at);
+
+-- 월별 파티션 생성
+CREATE TABLE raw_data_2025_01 PARTITION OF raw_data_partitioned
+    FOR VALUES FROM ('2025-01-01') TO ('2025-02-01');
+```
 
 ---
 
-## 5. AI 모델 라우터
+## 5. API 설계
 
-### 5.1. 기능별 모델 정책
+### 5.1. API 아키텍처 패턴
 
-```text
-.env (Provider + API Key)
-    -> ModelProvider
-    -> ModelCatalog
-    -> FeatureModelPolicy (관리자 설정)
-    -> ModelRouter
-    -> TrendResearch / ConceptChat / SketchAnalysis / ...
-```
+#### 5.1.1. RESTful API
+- 자원 기반 URI 설계
+- HTTP 메서드 적절한 사용
+- 일관된 응답 형식
 
-모델명은 코드에 하드코딩하지 않고, `.env`와 관리자 카탈로그를 통해 관리합니다.
+#### 5.1.2. GraphQL (향후 지원)
+- 유연한 데이터 조회
+- 단일 엔드포인트
+- 타입 시스템
 
-### 5.2. Fallback 전략
+### 5.2. API 버전 관리
+- URL 경로 기반 버전: `/api/v1/`
+- 하위 호환성 보장
+- 디프리케이션 정책
 
-Fallback은 거짓 결과를 반환하는 방식이 아니라 실패를 명확히 보고하고 재시도 가능한 다른 모델 정책을 사용하는 방식입니다.
-
----
-
-## 6. 파이프라인 오케스트레이션
-
-### 6.1. 17단계 파이프라인
-
-```
- 1. 목적 입력 -> 2. 브리프 구조화 -> 3. 스케치 업로드(선택)
- -> 4. 추가 질문 -> 5. 트렌드 조사 -> 6. 컨셉 후보 생성
- -> 7. 컨셉 평가 -> 8. 컨셉 결정 -> 9. 레퍼런스 검색
- -> 10. 레퍼런스 분석 -> 11. 스케치 분석 -> 12. 추상화
- -> 13. 시각화 -> 14. 대상물 적용 -> 15. 후보 비교
- -> 16. 스펙 문서 작성 -> 17. 검토/승인
-```
-
-### 6.2. 불변 조건
-
-- 출처 없는 트렌드 주장은 컨셉 결정 근거로 사용하지 않음
-- 레퍼런스 원본과 AI 생성 이미지를 엄격히 구분
-- 사용자 스케치 원본을 절대 덮어쓰지 않음
-- 이미지 생성은 최소 1개 이상의 브리프, 컨셉, 추상화 규칙과 연결
-- 스펙 문서는 버린 대안과 선택 사유도 기록
+### 5.3. 보안
+- JWT 기반 인증
+- OAuth 2.0 지원
+- Rate Limiting
+- HTTPS 강제
 
 ---
 
-## 7. SaaS 멀티테넌시
+## 6. 메시징 시스템
 
-### 7.1. 데이터 격리
+### 6.1. 비동기 처리
 
-모든 사용자 데이터는 Tenant와 Workspace에 종속됩니다.
+```python
+# Celery 기반 태스크 큐
+from celery import Celery
 
-```text
-Tenant
-  -> Workspace
-    -> DesignProject
-      -> DesignSession (Brief, Concepts, References, ...)
+app = Celery('fashion_ai')
+
+@app.task
+def process_image_generation(generation_request):
+    # 이미지 생성 비동기 처리
+    pass
+
+@app.task
+def crawl_fashion_data(sources, keywords):
+    # 데이터 크롤링 비동기 처리
+    pass
 ```
 
-### 7.2. 공용 데이터
+### 6.2. 이벤트 버스
 
-- 트렌드 출처와 문서: 공개 범위와 비공개 범위 구분
-- 모델 카탈로그: 관리자가 관리, 모든 테넌트 공유
-- 레퍼런스 공용 라이브러리: 옵션
+```python
+# 이벤트 발행
+from app.events import EventBus
 
-### 7.3. 감사 로그
+event_bus = EventBus()
 
-관리자 작업과 AI 호출은 AuditLog에 저장합니다.
+async def publish_generation_completed(event):
+    await event_bus.publish("generation.completed", event)
+
+# 이벤트 구독
+@event_bus.subscribe("trend.analyzed")
+async def handle_trend_analyzed(event):
+    # 트렌드 분석 완료 처리
+    pass
+```
 
 ---
 
-## 8. 도메인팩
+## 7. 캐싱 전략
 
-공통 파이프라인 위에 얹히는 도메인별 입력/평가/출력 템플릿입니다.
+### 7.1. 다단계 캐싱
 
-| 도메인 | 특화 분석 | 시각화 | 스펙 필드 |
-|--------|----------|--------|----------|
-| 산업디자인 | 사용성, 구조, 재료, CMF | 형태/구조 스케치, 사용 장면 | 치수, 소재, 제조 방식 |
-| 패션디자인 | 시즌, 실루엣, 소재, 패턴 | 무드보드, 룩 스케치, 착장 | 아이템, 소재, 컬러, 스타일링 |
-| 시각디자인 | 브랜드 톤, 색, 타입, 그리드 | 키비주얼, 로고, 포스터 | 색/타입/그리드, 사용 규칙 |
-| 광고디자인 | 타깃 인사이트, 메시지, 채널 | 캠페인 컷, 소셜 소재 | 메시지, 채널, 카피, CTA |
+```python
+# L1: 인메모리 캐시 (Python)
+from functools import lru_cache
+
+@lru_cache(maxsize=1024)
+def get_trend_data(keywords_hash):
+    # 자주 조회되는 트렌드 데이터
+    pass
+
+# L2: Redis 캐시
+import redis
+
+redis_client = redis.Redis(host='redis', port=6379)
+
+async def get_cached_analysis(analysis_id):
+    cached = redis_client.get(f"analysis:{analysis_id}")
+    if cached:
+        return json.loads(cached)
+    return None
+```
+
+### 7.2. CDN 캐싱
+- 정적 자원 CDN 배포
+- 이미지 최적화
+- 글로벌 엣지 로케이션
+
+---
+
+## 8. 모니터링
+
+### 8.1. 메트릭 수집
+
+```python
+# Prometheus 메트릭
+from prometheus_client import Counter, Histogram, Gauge
+
+REQUEST_COUNT = Counter('http_requests_total', 'Total requests', ['method', 'endpoint'])
+REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'Request latency')
+ACTIVE_CONNECTIONS = Gauge('active_connections', 'Active connections')
+
+# 미들웨어 적용
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration = time.time() - start_time
+
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path).inc()
+    REQUEST_LATENCY.observe(duration)
+
+    return response
+```
+
+### 8.2. 로깅
+
+```python
+# 구조화 로깅
+import structlog
+
+logger = structlog.get_logger()
+
+async def process_generation(request):
+    logger.info(
+        "generation_started",
+        request_id=request.id,
+        user_id=request.user_id,
+        prompt=request.prompt[:50]
+    )
+
+    try:
+        result = await generate_image(request)
+        logger.info(
+            "generation_completed",
+            request_id=request.id,
+            image_urls=result.urls
+        )
+        return result
+    except Exception as e:
+        logger.error(
+            "generation_failed",
+            request_id=request.id,
+            error=str(e),
+            exc_info=True
+        )
+        raise
+```
+
+### 8.3. 헬스 체크
+
+```python
+from fastapi import HTTPException
+from app.dependencies import get_db, get_redis
+
+@app.get("/health")
+async def health_check(db: Session = Depends(get_db)):
+    try:
+        # DB 연결 확인
+        db.execute("SELECT 1")
+
+        # Redis 연결 확인
+        redis = get_redis()
+        redis.ping()
+
+        # 외부 API 연결 확인
+        # ...
+
+        return {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0",
+            "checks": {
+                "database": "ok",
+                "redis": "ok",
+                "external_apis": "ok"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+```
 
 ---
 
@@ -269,31 +473,38 @@ Tenant
 ### 9.1. 컨테이너화
 
 ```dockerfile
-FROM python:3.13-slim as base
+# Dockerfile
+FROM python:3.10-slim as base
 
 WORKDIR /app
 
+# 의존성 설치
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# 애플리케이션 코드 복사
 COPY . .
 
+# 실행 사용자 생성
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8000
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ### 9.2. 오케스트레이션
 
 ```yaml
+# docker-compose.yml
+version: '3.8'
+
 services:
   web:
     build: .
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/design_support
+      - DATABASE_URL=postgresql://postgres:password@db:5432/fashion_ai
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - db
@@ -303,7 +514,7 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=design_support
+      - POSTGRES_DB=fashion_ai
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     volumes:
@@ -311,34 +522,188 @@ services:
 
   redis:
     image: redis:7-alpine
-
-  celery:
-    build: .
-    command: celery -A config worker -l info
-    depends_on:
-      - db
-      - redis
+    volumes:
+      - redis_data:/data
 
   nginx:
     image: nginx:alpine
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
     depends_on:
       - web
 
 volumes:
   postgres_data:
+  redis_data:
+```
+
+### 9.3. CI/CD 파이프라인
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+      - name: Run tests
+        run: pytest tests/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to production
+        run: |
+          # 배포 스크립트
+          docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ---
 
-## 10. 참고 자료
+## 10. 성능 최적화
 
-- [Django 공식 문서](https://docs.djangoproject.com/)
+### 10.1. 데이터베이스 최적화
+
+```python
+# 쿼리 최적화
+from sqlalchemy.orm import selectinload, joinedload
+
+# N+1 문제 해결
+projects = session.query(Project)\
+    .options(selectinload(Project.analyses))\
+    .options(joinedload(Project.user))\
+    .all()
+
+# 배치 처리
+def bulk_insert_raw_data(data_list):
+    session.bulk_insert_mappings(RawData, data_list)
+    session.commit()
+```
+
+### 10.2. API 최적화
+
+```python
+# 응답 압축
+from fastapi.middleware.gzip import GZipMiddleware
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# 비동기 처리
+import asyncio
+import aiohttp
+
+async def fetch_multiple_sources(urls):
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_source(session, url) for url in urls]
+        results = await asyncio.gather(*tasks)
+    return results
+```
+
+---
+
+## 11. 보안 아키텍처
+
+### 11.1. 인증/인가
+
+```python
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = decode_jwt(token)
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
+        return user_id
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+```
+
+### 11.2. 데이터 암호화
+
+```python
+from cryptography.fernet import Fernet
+
+class EncryptionService:
+    def __init__(self, key: bytes):
+        self.cipher = Fernet(key)
+
+    def encrypt(self, data: str) -> str:
+        return self.cipher.encrypt(data.encode()).decode()
+
+    def decrypt(self, encrypted_data: str) -> str:
+        return self.cipher.decrypt(encrypted_data.encode()).decode()
+```
+
+---
+
+## 12. 재해 복구
+
+### 12.1. 백업 전략
+- 데이터베이스: 매일 자동 백업
+- 파일 스토리지: 3중 복제
+- 구성: 버전 관리
+
+### 12.2. Failover
+- Active-Active 구성
+- 자동 장애 전환
+- 데이터 일관성 보장
+
+---
+
+## 13. 향후 개선 방향
+
+### 13.1. 기술적 개선
+- GraphQL 도입
+- gRPC 도입
+- 서비스 메시 (Istio)
+- 이벤트소싱
+
+### 13.2. 기능적 개선
+- 실시간 협업
+- 3D 뷰어
+- VR/AR 지원
+- AI 추천 시스템
+
+---
+
+## 14. 참고 자료
+
+- [FastAPI 공식 문서](https://fastapi.tiangolo.com/)
 - [PostgreSQL 문서](https://www.postgresql.org/docs/)
 - [Docker 공식 문서](https://docs.docker.com/)
-- [Celery 문서](https://docs.celeryq.dev/)
+- [Kubernetes 공식 문서](https://kubernetes.io/docs/)
+- [Nginx 공식 문서](https://nginx.org/en/docs/)
 
 ---
 

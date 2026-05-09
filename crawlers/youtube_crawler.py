@@ -89,6 +89,8 @@ class YouTubeAudioTranscriber:
     - Intel/NVIDIA: faster-whisper (CUDA/CPU 자동 감지)
     - 폴백: openai-whisper (범용)
     """
+    # @MX:WARN: [AUTO] Hardware auto-detection with multiple backend dependencies. Import side effects at module level.
+    # @MX:REASON: Dynamically imports pywhispercpp, faster-whisper, or openai-whisper based on platform. Module-level imports execute at import time.
 
     def __init__(self,
                  model_size: str = None,

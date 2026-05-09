@@ -1,53 +1,40 @@
 """
-Database engine and session management
+SQLAlchemy engine, session factory, and FastAPI dependency for PostgreSQL.
 """
 
 from contextlib import contextmanager
-from pathlib import Path
 from typing import Generator
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
-from app.models.base import Base
 
 logger = get_logger(__name__)
 settings = get_settings()
-
-
-def _ensure_sqlite_path(database_url: str) -> None:
-    if not database_url.startswith("sqlite:///"):
-        return
-    db_path = database_url.replace("sqlite:///", "")
-    if not db_path or db_path == ":memory:":
-        return
-    Path(db_path).expanduser().parent.mkdir(parents=True, exist_ok=True)
-
-
-_ensure_sqlite_path(settings.database_url)
 
 engine = create_engine(
     settings.database_url,
     echo=settings.debug,
     pool_pre_ping=True,
-    connect_args={"check_same_thread": False} if settings.database_url.startswith("sqlite:///") else {}
+    pool_recycle=3600,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db() -> None:
-    """Initialize database tables"""
-    from app import models  # noqa: F401
+    """Create all tables that do not yet exist."""
+    from app.models.base import Base
+    import app.models  # noqa: F401 - registers all ORM classes with metadata
     Base.metadata.create_all(bind=engine)
-    logger.info("Database initialized")
+    logger.info("Database tables initialised")
 
 
 @contextmanager
 def get_db_session() -> Generator[Session, None, None]:
-    """Context manager for DB sessions outside FastAPI dependencies"""
+    """Context manager for DB sessions used outside FastAPI (e.g. startup tasks)."""
     db = SessionLocal()
     try:
         yield db
@@ -59,8 +46,11 @@ def get_db_session() -> Generator[Session, None, None]:
         db.close()
 
 
+# @MX:ANCHOR: [AUTO] Database session dependency for FastAPI endpoints
+# @MX:REASON: High fan_in (62+ callers) - all API routes depend on this function
+
 def get_db() -> Generator[Session, None, None]:
-    """FastAPI dependency for DB sessions"""
+    """FastAPI Depends() provider for database sessions."""
     db = SessionLocal()
     try:
         yield db

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.chatbot{% endblock %}
-{% block title %}AI 챗봇 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}AI 챗봇 - 디자인 발상 시스템{% endblock %}
 
 {% block content %}
 <div style="display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; height: calc(100vh - 8rem);">
@@ -17,7 +17,7 @@
         <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
             <h2 style="font-size: var(--font-xl); font-weight: 600; color: var(--text-primary);" data-i18n="chatbot.header.title">AI 챗봇</h2>
             <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-top: 0.25rem;" id="session-title" data-i18n="chatbot.header.subtitle">
-                패션 아이디어를 자유롭게 질문하세요
+                디자인 아이디어를 자유롭게 질문하세요
             </p>
         </div>
 
@@ -66,7 +66,9 @@
 
 {% block extra_js %}
 <script>
-const t = window.t;
+function tr(key, params) {
+    return window.t ? window.t(key, params) : key;
+}
 let currentSession = null;
 let sessions = [];
 let projects = [];
@@ -82,7 +84,7 @@ async function loadProjects() {
     if (!res.ok) return;
     projects = await res.json();
     const select = document.getElementById('modal-project-id');
-    select.innerHTML = `<option value="">${t('chatbot.modal.projectPlaceholder')}</option>` +
+    select.innerHTML = `<option value="">${tr('chatbot.modal.projectPlaceholder')}</option>` +
         projects.map(p => `<option value="${p.id}">${escapeHtml(p.title)}</option>`).join('');
 }
 
@@ -96,12 +98,12 @@ async function loadSessions() {
 function renderSessions() {
     const container = document.getElementById('sessions-list');
     if (!sessions || sessions.length === 0) {
-        container.innerHTML = `<div style="text-align:center; font-size: var(--font-sm); color: var(--text-muted);">${t('chatbot.messages.noSessions')}</div>`;
+        container.innerHTML = `<div style="text-align:center; font-size: var(--font-sm); color: var(--text-muted);">${tr('chatbot.messages.noSessions')}</div>`;
         return;
     }
     container.innerHTML = sessions.map(session => `
         <div class="session-item ${session.id === currentSession ? 'active' : ''}" onclick="loadSession(${session.id})">
-            <div style="font-size: var(--font-sm); font-weight: 600;">${escapeHtml(session.title || t('chatbot.labels.newChat'))}</div>
+            <div style="font-size: var(--font-sm); font-weight: 600;">${escapeHtml(session.title || tr('chatbot.labels.newChat'))}</div>
             <div style="font-size: 0.75rem; color: var(--text-muted);">${new Date(session.created_at).toLocaleDateString(window.i18n.getNumberLocale())}</div>
         </div>
     `).join('');
@@ -120,7 +122,7 @@ function hideNewSessionModal() {
 async function createNewSession() {
     const projectId = document.getElementById('modal-project-id').value;
     if (!projectId) {
-        alert(t('chatbot.messages.selectProject'));
+        alert(tr('chatbot.messages.selectProject'));
         return;
     }
     const title = document.getElementById('modal-session-title').value.trim();
@@ -128,7 +130,7 @@ async function createNewSession() {
     const res = await fetch('/api/v1/chat/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_id: projectId, title: title || null })
+        body: JSON.stringify({ project_id: parseInt(projectId, 10), title: title || null })
     });
 
     if (res.ok) {
@@ -139,7 +141,7 @@ async function createNewSession() {
         hideNewSessionModal();
     } else {
         const error = await res.json();
-        alert(error.detail || t('chatbot.messages.sessionCreateFailed'));
+        alert(error.detail || tr('chatbot.messages.sessionCreateFailed'));
     }
 }
 
@@ -148,7 +150,7 @@ async function loadSession(sessionId) {
     if (!res.ok) return;
     const data = await res.json();
     currentSession = sessionId;
-    document.getElementById('session-title').textContent = sessions.find(s => s.id === sessionId)?.title || t('chatbot.labels.chat');
+    document.getElementById('session-title').textContent = sessions.find(s => s.id === sessionId)?.title || tr('chatbot.labels.chat');
     renderMessages(data || []);
     renderSessions();
 }
@@ -156,12 +158,12 @@ async function loadSession(sessionId) {
 function renderMessages(messages) {
     const container = document.getElementById('messages-container');
     if (!messages || messages.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color: var(--text-muted);">${t('chatbot.messages.noMessages')}</div>`;
+        container.innerHTML = `<div style="text-align:center; color: var(--text-muted);">${tr('chatbot.messages.noMessages')}</div>`;
         return;
     }
     container.innerHTML = messages.map(msg => `
         <div class="message ${msg.role}">
-            <strong style="display:block; font-size: 0.75rem; margin-bottom: 0.25rem;">${msg.role === 'user' ? t('chatbot.labels.me') : t('chatbot.labels.ai')}</strong>
+            <strong style="display:block; font-size: 0.75rem; margin-bottom: 0.25rem;">${msg.role === 'user' ? tr('chatbot.labels.me') : tr('chatbot.labels.ai')}</strong>
             <p style="margin:0; font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(msg.message || msg.content || '')}</p>
         </div>
     `).join('');
@@ -170,7 +172,7 @@ function renderMessages(messages) {
 
 async function sendMessage(message) {
     if (!currentSession) {
-        alert(t('chatbot.messages.selectSession'));
+        alert(tr('chatbot.messages.selectSession'));
         return;
     }
     const res = await fetch(`/api/v1/chat/sessions/${currentSession}/messages`, {
@@ -186,7 +188,7 @@ async function sendMessage(message) {
     }
 
     const error = await res.json();
-    alert(error.detail || t('chatbot.messages.messageSendFailed'));
+    alert(error.detail || tr('chatbot.messages.messageSendFailed'));
 }
 
 document.getElementById('chat-form').addEventListener('submit', async (e) => {
@@ -206,7 +208,7 @@ window.addEventListener('languageChanged', () => {
     renderSessions();
     const current = sessions.find(s => s.id === currentSession);
     if (!current) {
-        document.getElementById('session-title').textContent = t('chatbot.header.subtitle');
+        document.getElementById('session-title').textContent = tr('chatbot.header.subtitle');
     }
 });
 </script>

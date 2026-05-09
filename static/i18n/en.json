@@ -1,6 +1,6 @@
 {
   "nav": {
-    "title": "Fashion Trend AI",
+    "title": "Design Creative AI",
     "home": "Home",
     "projects": "Projects",
     "dashboard": "Dashboard",
@@ -12,22 +12,22 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Fashion Trend AI",
-      "title": "Analyze fashion trends and generate new designs",
-      "description": "Automatically collect and analyze the latest fashion trends, and generate AI-based design images and patterns.",
-      "searchPlaceholder": "What fashion trend would you like to analyze?",
+      "eyebrow": "Design Creative AI",
+      "title": "Analyze design trends and generate new concepts",
+      "description": "Collect and analyze design trends, then generate AI-based concept images and specifications.",
+      "searchPlaceholder": "What design trend would you like to analyze?",
       "startButton": "Start Analysis",
       "chips": {
-        "casual": "Women's Casual",
-        "street": "Streetwear",
-        "sustainable": "Sustainable Fashion",
-        "luxury": "Luxury Formal"
+        "casual": "Product Design",
+        "street": "Spatial Experience",
+        "sustainable": "Sustainable Materials",
+        "luxury": "Brand Visuals"
       },
       "chipsData": {
-        "casual": "2025 S/S women's casual trends",
-        "street": "Minimal streetwear menswear",
-        "sustainable": "Sustainable fashion materials trend",
-        "luxury": "Luxury formalwear color trends"
+        "casual": "User-centered product design trends",
+        "street": "Urban spatial experience design",
+        "sustainable": "Sustainable materials and production trends",
+        "luxury": "Premium brand visual direction"
       },
       "links": {
         "newProject": "New Project",
@@ -47,12 +47,12 @@
       "cards": {
         "trend": {
           "title": "Trend Analysis",
-          "desc": "Collect and analyze fashion trend data with AI",
+          "desc": "Collect and analyze design trend data with AI",
           "action": "Go to Projects"
         },
         "designs": {
           "title": "Design Library",
-          "desc": "Manage generated fashion designs and model images",
+          "desc": "Manage generated design images and application images",
           "action": "Open Library"
         },
         "settings": {
@@ -86,14 +86,14 @@
     },
     "recentImages": {
       "title": "Recent Generated Images",
-      "subtitle": "Recently generated designs and model images",
+      "subtitle": "Recently generated design images and application images",
       "viewAll": "Go to Library",
       "empty": "No generated images yet",
       "error": "Failed to load images"
     }
   },
   "common": {
-    "appSubtitle": "Fashion Trend Analysis & Image Generation System",
+    "appSubtitle": "Design Trend Analysis & Image Generation System",
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
@@ -146,7 +146,7 @@
     "crawler": "Data Collection"
   },
   "trendAnalysis": {
-    "title": "Fashion Trend Analysis",
+    "title": "Design Trend Analysis",
     "keywords": "Keywords",
     "keywordsPlaceholder": "e.g., oversized, minimalist, vintage",
     "keywordsHelp": "Enter multiple keywords separated by commas",
@@ -168,10 +168,10 @@
     }
   },
   "imageGeneration": {
-    "title": "Fashion Design Image Generation",
+    "title": "Design Image Generation",
     "designPrompt": {
       "label": "Design Description",
-      "placeholder": "Describe the fashion design you want to generate in detail"
+      "placeholder": "Describe the design image you want to generate in detail"
     },
     "garmentType": {
       "label": "Garment Type",
@@ -288,25 +288,25 @@
     }
   },
   "crawler": {
-    "title": "Fashion Data Collection",
+    "title": "Design Data Collection",
     "sources": {
       "label": "Data Sources",
-      "fashion_news": "Fashion News",
-      "fashion_insta": "Fashion Instagram",
-      "musinsa": "Musinsa",
-      "wgsn": "WGSN",
-      "pinterest": "Pinterest",
+      "fashion_news": "Design News",
+      "fashion_insta": "Social References",
+      "musinsa": "Design Community",
+      "wgsn": "Trend Reports",
+      "pinterest": "Visual References",
       "options": {
-        "fashion_news": "Fashion News",
-        "fashion_insta": "Fashion Instagram",
-        "musinsa": "Musinsa",
-        "wgsn": "WGSN",
-        "pinterest": "Pinterest"
+        "fashion_news": "Design News",
+        "fashion_insta": "Social References",
+        "musinsa": "Design Community",
+        "wgsn": "Trend Reports",
+        "pinterest": "Visual References"
       }
     },
     "keywords": {
       "label": "Collection Keywords",
-      "placeholder": "e.g., 2024 fashion trends, oversized"
+      "placeholder": "e.g., 2026 design trends, sustainable materials"
     },
     "maxItems": {
       "label": "Maximum Items"
@@ -337,7 +337,7 @@
   },
   "crawlers": {
     "categories": {
-      "fashion": "Fashion Platforms",
+      "fashion": "Design Platforms",
       "community": "Communities",
       "portal": "Portals/Blogs",
       "media": "Media",
@@ -345,9 +345,9 @@
       "search": "Search"
     },
     "names": {
-      "musinsa": "Musinsa",
-      "fashion_insta": "Instagram",
-      "pinterest": "Pinterest",
+      "musinsa": "Design Community",
+      "fashion_insta": "Social References",
+      "pinterest": "Visual References",
       "dcinside": "DC Inside",
       "theqoo": "Theqoo",
       "fmkorea": "FMKorea",
@@ -362,8 +362,8 @@
       "naver_cafe": "Naver Cafe",
       "daum_cafe": "Daum Cafe",
       "youtube": "YouTube",
-      "fashion_news": "Fashion N",
-      "wgsn": "WGSN",
+      "fashion_news": "Design News",
+      "wgsn": "Trend Reports",
       "natenews": "Nate News",
       "searxng": "SearXNG"
     }
@@ -373,25 +373,25 @@
       "title": "Image Generation Models",
       "zimage": {
         "name": "Z-Image",
-        "description": "Professional fashion image generation",
+        "description": "Professional design image generation",
         "capabilities": [
-          "fashion_design",
-          "model_fitting",
+          "design_generation",
+          "application_visualization",
           "upscale"
         ]
       },
       "seedream": {
         "name": "Seedream (Bytedance)",
-        "description": "Advanced fashion collection generation",
+        "description": "Advanced design series generation",
         "capabilities": [
-          "fashion_collection",
+          "design_series",
           "patterns",
           "textures"
         ]
       },
       "nano_banana": {
         "name": "Nano Banana",
-        "description": "Technical fashion illustrations",
+        "description": "Technical design illustrations",
         "capabilities": [
           "sketch",
           "flat_lay",
@@ -516,12 +516,12 @@
   },
   "filters": {
     "gender": {
-      "label": "Gender",
+      "label": "Audience",
       "options": {
         "": "All",
-        "female": "Female",
-        "male": "Male",
-        "unisex": "Unisex"
+        "female": "Primary User A",
+        "male": "Primary User B",
+        "unisex": "Shared Audience"
       }
     },
     "age": {
@@ -551,41 +551,41 @@
       "label": "Category",
       "options": {
         "": "All",
-        "casual": "Casual",
+        "casual": "Everyday",
         "formal": "Formal",
         "sports": "Sports",
         "outdoor": "Outdoor",
-        "street": "Street",
+        "street": "Urban",
         "minimal": "Minimal",
         "vintage": "Vintage",
         "romantic": "Romantic",
         "ethnic": "Ethnic",
         "avantgarde": "Avant-Garde",
-        "genderless": "Genderless",
-        "top": "Tops",
-        "bottom": "Bottoms",
-        "dress": "Dress",
-        "outer": "Outerwear",
-        "underwear": "Underwear",
-        "sleepwear": "Sleepwear",
-        "swimwear": "Swimwear",
-        "activewear": "Activewear"
+        "genderless": "Universal",
+        "top": "Product",
+        "bottom": "Service",
+        "dress": "Space",
+        "outer": "Graphic",
+        "underwear": "Package",
+        "sleepwear": "Content",
+        "swimwear": "Interaction",
+        "activewear": "Branding"
       }
     }
   },
   "pageTitles": {
-    "home": "Home - Fashion Trend AI Generation System",
-    "dashboard": "Dashboard - Fashion Trend AI Generation System",
-    "projects": "Project Management - Fashion Trend AI Generation System",
-    "newProject": "Create Project - Fashion Trend AI Generation System",
-    "projectDetail": "Project Details - Fashion Trend AI Generation System",
-    "newSession": "Create Session - Fashion Trend AI Generation System",
-    "sessionDetail": "Session Details - Fashion Trend AI Generation System",
-    "history": "Session Management - Fashion Trend AI Generation System",
-    "ideas": "Idea Management - Fashion Trend AI Generation System",
-    "chatbot": "AI Chatbot - Fashion Trend AI Generation System",
-    "library": "Library - Fashion Trend AI Generation System",
-    "settings": "Settings - Fashion Trend AI Generation System"
+    "home": "Home - Design Creative Support System",
+    "dashboard": "Dashboard - Design Creative Support System",
+    "projects": "Project Management - Design Creative Support System",
+    "newProject": "Create Project - Design Creative Support System",
+    "projectDetail": "Project Details - Design Creative Support System",
+    "newSession": "Create Session - Design Creative Support System",
+    "sessionDetail": "Session Details - Design Creative Support System",
+    "history": "Session Management - Design Creative Support System",
+    "ideas": "Idea Management - Design Creative Support System",
+    "chatbot": "AI Chatbot - Design Creative Support System",
+    "library": "Library - Design Creative Support System",
+    "settings": "Settings - Design Creative Support System"
   },
   "dashboard": {
     "panels": {
@@ -613,20 +613,20 @@
       "crawled": "Collected Data",
       "keywords": "Extracted Keywords",
       "designs": "Designs",
-      "models": "Model Images"
+      "models": "Application Images"
     },
     "inlineStats": {
       "crawled": "Collected",
       "keywords": "Keywords",
       "designs": "Designs",
-      "models": "Models"
+      "models": "Applications"
     },
     "tabs": {
       "overview": "Overview",
       "data": "Collected Data",
       "analysis": "Analysis Report",
       "design": "Design Images",
-      "model": "Model Images",
+      "model": "Application Images",
       "blueprint": "Blueprint"
     },
     "empty": {
@@ -634,7 +634,7 @@
       "data": "Collected data will appear here",
       "analysis": "Analysis results will appear here",
       "designImages": "No design images available",
-      "modelImages": "No model images available",
+      "modelImages": "No application images available",
       "projects": "No projects",
       "sessions": "No sessions",
       "blueprints": "No blueprints available"
@@ -662,7 +662,7 @@
       "session": {
         "title": "Create Session",
         "name": "Session Name",
-        "namePlaceholder": "e.g., Casual womenswear analysis",
+        "namePlaceholder": "e.g., User-centered product experience analysis",
         "description": "Description",
         "descriptionPlaceholder": "Analysis goals...",
         "crawlerSelect": "Select Crawlers"
@@ -754,7 +754,7 @@
   },
   "projects": {
     "title": "Project Management",
-    "subtitle": "Manage and track fashion analysis projects",
+    "subtitle": "Manage and track design analysis projects",
     "actions": {
       "new": "New Project",
       "newStart": "Start New Project"
@@ -782,11 +782,11 @@
     "subtitle": "Enter project details",
     "form": {
       "titleLabel": "Project Title",
-      "titlePlaceholder": "e.g., 2025 SS minimal look analysis",
+      "titlePlaceholder": "e.g., Sustainable product experience analysis",
       "descriptionLabel": "Project Description (optional)",
       "descriptionPlaceholder": "Enter background and expected outcomes",
       "promptLabel": "Goals / Instructions",
-      "promptPlaceholder": "e.g., Analyze functional needs for unisex casual line",
+      "promptPlaceholder": "e.g., Analyze functional needs for a user-centered product line",
       "promptHint": "Be specific about scope, exclusions, and expected outputs."
     },
     "actions": {
@@ -802,10 +802,10 @@
   "newSession": {
     "backToProject": "← Back to project",
     "title": "Create Analysis Session",
-    "subtitle": "Set conditions for trend analysis and design generation",
+    "subtitle": "Set conditions for design trend analysis and image generation",
     "sections": {
       "sessionInfo": "Session Info",
-      "filters": "Fashion Analysis Filters",
+      "filters": "Design Analysis Filters",
       "filtersHelp": "Select only what you need (all optional)",
       "inputs": "Input Data (optional)",
       "inputsHelp": "Text, files, and URLs will be included in analysis",
@@ -813,12 +813,12 @@
     },
     "fields": {
       "title": "Session Title",
-      "titlePlaceholder": "e.g., 2025 S/S street trends",
+      "titlePlaceholder": "e.g., 2026 S/S product experience trends",
       "description": "Session Description",
       "descriptionPlaceholder": "Enter goals, exclusions, focus points",
-      "descriptionHint": "e.g., \"Unisex casual focus, practicality\", \"Exclude excessive luxury\"",
+      "descriptionHint": "e.g., \"Usability focus, practical and functional\", \"Exclude excessive decoration\"",
       "userKeywords": "Custom Keywords (optional)",
-      "userKeywordsPlaceholder": "e.g., minimal, oversized, retro (comma-separated)"
+      "userKeywordsPlaceholder": "e.g., minimal, sustainable materials, retro (comma-separated)"
     },
     "inputs": {
       "textLabel": "Text Input",
@@ -934,7 +934,7 @@
     },
     "header": {
       "title": "AI Chatbot",
-      "subtitle": "Ask freely about fashion ideas"
+      "subtitle": "Ask freely about design ideas"
     },
     "empty": {
       "state": "Select or create a chat session"
@@ -1035,7 +1035,7 @@
     "stats": {
       "total": "images",
       "design": "Design",
-      "model": "Model",
+      "model": "Application Images",
       "blueprint": "Blueprint"
     },
     "empty": {
@@ -1053,7 +1053,7 @@
     },
     "types": {
       "design": "Design",
-      "model": "Model",
+      "model": "Application Images",
       "blueprint": "Blueprint"
     },
     "sort": {
@@ -1199,261 +1199,5 @@
   "currency": {
     "symbol": "$",
     "code": "USD"
-  },
-  "workspace": {
-    "stepBar": {
-      "title": "Progress Steps",
-      "steps": {
-        "step1": "Input Analysis",
-        "step2": "Keyword Extraction",
-        "step3": "Data Collection",
-        "step4": "Trend Analysis",
-        "step5": "Evidence Collection",
-        "step6": "Sketch Input",
-        "step7": "AI Interpretation",
-        "step8": "Reference Search",
-        "step9": "Abstraction Rules",
-        "step10": "Design Generation",
-        "step11": "Result Review",
-        "step12": "Decision Log",
-        "step13": "Improvement Iteration",
-        "step14": "Final Selection",
-        "step15": "Export",
-        "step16": "Documentation",
-        "step17": "Complete"
-      }
-    },
-    "boards": {
-      "chat": {
-        "title": "Chat",
-        "placeholder": "Enter your message...",
-        "sendButton": "Send",
-        "hypothesis": "Hypothesis",
-        "evidenceRef": "Evidence",
-        "user": "User",
-        "ai": "AI"
-      },
-      "evidence": {
-        "title": "Evidence",
-        "filterBySource": "Filter by Source",
-        "sortBy": "Sort By",
-        "credibility": "Credibility",
-        "recency": "Recency",
-        "source": "Source",
-        "date": "Date",
-        "expand": "Expand"
-      },
-      "sketch": {
-        "title": "Sketch Input",
-        "original": "Original",
-        "interpretation": "AI Interpretation",
-        "refinement": "Refinement",
-        "upload": "Upload",
-        "intent": "Intent",
-        "form": "Form",
-        "structure": "Structure",
-        "uncertain": "Uncertain Elements",
-        "questions": "User Questions",
-        "actions": {
-          "keep": "Keep",
-          "clarify": "Clarify",
-          "vary": "Vary",
-          "refine": "Refine",
-          "expand": "Expand",
-          "useAsEvidence": "Use as Evidence",
-          "runSearch": "Run Search",
-          "generate": "Generate"
-        },
-        "saveAsNew": "Save as New Version",
-        "overwriteWarning": "A sketch already exists. Do you want to save it as a new version?"
-      },
-      "reference": {
-        "title": "Reference Search",
-        "clusters": "Source Clusters",
-        "grid": "Reference Grid",
-        "analysis": "Analysis",
-        "categories": {
-          "nature": "Nature",
-          "product": "Product",
-          "architecture": "Architecture",
-          "fashion": "Fashion",
-          "graphic": "Graphic",
-          "advertising": "Advertising",
-          "material": "Material"
-        },
-        "basedOnSketch": "Based on Sketch",
-        "similarity": "Similarity",
-        "license": "License",
-        "risk": "Risk Level",
-        "directApply": "Direct Style Application",
-        "riskReason": "Direct application limited due to license risk"
-      },
-      "abstraction": {
-        "title": "Abstraction",
-        "axes": {
-          "form": "Form",
-          "structure": "Structure",
-          "surface": "Surface",
-          "colorMaterial": "Color/Material",
-          "meaning": "Meaning",
-          "usability": "Usability"
-        },
-        "observation": "Observation",
-        "appliedRule": "Applied Rule",
-        "riskLevel": "Risk Level"
-      },
-      "generation": {
-        "title": "Generation",
-        "kinds": {
-          "refinement": "Refinement",
-          "variation": "Variation",
-          "domainApplication": "Domain Application"
-        },
-        "parentSketch": "Parent Sketch",
-        "aiGenerated": "AI Generated",
-        "modelPolicy": "Model Policy",
-        "comparison": "Comparison",
-        "download": "Download",
-        "select": "Select"
-      },
-      "decision": {
-        "title": "Decision",
-        "candidates": "Candidates",
-        "scores": {
-          "creativity": "Creativity",
-          "feasibility": "Feasibility",
-          "marketFit": "Market Fit"
-        },
-        "actions": {
-          "select": "Select",
-          "reject": "Reject",
-          "requestRevision": "Request Revision"
-        },
-        "log": "Decision Log"
-      },
-      "spec": {
-        "title": "Spec Builder",
-        "evidenceReferences": "Evidence References",
-        "decisionLog": "Decision Log",
-        "memoLabel": "Memo",
-        "memoPlaceholder": "Add your notes here...",
-        "memoSaveFailed": "Failed to save memo",
-        "rejectedConcepts": "Rejected/Held Concepts",
-        "toggleExpand": "Toggle Expand"
-      }
-    },
-    "decisionPanel": {
-      "title": "Decision Panel",
-      "currentStep": "Current Step",
-      "briefScore": "Brief Score",
-      "conceptScores": "Concept Scores",
-      "selectedSketch": "Selected Sketch",
-      "selectedReferences": "Selected References",
-      "nextAction": "Next Action",
-      "nextActionReason": "Reason",
-      "progress": "Progress",
-      "notifications": "Notifications"
-    },
-    "emptyStates": {
-      "noTrendData": {
-        "title": "Insufficient Trend Data",
-        "message": "Could not collect enough trend data. Try additional searches or switch domains.",
-        "action": "Run Additional Search"
-      },
-      "noReferences": {
-        "title": "No References Found",
-        "message": "No references found with current criteria. Try expanding search or upload manually.",
-        "action": "Expand Search"
-      },
-      "licenseRisk": {
-        "title": "License Risk Detected",
-        "message": "This reference has usage restrictions. Direct style application is limited.",
-        "badge": "High Risk",
-        "action": "View Alternatives"
-      },
-      "modelFailure": {
-        "title": "Model Generation Failed",
-        "message": "AI model {modelName} failed to generate results.",
-        "action": "Retry"
-      },
-      "highUncertainty": {
-        "title": "Review Needed",
-        "message": "AI is not confident about this content. User review required.",
-        "action": "Review Now"
-      },
-      "documentParsingFailure": {
-        "title": "Document Parsing Failed",
-        "message": "Could not parse the uploaded document. Check admin queue for details.",
-        "action": "View Admin Queue"
-      },
-      "networkError": {
-        "title": "Network Error",
-        "description": "Please check your connection and try again"
-      },
-      "quotaExceeded": {
-        "title": "Quota Exceeded",
-        "description": "API quota has been exceeded"
-      },
-      "insufficientEvidence": {
-        "title": "Insufficient Evidence",
-        "description": "Could not collect enough evidence"
-      },
-      "permissionDenied": {
-        "title": "Permission Denied",
-        "description": "You do not have permission to perform this action"
-      }
-    },
-    "skeleton": {
-      "loading": "Loading...",
-      "processing": "Processing...",
-      "analyzing": "Analyzing...",
-      "generating": "Generating..."
-    },
-    "a11y": {
-      "stepChanged": "Changed from {oldStep} to {newStep}",
-      "boardChanged": "Switched from {oldBoard} to {newBoard}",
-      "progressUpdate": "{step}: {progress}% - {message}",
-      "error": "Error: {error}",
-      "loading": "Loading content",
-      "decisionRequired": "Your decision is required",
-      "cardSelected": "Card selected",
-      "cardExpanded": "Card expanded",
-      "cardCollapsed": "Card collapsed"
-    },
-    "errors": {
-      "authRequired": "Authentication required",
-      "permissionDenied": "Permission denied",
-      "notFound": "Resource not found",
-      "conflict": "Resource conflict",
-      "validationError": "Validation error",
-      "quotaExceeded": "API quota exceeded",
-      "serverError": "Server error",
-      "networkError": "Network error",
-      "insufficientEvidence": "Insufficient evidence",
-      "licenseBlocked": "License blocked",
-      "celeryTaskFailed": "Task failed",
-      "unknown": "Unknown error"
-    },
-    "navigator": {
-      "projectList": "Project List",
-      "sessionList": "Session List",
-      "pipelineSteps": "Pipeline Steps"
-    },
-    "autoMode": {
-      "states": {
-        "queued": "Queued",
-        "researching": "Researching trends and evidence...",
-        "concepting": "Generating concept candidates...",
-        "referencing": "Searching and analyzing references...",
-        "abstracting": "Extracting abstraction rules...",
-        "generating": "Generating design variations...",
-        "documenting": "Creating spec document...",
-        "review_ready": "Review required",
-        "failed": "Task failed"
-      },
-      "taskLog": "Running: {featureKey} (Attempt {attempt})"
-    },
-    "initFailed": "Failed to initialize workspace",
-    "navigationFailed": "Navigation failed"
   }
 }

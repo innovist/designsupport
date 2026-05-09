@@ -1,6 +1,6 @@
 {
   "nav": {
-    "title": "패션 트렌드 AI",
+    "title": "디자인 발상 시스템",
     "home": "홈",
     "projects": "프로젝트",
     "dashboard": "대시보드",
@@ -12,22 +12,22 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Fashion Trend AI",
-      "title": "패션 트렌드를 분석하고 새로운 디자인을 생성하세요",
-      "description": "최신 패션 트렌드를 자동으로 수집·분석하고, AI 기반 디자인 이미지와 패턴을 생성합니다.",
-      "searchPlaceholder": "어떤 패션 트렌드를 분석할까요?",
+      "eyebrow": "Design Creative AI",
+      "title": "트렌드 조사부터 스펙 문서까지, 근거 있는 디자인을 만드세요",
+      "description": "트렌드 조사, 레퍼런스 수집, 컨셉 결정, 추상화, 이미지 생성 — 창작의 근거를 남기는 디자인 워크플로우입니다.",
+      "searchPlaceholder": "어떤 디자인을 발상할까요?",
       "startButton": "분석 시작",
       "chips": {
-        "casual": "여성 캐주얼",
-        "street": "스트리트웨어",
-        "sustainable": "지속가능 패션",
-        "luxury": "럭셔리 포멀"
+        "casual": "제품 디자인",
+        "street": "공간 경험",
+        "sustainable": "지속가능 소재",
+        "luxury": "브랜드 비주얼"
       },
       "chipsData": {
-        "casual": "2025 S/S 여성 캐주얼 트렌드",
-        "street": "미니멀 스트리트웨어 남성복",
-        "sustainable": "지속가능 패션 소재 트렌드",
-        "luxury": "럭셔리 포멀웨어 컬러 트렌드"
+        "casual": "사용자 중심 제품 디자인 트렌드",
+        "street": "도시형 공간 경험 디자인",
+        "sustainable": "지속가능 소재와 제작 방식 트렌드",
+        "luxury": "프리미엄 브랜드 비주얼 방향"
       },
       "links": {
         "newProject": "새 프로젝트",
@@ -47,12 +47,12 @@
       "cards": {
         "trend": {
           "title": "트렌드 분석",
-          "desc": "패션 트렌드 데이터 수집 및 AI 분석",
+          "desc": "디자인 트렌드 데이터 수집 및 AI 분석",
           "action": "프로젝트로 이동"
         },
         "designs": {
           "title": "디자인 라이브러리",
-          "desc": "생성된 의상 디자인과 착장 이미지 관리",
+          "desc": "생성된 디자인 이미지와 적용 이미지 관리",
           "action": "라이브러리 열기"
         },
         "settings": {
@@ -86,14 +86,14 @@
     },
     "recentImages": {
       "title": "최근 생성 이미지",
-      "subtitle": "최근에 생성된 디자인과 착장 이미지",
+      "subtitle": "최근에 생성된 디자인 이미지와 적용 이미지",
       "viewAll": "라이브러리로 이동",
       "empty": "생성된 이미지가 없습니다",
       "error": "이미지 로드 실패"
     }
   },
   "common": {
-    "appSubtitle": "패션 트렌드 분석 및 이미지 생성 시스템",
+    "appSubtitle": "근거 기반 디자인 발상 시스템",
     "loading": "로딩 중...",
     "error": "오류",
     "success": "성공",
@@ -146,7 +146,7 @@
     "crawler": "데이터 수집"
   },
   "trendAnalysis": {
-    "title": "패션 트렌드 분석",
+    "title": "디자인 트렌드 분석",
     "keywords": "키워드",
     "keywordsPlaceholder": "예: 오버사이즈, 미니멀, 빈티지",
     "keywordsHelp": "쉼표로 여러 키워드를 입력하세요",
@@ -168,10 +168,10 @@
     }
   },
   "imageGeneration": {
-    "title": "패션 디자인 이미지 생성",
+    "title": "디자인 이미지 생성",
     "designPrompt": {
       "label": "디자인 설명",
-      "placeholder": "생성하고 싶은 패션 디자인을 자세히 설명하세요"
+      "placeholder": "생성하고 싶은 디자인 이미지을 자세히 설명하세요"
     },
     "garmentType": {
       "label": "의류 종류",
@@ -288,25 +288,25 @@
     }
   },
   "crawler": {
-    "title": "패션 데이터 수집",
+    "title": "디자인 데이터 수집",
     "sources": {
       "label": "데이터 소스",
-      "fashion_news": "패션 뉴스",
-      "fashion_insta": "패션 인스타그램",
-      "musinsa": "무신사",
-      "wgsn": "WGSN",
-      "pinterest": "Pinterest",
+      "fashion_news": "디자인 뉴스",
+      "fashion_insta": "소셜 레퍼런스",
+      "musinsa": "디자인 커뮤니티",
+      "wgsn": "트렌드 리포트",
+      "pinterest": "비주얼 레퍼런스",
       "options": {
-        "fashion_news": "패션 뉴스",
-        "fashion_insta": "패션 인스타그램",
-        "musinsa": "무신사",
-        "wgsn": "WGSN",
-        "pinterest": "Pinterest"
+        "fashion_news": "디자인 뉴스",
+        "fashion_insta": "소셜 레퍼런스",
+        "musinsa": "디자인 커뮤니티",
+        "wgsn": "트렌드 리포트",
+        "pinterest": "비주얼 레퍼런스"
       }
     },
     "keywords": {
       "label": "수집 키워드",
-      "placeholder": "예: 2024 패션 트렌드, 오버핏"
+      "placeholder": "예: 2026 디자인 트렌드, 지속가능 소재"
     },
     "maxItems": {
       "label": "최대 수집량"
@@ -337,7 +337,7 @@
   },
   "crawlers": {
     "categories": {
-      "fashion": "패션 플랫폼",
+      "fashion": "디자인 플랫폼",
       "community": "커뮤니티",
       "portal": "포털/블로그",
       "media": "미디어",
@@ -345,9 +345,9 @@
       "search": "검색"
     },
     "names": {
-      "musinsa": "무신사",
-      "fashion_insta": "인스타그램",
-      "pinterest": "핀터레스트",
+      "musinsa": "디자인 커뮤니티",
+      "fashion_insta": "소셜 레퍼런스",
+      "pinterest": "비주얼 레퍼런스",
       "dcinside": "DC인사이드",
       "theqoo": "더쿠",
       "fmkorea": "FM코리아",
@@ -362,8 +362,8 @@
       "naver_cafe": "네이버카페",
       "daum_cafe": "다음카페",
       "youtube": "유튜브",
-      "fashion_news": "패션N",
-      "wgsn": "WGSN",
+      "fashion_news": "디자인 뉴스",
+      "wgsn": "트렌드 리포트",
       "natenews": "네이트뉴스",
       "searxng": "SearXNG"
     }
@@ -373,25 +373,25 @@
       "title": "이미지 생성 모델",
       "zimage": {
         "name": "Z-Image",
-        "description": "Professional fashion image generation",
+        "description": "Professional design image generation",
         "capabilities": [
-          "fashion_design",
-          "model_fitting",
+          "design_generation",
+          "application_visualization",
           "upscale"
         ]
       },
       "seedream": {
         "name": "Seedream (Bytedance)",
-        "description": "Advanced fashion collection generation",
+        "description": "Advanced design series generation",
         "capabilities": [
-          "fashion_collection",
+          "design_series",
           "patterns",
           "textures"
         ]
       },
       "nano_banana": {
         "name": "Nano Banana",
-        "description": "Technical fashion illustrations",
+        "description": "Technical design illustrations",
         "capabilities": [
           "sketch",
           "flat_lay",
@@ -496,8 +496,8 @@
     "session": "세션",
     "crawler": "크롤러",
     "analysis": "분석",
-    "design": "의상 디자인",
-    "modelImage": "착장 이미지",
+    "design": "디자인 이미지",
+    "modelImage": "적용 이미지",
     "blueprint": "블루프린트",
     "idea": "아이디어",
     "library": "라이브러리",
@@ -516,12 +516,12 @@
   },
   "filters": {
     "gender": {
-      "label": "성별",
+      "label": "대상",
       "options": {
         "": "전체",
-        "female": "여성",
-        "male": "남성",
-        "unisex": "유니섹스"
+        "female": "주요 사용자 A",
+        "male": "주요 사용자 B",
+        "unisex": "공통 대상"
       }
     },
     "age": {
@@ -551,41 +551,41 @@
       "label": "카테고리",
       "options": {
         "": "전체",
-        "casual": "캐주얼",
-        "formal": "포멀",
+        "casual": "일상형",
+        "formal": "공식형",
         "sports": "스포츠",
         "outdoor": "아웃도어",
-        "street": "스트릿",
+        "street": "도시형",
         "minimal": "미니멀",
         "vintage": "빈티지",
         "romantic": "로맨틱",
         "ethnic": "에스닉",
         "avantgarde": "아방가르드",
-        "genderless": "젠더리스",
-        "top": "상의",
-        "bottom": "하의",
-        "dress": "원피스",
-        "outer": "아우터",
-        "underwear": "내의",
-        "sleepwear": "수면복",
-        "swimwear": "수영복",
-        "activewear": "액티브웨어"
+        "genderless": "범용형",
+        "top": "제품",
+        "bottom": "서비스",
+        "dress": "공간",
+        "outer": "그래픽",
+        "underwear": "패키지",
+        "sleepwear": "콘텐츠",
+        "swimwear": "인터랙션",
+        "activewear": "브랜딩"
       }
     }
   },
   "pageTitles": {
-    "home": "홈 - 패션 트렌드 AI 생성 시스템",
-    "dashboard": "대시보드 - 패션 트렌드 AI 생성 시스템",
-    "projects": "프로젝트 관리 - 패션 트렌드 AI 생성 시스템",
-    "newProject": "새 프로젝트 생성 - 패션 트렌드 AI 생성 시스템",
-    "projectDetail": "프로젝트 상세 - 패션 트렌드 AI 생성 시스템",
-    "newSession": "새 세션 생성 - 패션 트렌드 AI 생성 시스템",
-    "sessionDetail": "세션 상세 - 패션 트렌드 AI 생성 시스템",
-    "history": "세션 관리 - 패션 트렌드 AI 생성 시스템",
-    "ideas": "아이디어 관리 - 패션 트렌드 AI 생성 시스템",
-    "chatbot": "AI 챗봇 - 패션 트렌드 AI 생성 시스템",
-    "library": "라이브러리 - 패션 트렌드 AI 생성 시스템",
-    "settings": "설정 - 패션 트렌드 AI 생성 시스템"
+    "home": "홈 - 디자인 창작 지원 시스템",
+    "dashboard": "대시보드 - 디자인 창작 지원 시스템",
+    "projects": "프로젝트 관리 - 디자인 창작 지원 시스템",
+    "newProject": "새 프로젝트 생성 - 디자인 창작 지원 시스템",
+    "projectDetail": "프로젝트 상세 - 디자인 창작 지원 시스템",
+    "newSession": "새 세션 생성 - 디자인 창작 지원 시스템",
+    "sessionDetail": "세션 상세 - 디자인 창작 지원 시스템",
+    "history": "세션 관리 - 디자인 창작 지원 시스템",
+    "ideas": "아이디어 관리 - 디자인 창작 지원 시스템",
+    "chatbot": "AI 챗봇 - 디자인 창작 지원 시스템",
+    "library": "라이브러리 - 디자인 창작 지원 시스템",
+    "settings": "설정 - 디자인 창작 지원 시스템"
   },
   "dashboard": {
     "panels": {
@@ -612,29 +612,29 @@
     "stats": {
       "crawled": "수집 데이터",
       "keywords": "추출 키워드",
-      "designs": "의상 디자인",
-      "models": "착장 이미지"
+      "designs": "디자인 이미지",
+      "models": "적용 이미지"
     },
     "inlineStats": {
       "crawled": "수집",
       "keywords": "키워드",
       "designs": "디자인",
-      "models": "착장"
+      "models": "적용"
     },
     "tabs": {
       "overview": "개요",
       "data": "수집 데이터",
       "analysis": "분석 보고서",
-      "design": "의상 이미지",
-      "model": "착장 이미지",
+      "design": "디자인 이미지",
+      "model": "적용 이미지",
       "blueprint": "블루프린트"
     },
     "empty": {
       "overview": "세션 결과가 여기에 표시됩니다",
       "data": "수집된 데이터가 여기에 표시됩니다",
       "analysis": "분석 결과가 여기에 표시됩니다",
-      "designImages": "의상 이미지가 없습니다",
-      "modelImages": "착장 이미지가 없습니다",
+      "designImages": "디자인 이미지가 없습니다",
+      "modelImages": "적용 이미지가 없습니다",
       "projects": "프로젝트가 없습니다",
       "sessions": "세션이 없습니다",
       "blueprints": "블루프린트가 없습니다"
@@ -662,7 +662,7 @@
       "session": {
         "title": "새 세션 생성",
         "name": "세션 이름",
-        "namePlaceholder": "예: 캐주얼 여성복 분석",
+        "namePlaceholder": "예: 사용자 중심 제품 경험 분석",
         "description": "설명",
         "descriptionPlaceholder": "분석 목적...",
         "crawlerSelect": "크롤러 선택"
@@ -754,7 +754,7 @@
   },
   "projects": {
     "title": "프로젝트 관리",
-    "subtitle": "패션 분석 프로젝트를 관리하고 추적합니다",
+    "subtitle": "디자인 분석 프로젝트를 관리하고 추적합니다",
     "actions": {
       "new": "새 프로젝트",
       "newStart": "새 프로젝트 시작"
@@ -782,11 +782,11 @@
     "subtitle": "프로젝트 기본 정보를 입력하세요",
     "form": {
       "titleLabel": "프로젝트 제목",
-      "titlePlaceholder": "예: 2025 SS 미니멀 룩 분석",
+      "titlePlaceholder": "예: 지속가능 제품 경험 분석",
       "descriptionLabel": "프로젝트 설명 (선택사항)",
       "descriptionPlaceholder": "프로젝트 배경과 기대 결과를 입력하세요",
       "promptLabel": "분석 목표/지시사항",
-      "promptPlaceholder": "예: 유니섹스 캐주얼 라인의 기능성 니즈 분석",
+      "promptPlaceholder": "예: 사용자 중심 제품 라인의 기능성 니즈 분석",
       "promptHint": "분석 범위, 제외 항목, 기대 결과 등을 구체적으로 작성하세요."
     },
     "actions": {
@@ -802,10 +802,10 @@
   "newSession": {
     "backToProject": "← 프로젝트로 돌아가기",
     "title": "새 분석 세션 생성",
-    "subtitle": "패션 트렌드 분석과 디자인 생성을 위한 조건을 설정하세요",
+    "subtitle": "디자인 트렌드 분석과 이미지 생성을 위한 조건을 설정하세요",
     "sections": {
       "sessionInfo": "세션 정보",
-      "filters": "패션 분석 조건",
+      "filters": "디자인 분석 조건",
       "filtersHelp": "필요한 조건만 선택하세요 (모두 선택사항)",
       "inputs": "입력 데이터 (선택사항)",
       "inputsHelp": "텍스트, 파일, URL을 입력하면 분석에 반영됩니다",
@@ -813,12 +813,12 @@
     },
     "fields": {
       "title": "세션 제목",
-      "titlePlaceholder": "예: 2025 봄/여름 스트릿 트렌드",
+      "titlePlaceholder": "예: 2026 봄/여름 제품 경험 트렌드",
       "description": "세션 설명",
       "descriptionPlaceholder": "분석 목적, 제외할 요소, 집중할 포인트를 입력하세요",
-      "descriptionHint": "예: \"유니섹스 캐주얼 중심, 실용성과 기능성 위주\", \"과도한 럭셔리 요소 제외\"",
+      "descriptionHint": "예: \"사용성 중심, 실용성과 기능성 위주\", \"과도한 장식 요소 제외\"",
       "userKeywords": "사용자 정의 키워드 (선택사항)",
-      "userKeywordsPlaceholder": "예: 미니멀, 오버핏, 레트로 (쉼표로 구분)"
+      "userKeywordsPlaceholder": "예: 미니멀, 지속가능 소재, 레트로 (쉼표로 구분)"
     },
     "inputs": {
       "textLabel": "텍스트 입력",
@@ -934,7 +934,7 @@
     },
     "header": {
       "title": "AI 챗봇",
-      "subtitle": "패션 아이디어를 자유롭게 질문하세요"
+      "subtitle": "디자인 아이디어를 자유롭게 질문하세요"
     },
     "empty": {
       "state": "대화 세션을 선택하거나 새로 생성하세요"
@@ -1034,8 +1034,8 @@
     },
     "stats": {
       "total": "개 이미지",
-      "design": "의상 디자인",
-      "model": "모델 착장",
+      "design": "디자인 이미지",
+      "model": "적용 이미지",
       "blueprint": "블루프린트"
     },
     "empty": {
@@ -1052,8 +1052,8 @@
       "close": "닫기"
     },
     "types": {
-      "design": "의상 디자인",
-      "model": "모델 착장",
+      "design": "디자인 이미지",
+      "model": "적용 이미지",
       "blueprint": "블루프린트"
     },
     "sort": {
@@ -1199,197 +1199,5 @@
   "currency": {
     "symbol": "₩",
     "code": "KRW"
-  },
-  "workspace": {
-    "stepBar": {
-      "title": "진행 단계",
-      "steps": {
-        "step1": "입력 분석",
-        "step2": "키워드 추출",
-        "step3": "데이터 수집",
-        "step4": "트렌드 분석",
-        "step5": "증거 수집",
-        "step6": "스케치 입력",
-        "step7": "AI 해석",
-        "step8": "레퍼런스 검색",
-        "step9": "추상화 규칙",
-        "step10": "디자인 생성",
-        "step11": "결과 검토",
-        "step12": "결정 로그",
-        "step13": "개선 반복",
-        "step14": "최종 선택",
-        "step15": "내보내기",
-        "step16": "문서화",
-        "step17": "완료"
-      }
-    },
-    "boards": {
-      "chat": {
-        "title": "채팅",
-        "placeholder": "메시지를 입력하세요...",
-        "sendButton": "전송",
-        "hypothesis": "가설",
-        "evidenceRef": "증거",
-        "user": "사용자",
-        "ai": "AI"
-      },
-      "evidence": {
-        "title": "증거",
-        "filterBySource": "출처별 필터",
-        "sortBy": "정렬",
-        "credibility": "신뢰도",
-        "recency": "최신성",
-        "source": "출처",
-        "date": "날짜",
-        "expand": "펼쳐보기"
-      },
-      "sketch": {
-        "title": "스케치 입력",
-        "original": "원본",
-        "interpretation": "AI 해석",
-        "refinement": "개선 작업",
-        "upload": "업로드",
-        "intent": "의도",
-        "form": "형태",
-        "structure": "구조",
-        "uncertain": "불확실 요소",
-        "questions": "사용자 질문",
-        "actions": {
-          "keep": "유지",
-          "clarify": "명확화",
-          "vary": "변형",
-          "refine": "개선",
-          "expand": "확장",
-          "useAsEvidence": "증거로 사용",
-          "runSearch": "검색 실행",
-          "generate": "생성"
-        },
-        "saveAsNew": "새 버전으로 저장"
-      },
-      "reference": {
-        "title": "레퍼런스 검색",
-        "clusters": "소스 클러스터",
-        "grid": "레퍼런스 그리드",
-        "analysis": "분석",
-        "categories": {
-          "nature": "자연",
-          "product": "제품",
-          "architecture": "건축",
-          "fashion": "패션",
-          "graphic": "그래픽",
-          "advertising": "광고",
-          "material": "소재"
-        },
-        "basedOnSketch": "스케치 기반",
-        "similarity": "유사도",
-        "license": "라이선스",
-        "risk": "위험도",
-        "directApply": "직접 스타일 적용",
-        "riskReason": "라이선스 위험으로 인해 직접 적용이 제한됩니다"
-      },
-      "abstraction": {
-        "title": "추상화",
-        "axes": {
-          "form": "형태",
-          "structure": "구조",
-          "surface": "표면",
-          "colorMaterial": "색상/소재",
-          "meaning": "의미",
-          "usability": "사용성"
-        },
-        "observation": "관찰",
-        "appliedRule": "적용 규칙",
-        "riskLevel": "위험도"
-      },
-      "generation": {
-        "title": "생성",
-        "kinds": {
-          "refinement": "개선",
-          "variation": "변형",
-          "domainApplication": "도메인 적용"
-        },
-        "parentSketch": "부모 스케치",
-        "aiGenerated": "AI 생성",
-        "modelPolicy": "모델 정책",
-        "comparison": "비교",
-        "download": "다운로드",
-        "select": "선택"
-      },
-      "decision": {
-        "title": "결정",
-        "candidates": "후보",
-        "scores": {
-          "creativity": "창의성",
-          "feasibility": "실현가능성",
-          "marketFit": "시적합성"
-        },
-        "actions": {
-          "select": "선택",
-          "reject": "거부",
-          "requestRevision": "수정 요청"
-        },
-        "log": "결정 로그"
-      }
-    },
-    "decisionPanel": {
-      "title": "결정 패널",
-      "currentStep": "현재 단계",
-      "briefScore": "브리프 점수",
-      "conceptScores": "컨셉 점수",
-      "selectedSketch": "선택된 스케치",
-      "selectedReferences": "선택된 레퍼런스",
-      "nextAction": "다음 결정",
-      "nextActionReason": "사유",
-      "progress": "진행률",
-      "notifications": "알림"
-    },
-    "emptyStates": {
-      "noTrendData": {
-        "title": "트렌드 데이터 부족",
-        "description": "충분한 트렌드 데이터를 수집하지 못했습니다"
-      },
-      "noReferences": {
-        "title": "레퍼런스 없음",
-        "description": "검색된 레퍼런스가 없습니다"
-      },
-      "licenseRisk": {
-        "title": "라이선스 위험",
-        "description": "이 레퍼런스는 사용에 제한이 있습니다"
-      },
-      "modelFailure": {
-        "title": "모델 실패",
-        "description": "AI 모델이 실패했습니다. 다시 시도해주세요"
-      },
-      "autoUncertainty": {
-        "title": "불확실성",
-        "description": "AI가 이 내용을 확신하지 못합니다"
-      },
-      "parseFailure": {
-        "title": "파싱 실패",
-        "description": "콘텐츠를 파싱하지 못했습니다"
-      },
-      "networkError": {
-        "title": "네트워크 오류",
-        "description": "연결을 확인하고 다시 시도해주세요"
-      },
-      "quotaExceeded": {
-        "title": "할당량 초과",
-        "description": "API 할당량을 초과했습니다"
-      },
-      "insufficientEvidence": {
-        "title": "증거 불충분",
-        "description": "충분한 증거를 수집하지 못했습니다"
-      },
-      "permissionDenied": {
-        "title": "권한 거부",
-        "description": "이 작업을 수행할 권한이 없습니다"
-      }
-    },
-    "skeleton": {
-      "loading": "로딩 중...",
-      "processing": "처리 중...",
-      "analyzing": "분석 중...",
-      "generating": "생성 중..."
-    }
   }
 }

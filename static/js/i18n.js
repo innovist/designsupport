@@ -1,5 +1,3 @@
-// @MX:ANCHOR: [AUTO] Core internationalization manager for the entire application
-// @MX:REASON: Used by all pages as the single source of truth for translations and locale settings
 class I18nManager {
     constructor() {
         this.currentLanguage = 'ko';
@@ -8,7 +6,7 @@ class I18nManager {
         this.init();
     }
     async init() {
-        const savedLang = localStorage.getItem('fashion_ai_language');
+        const savedLang = localStorage.getItem('design_support_language');
         const browserLang = navigator.language || navigator.languages[0];
         const langMap = {
             'ko': 'ko',
@@ -38,15 +36,11 @@ class I18nManager {
             this.translations[language] = await response.json();
         } catch (error) {
             console.error(`Error loading translations for ${language}:`, error);
-            // @MX:WARN: [AUTO] Recursive fallback loading without error handling
-            // @MX:REASON: Could cause infinite recursion if fallback language also fails to load
             if (language !== this.fallbackLanguage && !this.translations[this.fallbackLanguage]) {
                 await this.loadTranslations(this.fallbackLanguage);
             }
         }
     }
-    // @MX:ANCHOR: [AUTO] Core translation lookup with nested key support and parameter interpolation
-    // @MX:REASON: Called extensively across all pages for every UI string translation
     get(key, params = {}) {
         let translation = this.getNestedValue(this.translations[this.currentLanguage], key);
         if (!translation && this.currentLanguage !== this.fallbackLanguage) {
@@ -70,15 +64,13 @@ class I18nManager {
             return params[key] !== undefined ? params[key] : match;
         });
     }
-    // @MX:ANCHOR: [AUTO] Language switching with persistence and DOM-wide update notification
-    // @MX:REASON: Triggers global 'languageChanged' event that all pages listen to for re-rendering
     async setLanguage(language) {
         if (language === this.currentLanguage) return;
         if (!this.translations[language]) {
             await this.loadTranslations(language);
         }
         this.currentLanguage = language;
-        localStorage.setItem('fashion_ai_language', language);
+        localStorage.setItem('design_support_language', language);
         this.applyTranslations();
         this.updateLanguageSelector();
         document.documentElement.lang = language;
@@ -242,7 +234,7 @@ class I18nManager {
         return this.get('currency') || { symbol: '$', code: 'USD' };
     }
     getSizeSystem() {
-        const savedSystem = localStorage.getItem('fashion_ai_size_system');
+        const savedSystem = localStorage.getItem('design_support_size_system');
         if (savedSystem) {
             return savedSystem;
         }
@@ -255,7 +247,7 @@ class I18nManager {
         return defaultSystems[this.currentLanguage] || 'KS';
     }
     setSizeSystem(system) {
-        localStorage.setItem('fashion_ai_size_system', system);
+        localStorage.setItem('design_support_size_system', system);
         window.dispatchEvent(new CustomEvent('sizeSystemChanged', {
             detail: { system }
         }));

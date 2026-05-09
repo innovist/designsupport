@@ -1,51 +1,114 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.projectDetail{% endblock %}
-{% block title %}프로젝트 상세 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}프로젝트 상세 - 디자인 발상 시스템{% endblock %}
+
+{% block extra_css %}
+<style>
+.project-detail-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0; align-items: stretch; min-height: calc(100vh - 108px); margin: -24px -24px 0; }
+.project-detail-shell.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
+.project-detail-shell.sidebar-collapsed .project-sidebar { display: none; }
+.project-sidebar { padding: 16px 14px; border-right: 1px solid #b0b0b0; box-shadow: 1px 0 0 0 rgba(0,0,0,0.02); position: sticky; top: 60px; align-self: start; height: calc(100vh - 60px); overflow-y: auto; }
+.project-main { padding: 24px 24px 24px 24px; min-width: 0; }
+.project-sidebar-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 8px; margin-bottom: 6px; border-bottom: 1px solid var(--border-color); }
+.project-sidebar-title { font-size: var(--font-xs); font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; }
+.sidebar-project-item { display: block; padding: 6px 8px; border-radius: 3px; text-decoration: none; color: var(--text-primary); margin-bottom: 1px; border-left: 2px solid transparent; }
+.sidebar-project-item:hover { background: var(--bg-hover); }
+.sidebar-project-item.active { border-left-color: var(--color-primary); background: var(--bg-hover); }
+.sidebar-project-name { font-size: var(--font-xs); font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-project-brief { font-size: 11px; color: var(--text-muted); margin-top: 1px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detail-header { padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); }
+.brief-block { margin-top: 8px; }
+.brief-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.brief-text { font-size: var(--font-sm); color: var(--text-secondary); margin: 2px 0 0; line-height: 1.5; white-space: pre-wrap; }
+.icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary); border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; }
+.icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.section-head { display:flex; justify-content: space-between; align-items: baseline; padding-bottom: 6px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.section-title { font-size: var(--font-base); font-weight: 700; margin: 0; color: var(--text-primary); }
+.draft-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.draft-card { border: 1px solid var(--border-color); border-radius: 4px; padding: 8px 10px; background: var(--bg-card); }
+.draft-card .draft-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.draft-card h4 { font-size: var(--font-sm); font-weight: 600; margin: 0 0 2px; color: var(--text-primary); }
+.draft-card p { font-size: 11px; color: var(--text-secondary); margin: 0 0 6px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.draft-card .draft-foot { display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+@media (max-width: 960px) {
+    .project-detail-shell { grid-template-columns: 1fr; }
+    .project-sidebar { position: static; max-height: 200px; border-right: none; border-bottom: 1px solid #d4d4d4; padding: 0 0 8px; }
+    .project-main { padding-left: 0; padding-top: 12px; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div id="project-detail-app">
-    <header style="margin-bottom: 1.5rem;">
+<div id="project-detail-app" class="project-detail-shell">
+    <aside class="project-sidebar">
+        <div class="project-sidebar-head">
+            <span class="project-sidebar-title" data-i18n="nav.projects">프로젝트</span>
+        </div>
+        <div id="project-sidebar-list">
+            <div class="skeleton" style="height:36px;border-radius:4px;margin-bottom:4px;"></div>
+            <div class="skeleton" style="height:36px;border-radius:4px;"></div>
+        </div>
+    </aside>
+    <div class="project-main">
+    <header class="detail-header">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
-            <div style="flex: 1;">
-                <a href="/projects" style="color: var(--text-secondary); font-size: var(--font-sm); text-decoration: none;" data-i18n="projectDetail.backToList">
-                    ← 프로젝트 목록
-                </a>
-                <h2 id="project-title" style="font-size: 1.5rem; font-weight: 700; margin: 0.5rem 0; color: var(--text-primary);" data-i18n="common.loading">프로젝트 로딩 중...</h2>
-                <div id="description-display" style="margin-top: 0.5rem;">
-                    <p id="project-description" style="font-size: var(--font-sm); color: var(--text-secondary); margin: 0 0 0.5rem;"></p>
-                    <button onclick="toggleEditDescription()" class="btn btn-sm btn-outline" style="font-size: var(--font-xs); padding: 4px 8px;" data-i18n="projectDetail.actions.editDescription">설명 편집</button>
+            <div style="flex: 1; min-width: 0;">
+                <div style="display:flex;align-items:center;gap:4px;">
+                    <button onclick="toggleProjectSidebar()" class="icon-btn" id="sidebar-toggle-btn" title="사이드바 접기/펼치기" aria-label="사이드바 토글">
+                        <svg id="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <a href="/projects" style="color: var(--text-secondary); font-size: var(--font-xs); text-decoration: none;" data-i18n="projectDetail.backToList">← 프로젝트 목록</a>
                 </div>
-                <div id="description-edit" style="display: none; margin-top: 0.5rem;">
-                    <textarea id="description-input" style="width: 100%; min-height: 80px; margin-bottom: 0.5rem; resize: vertical;"></textarea>
+                <h2 id="project-title" style="font-size: 1.25rem; font-weight: 700; margin: 4px 0 2px; color: var(--text-primary);" data-i18n="common.loading">프로젝트 로딩 중...</h2>
+                <div style="display: flex; gap: 10px; font-size: 11px; color: var(--text-muted);">
+                    <span><span data-i18n="common.createdAt">생성일</span> <strong id="project-created"></strong></span>
+                    <span>·</span>
+                    <span><span data-i18n="common.status">상태</span> <strong id="project-status"></strong></span>
+                </div>
+                <div id="description-display" class="brief-block">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                        <span class="brief-label">프로젝트 브리프</span>
+                        <button onclick="toggleEditDescription()" class="btn btn-sm btn-outline" style="font-size: var(--font-xs); padding: 4px 10px;">수정</button>
+                    </div>
+                    <p id="project-description" class="brief-text"></p>
+                </div>
+                <div id="description-edit" class="brief-block" style="display: none;">
+                    <div class="brief-label" style="margin-bottom:6px;">프로젝트 브리프 수정</div>
+                    <textarea id="description-input" placeholder="이 프로젝트의 요구 조건, 목표, 제약, 원하는 결과를 한 번에 입력하세요." style="width: 100%; min-height: 120px; margin-bottom: 0.5rem; resize: vertical;"></textarea>
                     <div style="display: flex; gap: 0.5rem;">
                         <button onclick="saveDescription()" class="btn btn-sm btn-primary" style="font-size: var(--font-xs); padding: 4px 12px;" data-i18n="common.save">저장</button>
                         <button onclick="cancelEditDescription()" class="btn btn-sm btn-outline" style="font-size: var(--font-xs); padding: 4px 12px;" data-i18n="common.cancel">취소</button>
                     </div>
                 </div>
-                <div style="display: flex; gap: 12px; margin-top: 6px; font-size: var(--font-xs); color: var(--text-muted);">
-                    <span><span data-i18n="common.createdAt">생성일</span>: <strong id="project-created"></strong></span>
-                    <span><span data-i18n="common.status">상태</span>: <strong id="project-status"></strong></span>
-                </div>
             </div>
-            <a href="/projects/{{ project_id }}/new-session" class="btn btn-primary" style="padding: 8px 16px; font-size: var(--font-sm); text-decoration: none;" data-i18n="projectDetail.actions.newSession">+ 새 세션</a>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+                <button onclick="openLatestDraft()" class="btn btn-primary btn-sm" style="font-size: var(--font-xs);">최근 디자인안 열기</button>
+                <button onclick="createNewDraft()" class="btn btn-secondary btn-sm" style="font-size: var(--font-xs);">새 디자인안</button>
+            </div>
         </div>
     </header>
 
     <section>
-        <h3 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);" data-i18n="projectDetail.sessionsTitle">분석 세션</h3>
-        <div id="sessions-container" class="grid">
-            <div class="card" style="text-align: center; padding: 2rem;">
-                <p style="color: var(--text-muted);" data-i18n="projectDetail.loading">세션 로딩 중...</p>
-            </div>
+        <div class="section-head">
+            <h3 class="section-title">디자인안</h3>
+            <span style="font-size: var(--font-xs); color: var(--text-muted);" id="draft-count"></span>
+        </div>
+        <div id="sessions-container" class="draft-grid">
+            <div style="grid-column: 1 / -1; padding: 1rem; color: var(--text-muted); font-size: var(--font-sm);">디자인안 로딩 중...</div>
         </div>
     </section>
+    </div>
 </div>
 
 <script>
-const t = window.t;
-const projectId = '{{ project_id }}';
+function tr(key, params) {
+    return window.t ? window.t(key, params) : key;
+}
+
+const projectId = "{{ project_id }}";
 let project = null;
+let projectList = [];
 let sessions = [];
 
 function escapeHtml(text) {
@@ -56,15 +119,15 @@ function escapeHtml(text) {
 
 function getStatusText(status) {
     const map = {
-        created: t('status.created'),
-        running: t('status.running'),
-        analyzing: t('status.analyzing'),
-        completed: t('status.completed'),
-        failed: t('status.failed'),
-        draft: t('status.draft'),
-        active: t('status.active')
+        created: tr('status.created'),
+        running: tr('status.running'),
+        analyzing: tr('status.analyzing'),
+        completed: tr('status.completed'),
+        failed: tr('status.failed'),
+        draft: tr('status.draft'),
+        active: tr('status.active')
     };
-    return map[status] || t('status.unknown');
+    return map[status] || tr('status.unknown');
 }
 
 function formatDateShort(dateStr) {
@@ -72,18 +135,65 @@ function formatDateShort(dateStr) {
     return new Date(dateStr).toLocaleDateString(window.i18n.getNumberLocale());
 }
 
+function renderProjectSidebar() {
+    const container = document.getElementById('project-sidebar-list');
+    if (!container) return;
+    if (!projectList.length) {
+        container.innerHTML = '<div style="font-size:var(--font-xs);color:var(--text-muted);padding:10px;">프로젝트가 없습니다.</div>';
+        return;
+    }
+    container.innerHTML = projectList.map(item => {
+        const active = item.id === projectId;
+        const name = item.name || item.title || '이름 없음';
+        const brief = item.purpose || item.description || '브리프 없음';
+        return `
+            <a class="sidebar-project-item ${active ? 'active' : ''}" href="/projects/${item.id}">
+                <div class="sidebar-project-name">${escapeHtml(name)}</div>
+                <div class="sidebar-project-brief">${escapeHtml(brief)}</div>
+            </a>
+        `;
+    }).join('');
+}
+
+async function loadProjectSidebar() {
+    try {
+        const res = await fetch('/api/projects');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        projectList = await res.json();
+        renderProjectSidebar();
+    } catch (error) {
+        console.error('Project sidebar load error:', error);
+        const container = document.getElementById('project-sidebar-list');
+        if (container) {
+            container.innerHTML = '<div style="font-size:var(--font-xs);color:var(--color-danger);padding:10px;">프로젝트 목록을 불러오지 못했습니다.</div>';
+        }
+    }
+}
+
+function toggleProjectSidebar() {
+    const shell = document.getElementById('project-detail-app');
+    shell.classList.toggle('sidebar-collapsed');
+    const collapsed = shell.classList.contains('sidebar-collapsed');
+    const icon = document.getElementById('sidebar-toggle-icon');
+    if (icon) {
+        icon.innerHTML = collapsed
+            ? '<polyline points="9 18 15 12 9 6"/>'
+            : '<polyline points="15 18 9 12 15 6"/>';
+    }
+}
+
 function renderProjectDetail() {
     if (!project) return;
-    document.getElementById('project-title').textContent = project.title;
-    document.getElementById('project-description').textContent = project.description || t('common.noDescription');
+    document.getElementById('project-title').textContent = project.name || project.title || '';
+    document.getElementById('project-description').textContent = project.purpose || project.description || tr('common.noDescription');
     document.getElementById('project-created').textContent = formatDateShort(project.created_at);
     document.getElementById('project-status').textContent = getStatusText(project.status);
 }
 
 async function loadProjectDetail() {
-    const res = await fetch(`/api/projects/${projectId}/`);
+    const res = await fetch(`/api/projects/${projectId}`);
     if (!res.ok) {
-        alert(t('projectDetail.messages.notFound'));
+        alert(tr('projectDetail.messages.notFound'));
         window.location.href = '/projects';
         return;
     }
@@ -92,7 +202,7 @@ async function loadProjectDetail() {
 }
 
 async function loadSessions() {
-    const res = await fetch(`/api/sessions/?project_id=${projectId}&limit=100`);
+    const res = await fetch(`/api/sessions?project_id=${projectId}&limit=100`);
     if (res.ok) {
         sessions = await res.json();
         renderSessions();
@@ -101,41 +211,42 @@ async function loadSessions() {
 
 function renderSessions() {
     const container = document.getElementById('sessions-container');
+    const countEl = document.getElementById('draft-count');
+    if (countEl) countEl.textContent = sessions && sessions.length ? `${sessions.length}개` : '';
     if (!sessions || sessions.length === 0) {
         container.innerHTML = `
-            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-                <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary);">${t('projectDetail.empty.title')}</h4>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${t('projectDetail.empty.subtitle')}</p>
-                <a href="/projects/${projectId}/new-session" class="btn btn-primary">${t('projectDetail.empty.action')}</a>
+            <div style="grid-column: 1 / -1; padding: 2rem 0; text-align: center;">
+                <p style="color: var(--text-secondary); margin: 0 0 0.75rem;">${tr('projectDetail.empty.subtitle')}</p>
+                <button onclick="createNewDraft()" class="btn btn-primary btn-sm">첫 디자인안 만들기</button>
             </div>
         `;
         return;
     }
 
-    container.innerHTML = sessions.map(session => `
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+    container.innerHTML = sessions.map((session, index) => {
+        const draftNumber = sessions.length - index;
+        const draftTitle = `디자인안 ${draftNumber}`;
+        return `
+        <div class="draft-card">
+            <div class="draft-head">
                 <span class="badge">${getStatusText(session.status)}</span>
                 <span style="font-size: var(--font-xs); color: var(--text-muted);">${formatDateShort(session.created_at)}</span>
             </div>
-            <h4 style="font-size: var(--font-lg); font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">${escapeHtml(session.session_title || t('common.noTitle'))}</h4>
-            <p style="font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 0.75rem;">${escapeHtml(session.description || t('common.noDescription'))}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: var(--font-xs); color: var(--text-muted);">${t('projectDetail.labels.progress', { percent: Math.round(session.progress_percent || 0) })}</span>
-                <div style="display: flex; gap: 0.5rem;">
-                    <a href="/workspace?session=${session.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.open')}</a>
-                    <button onclick="deleteSession('${session.id}')" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: var(--font-sm);">${t('common.delete')}</button>
-                </div>
+            <h4>${escapeHtml(draftTitle)}</h4>
+            <p>${escapeHtml(session.pipeline_stage || '브리프 기반 초안')}</p>
+            <div class="draft-foot">
+                <a href="/sessions/${session.id}" class="btn btn-primary btn-sm" style="font-size: var(--font-xs); padding: 4px 10px;">${tr('common.open')}</a>
+                <button onclick="deleteSession('${session.id}')" class="btn btn-outline btn-sm" style="font-size: var(--font-xs); padding: 4px 10px;">${tr('common.delete')}</button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function toggleEditDescription() {
     document.getElementById('description-display').style.display = 'none';
     document.getElementById('description-edit').style.display = 'block';
-    document.getElementById('description-input').value = project?.description || '';
+    document.getElementById('description-input').value = project?.purpose || project?.description || '';
 }
 
 function cancelEditDescription() {
@@ -145,32 +256,76 @@ function cancelEditDescription() {
 
 async function saveDescription() {
     const description = document.getElementById('description-input').value.trim();
-    const res = await fetch(`/api/projects/${projectId}/`, {
+    const res = await fetch(`/api/projects/${projectId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description })
+        body: JSON.stringify({ purpose: description })
     });
 
     if (res.ok) {
-        project.description = description;
-        document.getElementById('project-description').textContent = description || t('common.noDescription');
+        project.purpose = description;
+        document.getElementById('project-description').textContent = description || tr('common.noDescription');
         cancelEditDescription();
     } else {
-        alert(t('projectDetail.messages.descriptionSaveFailed'));
+        alert(tr('projectDetail.messages.descriptionSaveFailed'));
     }
 }
 
 async function deleteSession(sessionId) {
-    if (!confirm(t('projectDetail.messages.confirmDeleteSession'))) return;
-    const res = await fetch(`/api/sessions/${sessionId}/`, { method: 'DELETE' });
+    if (!confirm(tr('projectDetail.messages.confirmDeleteSession'))) return;
+    const res = await fetch(`/api/sessions/${sessionId}`, { method: 'DELETE' });
     if (res.ok) {
         await loadSessions();
     } else {
-        alert(t('projectDetail.messages.deleteFailed'));
+        alert(tr('projectDetail.messages.deleteFailed'));
+    }
+}
+
+async function openLatestDraft() {
+    if (sessions && sessions.length > 0) {
+        window.location.href = `/sessions/${sessions[0].id}`;
+        return;
+    }
+    await createNewDraft();
+}
+
+async function createNewDraft() {
+    if (!project || !(project.purpose || '').trim()) {
+        alert('프로젝트 브리프를 먼저 입력하세요.');
+        toggleEditDescription();
+        return;
+    }
+    const res = await fetch('/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_id: projectId, mode: 'auto' })
+    });
+    if (!res.ok) {
+        alert('디자인안을 생성하지 못했습니다.');
+        return;
+    }
+    const session = await res.json();
+    await copyProjectBriefToDraft(session.id);
+    window.location.href = `/sessions/${session.id}`;
+}
+
+async function copyProjectBriefToDraft(sessionId) {
+    const res = await fetch(`/api/sessions/${sessionId}/brief`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            purpose: project.purpose || '',
+            domain: project.domain || null,
+            result_form: 'design image'
+        })
+    });
+    if (!res.ok) {
+        throw new Error('프로젝트 브리프를 디자인안에 연결하지 못했습니다.');
     }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await loadProjectSidebar();
     await loadProjectDetail();
     await loadSessions();
 });

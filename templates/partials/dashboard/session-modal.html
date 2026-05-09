@@ -7,7 +7,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                 <div>
                     <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.session.name">세션 이름</label>
-                    <input type="text" id="session-title-input" class="form-input" placeholder="예: 캐주얼 여성복 분석" data-i18n-placeholder="dashboard.modals.session.namePlaceholder" required style="width: 100%;">
+                    <input type="text" id="session-title-input" class="form-input" placeholder="예: 사용자 중심 제품 경험 분석" data-i18n-placeholder="dashboard.modals.session.namePlaceholder" required style="width: 100%;">
                 </div>
                 <div>
                     <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="dashboard.modals.session.description">설명</label>
@@ -18,11 +18,11 @@
             <!-- 필터 설정 (다중 선택) -->
             <div style="display: grid; grid-template-columns: 80px 120px 90px 1fr; gap: 12px; margin-bottom: 12px; align-items: start;">
                 <div>
-                    <label style="font-size: 11px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="filters.gender.label">성별</label>
+                    <label style="font-size: 11px; font-weight: 500; display: block; margin-bottom: 4px;" data-i18n="filters.gender.label">대상</label>
                     <div class="checkbox-group-compact" style="display: grid; gap: 3px;">
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="female"> <span style="font-size: 11px;" data-i18n="filters.gender.options.female">여성</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="male"> <span style="font-size: 11px;" data-i18n="filters.gender.options.male">남성</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="unisex"> <span style="font-size: 11px;" data-i18n="filters.gender.options.unisex">유니섹스</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="female"> <span style="font-size: 11px;" data-i18n="filters.gender.options.female">주요 사용자 A</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="male"> <span style="font-size: 11px;" data-i18n="filters.gender.options.male">주요 사용자 B</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-gender" value="unisex"> <span style="font-size: 11px;" data-i18n="filters.gender.options.unisex">공통 대상</span></label>
                     </div>
                 </div>
                 <div>
@@ -51,27 +51,27 @@
                     <div class="checkbox-group-compact" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px 4px; max-height: 200px; overflow-y: auto; padding: 8px; background: var(--bg-secondary); border-radius: 6px;">
                         <!-- 스타일 -->
                         <div style="grid-column: 1 / -1; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 2px; margin-top: 2px;">스타일</div>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="casual"> <span data-i18n="filters.category.options.casual">캐주얼</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="casual"> <span data-i18n="filters.category.options.casual">일상형</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="formal"> <span data-i18n="filters.category.options.formal">포멀</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="sports"> <span data-i18n="filters.category.options.sports">스포츠</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="outdoor"> <span data-i18n="filters.category.options.outdoor">아웃도어</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="street"> <span data-i18n="filters.category.options.street">스트릿</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="street"> <span data-i18n="filters.category.options.street">도시형</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="minimal"> <span data-i18n="filters.category.options.minimal">미니멀</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="vintage"> <span data-i18n="filters.category.options.vintage">빈티지</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="romantic"> <span data-i18n="filters.category.options.romantic">로맨틱</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="ethnic"> <span data-i18n="filters.category.options.ethnic">에스닉</span></label>
                         <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="avantgarde"> <span data-i18n="filters.category.options.avantgarde">아방가르드</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="genderless"> <span data-i18n="filters.category.options.genderless">젠더리스</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="genderless"> <span data-i18n="filters.category.options.genderless">범용형</span></label>
                         <!-- 의류 종류 -->
-                        <div style="grid-column: 1 / -1; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 2px; margin-top: 6px;">의류</div>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="top"> <span data-i18n="filters.category.options.top">상의</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="bottom"> <span data-i18n="filters.category.options.bottom">하의</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="dress"> <span data-i18n="filters.category.options.dress">원피스</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="outer"> <span data-i18n="filters.category.options.outer">아우터</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="underwear"> <span data-i18n="filters.category.options.underwear">내의</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="sleepwear"> <span data-i18n="filters.category.options.sleepwear">수면복</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="swimwear"> <span data-i18n="filters.category.options.swimwear">수영복</span></label>
-                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="activewear"> <span data-i18n="filters.category.options.activewear">액티브웨어</span></label>
+                        <div style="grid-column: 1 / -1; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 2px; margin-top: 6px;">유형</div>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="top"> <span data-i18n="filters.category.options.top">제품</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="bottom"> <span data-i18n="filters.category.options.bottom">서비스</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="dress"> <span data-i18n="filters.category.options.dress">공간</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="outer"> <span data-i18n="filters.category.options.outer">그래픽</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="underwear"> <span data-i18n="filters.category.options.underwear">패키지</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="sleepwear"> <span data-i18n="filters.category.options.sleepwear">콘텐츠</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="swimwear"> <span data-i18n="filters.category.options.swimwear">인터랙션</span></label>
+                        <label class="checkbox-item-compact"><input type="checkbox" name="filter-category" value="activewear"> <span data-i18n="filters.category.options.activewear">브랜딩</span></label>
                     </div>
                 </div>
             </div>

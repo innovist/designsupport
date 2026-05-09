@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title_key %}pageTitles.library{% endblock %}
-{% block title %}라이브러리 - 패션 트렌드 AI{% endblock %}
+{% block title %}라이브러리 - 디자인 발상 시스템{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/pages/library.css">
@@ -32,8 +32,8 @@
                 <label data-i18n="library.filter.type">이미지 타입</label>
                 <select id="filter-type">
                     <option value="" data-i18n="common.all">전체</option>
-                    <option value="design" data-i18n="library.types.design">의상 디자인</option>
-                    <option value="model" data-i18n="library.types.model">모델 착장</option>
+                    <option value="design" data-i18n="library.types.design">디자인 이미지</option>
+                    <option value="model" data-i18n="library.types.model">적용 이미지</option>
                     <option value="blueprint" data-i18n="library.types.blueprint">블루프린트</option>
                 </select>
             </div>
@@ -61,8 +61,8 @@
     <!-- Stats Bar -->
     <div class="stats-bar">
         <span class="stat-item"><strong id="total-count">0</strong> <span data-i18n="library.stats.total">개 이미지</span></span>
-        <span class="stat-item"><strong id="design-count">0</strong> <span data-i18n="library.stats.design">의상 디자인</span></span>
-        <span class="stat-item"><strong id="model-count">0</strong> <span data-i18n="library.stats.model">모델 착장</span></span>
+        <span class="stat-item"><strong id="design-count">0</strong> <span data-i18n="library.stats.design">디자인 이미지</span></span>
+        <span class="stat-item"><strong id="model-count">0</strong> <span data-i18n="library.stats.model">적용 이미지</span></span>
         <span class="stat-item"><strong id="blueprint-count">0</strong> <span data-i18n="library.stats.blueprint">블루프린트</span></span>
     </div>
 

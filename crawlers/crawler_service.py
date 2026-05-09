@@ -151,6 +151,8 @@ class ProgressCallback:
 
 class CrawlerService:
     """크롤러 서비스"""
+    # @MX:ANCHOR: [AUTO] Central orchestrator for all crawler operations. Manages crawler registration, execution, and job lifecycle.
+    # @MX:REASON: High fan_in component called by GUI, API endpoints, and background jobs. Changes affect all crawler consumers.
 
     def __init__(self, max_workers: int = 5, timeout_seconds: Optional[int] = None):
         """
@@ -313,6 +315,8 @@ class CrawlerService:
         Returns:
             수집된 데이터 목록
         """
+        # @MX:WARN: [AUTO] Complex async orchestration with parallel task execution, error handling, and cancellation support.
+        # @MX:REASON: Manages multiple concurrent crawler tasks with asyncio.gather(), error aggregation, and progress tracking. Complexity from error recovery and timeout handling.
         # 활성화할 크롤러 결정
         crawlers_to_run = self._resolve_crawlers(enabled_crawlers)
 
@@ -468,6 +472,7 @@ class CrawlerService:
 
     def _remove_duplicate_items(self, items: List[CrawledItem]) -> List[CrawledItem]:
         """중복 아이템 제거"""
+        # @MX:NOTE: [AUTO] Deduplication using URL and source_id as primary keys. Preserves first occurrence of each unique item.
         seen_urls = set()
         seen_ids = set()
         unique_items = []
@@ -529,6 +534,8 @@ class CrawlerService:
         Returns:
             작업 ID
         """
+        # @MX:WARN: [AUTO] Creates background tasks without explicit task lifecycle management. Tasks may outlive the job context.
+        # @MX:REASON: Uses asyncio.create_task() for background execution. Tasks are tracked in _jobs dict but not explicitly awaited or cancelled on shutdown.
         self._job_counter += 1
         job_id = f"crawl_{self._job_counter}_{int(time.time())}"
 
@@ -567,6 +574,8 @@ class CrawlerService:
         youtube_channel_urls: Optional[List[str]] = None
     ):
         """크롤링 작업 실행"""
+        # @MX:WARN: [AUTO] Long-running background task with complex state management. Mutates shared _jobs dict without lock.
+        # @MX:REASON: Updates job state in _jobs dict from async context without explicit synchronization. Multiple concurrent jobs could race.
         job = self._jobs.get(job_id)
         if not job:
             return

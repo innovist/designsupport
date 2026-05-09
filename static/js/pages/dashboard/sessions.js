@@ -8,8 +8,6 @@ const {
     getStatusText,
     getSelectedCheckboxValues
 } = window.dashboardUtils;
-// @MX:WARN: [AUTO] Async API call without error boundary - failures leave session list empty
-// @MX:REASON: Called during project selection and language changes; silent failures confuse users
 async function loadSessions(projectId) {
     try {
         const res = await fetch(`/api/v1/sessions/?project_id=${projectId}`);
@@ -34,7 +32,7 @@ function renderSessions() {
     container.innerHTML = sessionState.sessions.map(s => {
         const statusColor = s.status === 'completed' ? '#10b981' : s.status === 'running' ? '#f59e0b' : '#6b7280';
         return `
-        <div class="item-card ${sessionState.currentSessionId === s.id ? 'active' : ''}" onclick="selectSession('${s.id}')" style="border-left: 3px solid ${statusColor};">
+        <div class="item-card ${sessionState.currentSessionId === s.id ? 'active' : ''}" onclick="selectSession(${s.id})" style="border-left: 3px solid ${statusColor};">
             <div class="item-title">${escapeHtml(s.session_title || _t('common.noTitle'))}</div>
             <div class="item-meta">${getStatusText(s.status)} | ${formatDate(s.created_at)}</div>
         </div>
@@ -124,8 +122,6 @@ async function runAnalysis() {
         btn.textContent = _t('dashboard.actions.startAnalysis');
     }
 }
-// @MX:WARN: [AUTO] Polling interval without cleanup on page navigation or component unmount
-// @MX:REASON: Creates memory leak if user navigates away while polling is active
 function startProgressPolling() {
     const interval = setInterval(async () => {
         if (!sessionState.currentSessionId) { clearInterval(interval); return; }
@@ -245,7 +241,7 @@ async function updateSession() {
         if (res.ok) {
             closeEditSessionModal();
             await loadSessions(sessionState.currentProjectId);
-            await loadSessionDetails(sessionId);
+            await loadSessionDetails(parseInt(sessionId, 10));
         } else {
             const err = await res.json();
             alert(_t('dashboard.messages.updateFailed', { error: err.detail || _t('common.unknownError') }));

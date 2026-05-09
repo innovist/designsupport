@@ -1,5 +1,3 @@
-// @MX:NOTE: [AUTO] Crawler management module that handles data source selection and YouTube channel integration
-// @MX:REASON: Provides UI for configuring which fashion data sources to crawl and managing YouTube channel subscriptions
 // Crawler and YouTube handlers
 (function() {
 const crawlerState = window.dashboardState;
@@ -107,8 +105,6 @@ function toggleYoutubeChannel(channelId) {
     const ch = youtubeChannels.find(c => c.id === channelId);
     if (ch) ch.selected = !ch.selected;
 }
-// @MX:WARN: [AUTO] YouTube URL parsing with fragile string splitting - lacks comprehensive format validation
-// @MX:REASON: Complex URL patterns may not be captured; edge cases could bypass validation
 async function addYoutubeChannel() {
     const url = prompt(_t('youtube.prompt'));
     if (!url) return;
@@ -144,7 +140,7 @@ async function addYoutubeChannel() {
                 channel_handle: channelHandle || null,
                 channel_name: channelName,
                 channel_url: url,
-                category: '패션'
+                category: '디자인'
             })
         });
         if (!res.ok) {

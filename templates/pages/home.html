@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_key %}pageTitles.home{% endblock %}
-{% block title %}홈 - 패션 트렌드 AI 생성 시스템{% endblock %}
+{% block title %}대시보드 - 디자인 발상 시스템{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/pages/home.css">
@@ -9,141 +9,219 @@
 
 {% block content %}
 <div class="home-shell">
-    <!-- 히어로 섹션 -->
-    <section class="hero-slab">
-        <div class="hero-grid">
-            <div class="hero-copy">
-                <div class="hero-eyebrow" data-i18n="home.hero.eyebrow">Fashion Trend AI</div>
-                <h2 class="hero-title" data-i18n="home.hero.title">패션 트렌드를 분석하고 새로운 디자인을 생성하세요</h2>
-                <p class="hero-lead" data-i18n="home.hero.description">최신 패션 트렌드를 자동으로 수집·분석하고, AI 기반 디자인 이미지와 패턴을 생성합니다.</p>
 
-                <div class="hero-search">
-                    <input id="trend-idea-input" type="text" placeholder="어떤 패션 트렌드를 분석할까요?" data-i18n-placeholder="home.hero.searchPlaceholder">
-                    <button id="idea-start-btn" class="btn btn-primary" data-i18n="home.hero.startButton">분석 시작</button>
-                </div>
-
-                <div class="idea-chips">
-                    <button class="idea-chip" data-idea-key="home.hero.chipsData.casual" data-idea="2025 S/S 여성 캐주얼 트렌드" data-i18n="home.hero.chips.casual">여성 캐주얼</button>
-                    <button class="idea-chip" data-idea-key="home.hero.chipsData.street" data-idea="미니멀 스트리트웨어 남성복" data-i18n="home.hero.chips.street">스트리트웨어</button>
-                    <button class="idea-chip" data-idea-key="home.hero.chipsData.sustainable" data-idea="지속가능 패션 소재 트렌드" data-i18n="home.hero.chips.sustainable">지속가능 패션</button>
-                    <button class="idea-chip" data-idea-key="home.hero.chipsData.luxury" data-idea="럭셔리 포멀웨어 컬러 트렌드" data-i18n="home.hero.chips.luxury">럭셔리 포멀</button>
-                </div>
-
-                <div class="hero-links">
-                    <a href="/projects" class="pill-link primary" data-i18n="home.hero.links.newProject">새 프로젝트</a>
-                    <a href="/library" class="pill-link" data-i18n="home.hero.links.library">라이브러리</a>
-                    <a href="/settings" class="pill-link" data-i18n="home.hero.links.settings">설정</a>
-                </div>
-            </div>
-
-            <div class="hero-visual">
-                <div class="hero-label" data-i18n="home.hero.recentLabel">최근 생성 결과</div>
-                <div class="hero-mosaic" id="hero-mosaic">
-                    <div class="hero-empty" data-i18n="home.hero.noRecent">최근 생성된 이미지가 여기에 표시됩니다</div>
-                </div>
-                <div class="hero-meta">
-                    <span id="hero-meta-count" data-i18n="home.hero.noRecentCount">최근 생성 없음</span>
-                    <a href="/library" class="pill-link small" data-i18n="home.hero.viewLibrary">라이브러리 이동</a>
-                </div>
-            </div>
+    <!-- 대시보드 헤더 -->
+    <div class="dash-header">
+        <div class="dash-header-left">
+            <h2 class="dash-title">대시보드</h2>
+            <p class="dash-subtitle">근거 기반 디자인 발상 시스템</p>
         </div>
-    </section>
+        <div class="dash-actions">
+            <a href="/projects" class="btn btn-secondary btn-sm">프로젝트 목록</a>
+            <a href="/projects" class="btn btn-primary btn-sm" id="new-project-btn">+ 새 프로젝트</a>
+        </div>
+    </div>
 
-    <!-- 빠른 작업 섹션 -->
+    <!-- 통계 요약 -->
+    <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+            <div class="stat-num" id="stat-projects">—</div>
+            <div class="stat-label">프로젝트</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" id="stat-active">—</div>
+            <div class="stat-label">진행 중 세션</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" id="stat-completed">—</div>
+            <div class="stat-label">완료된 세션</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" id="stat-designs">—</div>
+            <div class="stat-label">생성된 이미지</div>
+        </div>
+    </div>
+
+    <!-- 최근 세션 -->
     <section class="section-card">
         <div class="section-header">
             <div>
-                <div class="section-title" data-i18n="home.quickActions.title">무엇을 하시겠어요?</div>
-                <div class="section-subtitle" data-i18n="home.quickActions.subtitle">자주 사용하는 기능을 바로 시작하세요</div>
+                <div class="section-title">최근 세션</div>
+                <div class="section-subtitle">최근 작업한 디자인 세션과 파이프라인 상태를 확인합니다</div>
             </div>
-            <a href="/projects" class="btn btn-primary btn-sm" data-i18n="home.quickActions.newSession">새 분석 시작</a>
+        </div>
+        <div id="recent-sessions" class="session-list">
+            <div class="empty-state">로딩 중...</div>
+        </div>
+    </section>
+
+    <!-- 빠른 이동 -->
+    <section class="section-card">
+        <div class="section-header">
+            <div>
+                <div class="section-title">빠른 이동</div>
+            </div>
         </div>
         <div class="quick-grid">
             <a href="/projects" class="quick-card">
-                <div class="quick-icon">📊</div>
-                <div class="quick-title" data-i18n="home.quickActions.cards.trend.title">트렌드 분석</div>
-                <div class="quick-desc" data-i18n="home.quickActions.cards.trend.desc">패션 트렌드 데이터 수집 및 AI 분석</div>
-                <div class="pill" data-i18n="home.quickActions.cards.trend.action">프로젝트로 이동</div>
+                <div class="quick-icon">📁</div>
+                <div class="quick-title">디자인 프로젝트</div>
+                <div class="quick-desc">프로젝트를 생성하고 디자인 세션을 관리합니다</div>
             </a>
             <a href="/library" class="quick-card">
-                <div class="quick-icon">🎨</div>
-                <div class="quick-title" data-i18n="home.quickActions.cards.designs.title">디자인 라이브러리</div>
-                <div class="quick-desc" data-i18n="home.quickActions.cards.designs.desc">생성된 의상 디자인과 착장 이미지 관리</div>
-                <div class="pill" data-i18n="home.quickActions.cards.designs.action">라이브러리 열기</div>
+                <div class="quick-icon">🖼️</div>
+                <div class="quick-title">이미지 라이브러리</div>
+                <div class="quick-desc">생성된 디자인 이미지와 스펙 문서를 확인합니다</div>
             </a>
-            <a href="/settings" class="quick-card">
+            <a href="/workspace/settings" class="quick-card">
                 <div class="quick-icon">⚙️</div>
-                <div class="quick-title" data-i18n="home.quickActions.cards.settings.title">시스템 설정</div>
-                <div class="quick-desc" data-i18n="home.quickActions.cards.settings.desc">API 키, 크롤러 설정 및 환경 구성</div>
-                <div class="pill" data-i18n="home.quickActions.cards.settings.action">설정으로 이동</div>
+                <div class="quick-title">AI 모델 설정</div>
+                <div class="quick-desc">기능별 AI 모델, 트렌드 소스, API 키 설정을 관리합니다</div>
             </a>
         </div>
     </section>
 
-    <!-- 시스템 상태 섹션 -->
+    <!-- AI 모델 연결 상태 -->
     <section class="section-card">
         <div class="section-header">
             <div>
-                <div class="section-title" data-i18n="home.status.title">시스템 상태</div>
-                <div class="section-subtitle" data-i18n="home.status.subtitle">크롤러 및 API 연결 상태를 확인하세요</div>
+                <div class="section-title">AI 모델 연결 상태</div>
+                <div class="section-subtitle">설정된 AI 제공자만 표시됩니다. 설정되지 않은 기능은 비활성화됩니다</div>
             </div>
-            <a href="/settings" class="btn btn-secondary btn-sm" data-i18n="home.status.viewDetails">상세 보기</a>
+            <a href="/workspace/settings" class="btn btn-secondary btn-sm">설정 관리</a>
         </div>
         <div class="status-grid" id="status-grid">
-            <div class="status-card">
-                <div class="status-icon active">✓</div>
-                <div class="status-info">
-                    <div class="status-label" data-i18n="home.status.crawlers">크롤러</div>
-                    <div class="status-value" id="crawler-status">-</div>
-                </div>
-            </div>
-            <div class="status-card">
-                <div class="status-icon" id="gemini-status-icon">-</div>
-                <div class="status-info">
-                    <div class="status-label" data-i18n="home.status.geminiApi">Gemini API</div>
-                    <div class="status-value" id="gemini-status" data-i18n="home.status.checking">확인 중...</div>
-                </div>
-            </div>
-            <div class="status-card">
-                <div class="status-icon" id="image-status-icon">-</div>
-                <div class="status-info">
-                    <div class="status-label" data-i18n="home.status.imageGen">이미지 생성</div>
-                    <div class="status-value" id="image-status" data-i18n="home.status.checking">확인 중...</div>
-                </div>
-            </div>
+            <div class="empty-state" style="padding: 12px;">확인 중...</div>
         </div>
     </section>
 
-    <!-- 최근 프로젝트 섹션 -->
-    <section class="section-card">
-        <div class="section-header">
-            <div>
-                <div class="section-title" data-i18n="home.recentProjects.title">최근 프로젝트</div>
-                <div class="section-subtitle" data-i18n="home.recentProjects.subtitle">최근 작업한 프로젝트를 확인하세요</div>
-            </div>
-            <a href="/projects" class="btn btn-secondary btn-sm" data-i18n="home.recentProjects.viewAll">전체 보기</a>
-        </div>
-        <div id="recent-projects" class="project-list">
-            <div class="empty-state" data-i18n="common.loading">로딩 중...</div>
-        </div>
-    </section>
-
-    <!-- 최근 생성 이미지 섹션 -->
-    <section class="section-card">
-        <div class="section-header">
-            <div>
-                <div class="section-title" data-i18n="home.recentImages.title">최근 생성 이미지</div>
-                <div class="section-subtitle" data-i18n="home.recentImages.subtitle">최근에 생성된 디자인과 착장 이미지</div>
-            </div>
-            <a href="/library" class="btn btn-secondary btn-sm" data-i18n="home.recentImages.viewAll">라이브러리로 이동</a>
-        </div>
-        <div id="recent-images" class="image-grid">
-            <div class="empty-state" data-i18n="common.loading">로딩 중...</div>
-        </div>
-    </section>
 </div>
-{% endblock %}
 
-{% block extra_js %}
-<script src="/static/js/pages/home.js"></script>
+<script>
+(function () {
+    const STAGE_LABEL = {
+        brief_input: '브리프 입력',
+        researching: '트렌드 조사 중',
+        concepting: '컨셉 생성 중',
+        referencing: '레퍼런스 수집 중',
+        abstracting: '추상화 중',
+        documenting: '스펙 작성 중',
+        review_ready: '검토 준비 완료',
+        failed: '실패',
+    };
+    const STAGE_COLOR = {
+        brief_input: '#6b7280',
+        researching: '#3b82f6',
+        concepting: '#8b5cf6',
+        referencing: '#f59e0b',
+        abstracting: '#06b6d4',
+        documenting: '#10b981',
+        review_ready: '#22c55e',
+        failed: '#ef4444',
+    };
+    const DOMAIN_LABEL = {
+        industrial: '산업디자인',
+        product_service: '제품·서비스',
+        visual: '시각디자인',
+        advertising: '광고·브랜딩',
+    };
+
+    // 대시보드 데이터 로드
+    fetch('/api/dashboard')
+        .then(r => r.json())
+        .then(data => {
+            // 통계 업데이트
+            document.getElementById('stat-projects').textContent = data.projects_count ?? 0;
+            document.getElementById('stat-active').textContent = data.active_sessions_count ?? 0;
+            document.getElementById('stat-completed').textContent = data.completed_sessions_count ?? 0;
+            document.getElementById('stat-designs').textContent = data.generated_designs_count ?? 0;
+
+            // 최근 세션 렌더링
+            const container = document.getElementById('recent-sessions');
+            const sessions = data.recent_sessions || [];
+            if (!sessions.length) {
+                container.innerHTML = '<div class="empty-state">아직 세션이 없습니다. <a href="/projects" class="text-link">새 프로젝트에서 세션을 시작하세요</a></div>';
+                return;
+            }
+            container.innerHTML = sessions.map(s => {
+                const stage = s.pipeline_stage || 'brief_input';
+                const color = STAGE_COLOR[stage] || '#6b7280';
+                const stageLabel = STAGE_LABEL[stage] || stage;
+                const domainLabel = DOMAIN_LABEL[s.domain] || s.domain || '';
+                const dateStr = s.created_at ? new Date(s.created_at).toLocaleDateString('ko-KR') : '';
+                return `
+                <div class="session-item">
+                    <div class="session-item-left">
+                        <div class="session-stage-dot" style="background:${color}"></div>
+                        <div>
+                            <div class="session-title-row">
+                                <span class="session-title">${s.title}</span>
+                                ${domainLabel ? `<span class="session-domain">${domainLabel}</span>` : ''}
+                            </div>
+                            <div class="session-meta">
+                                <span class="stage-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${stageLabel}</span>
+                                <span class="session-project">${s.project_name || ''}</span>
+                                <span class="session-date">${dateStr}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/sessions/${s.id}" class="btn btn-secondary btn-sm">열기</a>
+                </div>`;
+            }).join('');
+        })
+        .catch(() => {
+            document.getElementById('recent-sessions').innerHTML =
+                '<div class="empty-state">데이터를 불러오지 못했습니다.</div>';
+            ['stat-projects','stat-active','stat-completed','stat-designs'].forEach(id => {
+                document.getElementById(id).textContent = '—';
+            });
+        });
+
+    // AI 연결 상태 — 설정된 제공자만 동적으로 표시
+    fetch('/api/workspace/api-key-aliases')
+        .then(r => r.json())
+        .then(data => {
+            const providers = data.configured_providers || [];
+            const container = document.getElementById('status-grid');
+            if (!providers.length) {
+                container.innerHTML = '<div class="empty-state" style="padding:12px;">설정된 AI 제공자가 없습니다. <a href="/workspace/settings" class="text-link">설정으로 이동</a></div>';
+                return;
+            }
+            const providerLabel = { openai: 'OpenAI', anthropic: 'Anthropic', gemini: 'Google Gemini' };
+            container.innerHTML = providers.map(p => `
+                <div class="status-card">
+                    <div class="status-icon active">✓</div>
+                    <div class="status-info">
+                        <div class="status-label">${providerLabel[p] || p}</div>
+                        <div class="status-value" style="color:#10b981">연결됨</div>
+                    </div>
+                </div>`).join('');
+        })
+        .catch(() => {
+            document.getElementById('status-grid').innerHTML =
+                '<div class="empty-state" style="padding:12px;">상태 확인 실패</div>';
+        });
+
+    // 기능별 모델 설정 현황 추가 표시
+    fetch('/api/workspace/feature-models')
+        .then(r => r.json())
+        .then(models => {
+            if (!Array.isArray(models) || !models.length) return;
+            const container = document.getElementById('status-grid');
+            // 기존 제공자 카드 뒤에 모델 설정 요약 추가
+            const summary = document.createElement('div');
+            summary.className = 'status-card';
+            summary.style.gridColumn = '1 / -1';
+            summary.style.background = 'var(--bg-secondary)';
+            summary.innerHTML = `
+                <div class="status-icon active" style="font-size:0.9rem;">AI</div>
+                <div class="status-info">
+                    <div class="status-label">기능별 AI 모델</div>
+                    <div class="status-value" style="font-size:0.85rem;color:var(--text-secondary);">${models.length}개 기능에 모델이 설정되어 있습니다</div>
+                </div>`;
+            container.appendChild(summary);
+        })
+        .catch(() => {});
+})();
+</script>
 {% endblock %}

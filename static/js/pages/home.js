@@ -2,8 +2,6 @@
 // Use _t to avoid conflict with i18n.js global t
 const _t = (key, params) => window.t ? window.t(key, params) : key;
 
-// @MX:WARN: [AUTO] Parallel async data loading without error aggregation or partial failure handling
-// @MX:REASON: Uses Promise.all with no try-catch; any single failure prevents entire page from rendering
 function initHome() {
     updateIdeaChipsLocale();
     loadSystemStatus();
@@ -60,8 +58,6 @@ function updateIdeaChipsLocale() {
     });
 }
 
-// @MX:WARN: [AUTO] Sequential async calls in same function - second call waits even if first fails
-// @MX:REASON: Independent API status checks should run in parallel using Promise.all for better performance
 async function loadSystemStatus() {
     try {
         // Load crawler status

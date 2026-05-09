@@ -1,1 +1,0 @@
-# model_catalog module
