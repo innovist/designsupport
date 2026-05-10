@@ -107,7 +107,7 @@
 /react-testing-expert
 /react-component-patterns
 /frontend-ui-architect
-/mobile-ux-pattern-guide
 /web-design-guidelines
 /ux-improve
+/mobile-ux-pattern-guide
 ```

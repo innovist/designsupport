@@ -1,11 +1,8 @@
 """
 Shared result type for image generation responses.
+Re-exported from the AI client port for backward compatibility.
 """
 
-from pydantic import BaseModel
+from app.application.ports.ai_client import ImageGenerationResult
 
-
-class ImageGenerationResult(BaseModel):
-    image_path: str
-    provider: str
-    model: str
+__all__ = ["ImageGenerationResult"]

@@ -15,14 +15,11 @@ class GeneratedDesign(Base, TimestampMixin):
     """
     A single design image produced by an AI image model.
 
-    INVARIANT: rule_id is mandatory - no image may be generated without an
-    AbstractionRule as evidence. Enforced in create_generation_job use-case.
+    rule_id is optional because a draft can be generated directly from a
+    selected ConceptCandidate before abstraction rules exist.
 
     status: pending | processing | completed | failed
     """
-
-    # @MX:ANCHOR: [AUTO] rule_id FK enforces evidence-based generation invariant
-    # @MX:REASON: Designs without AbstractionRule violate the core pipeline contract
 
     __tablename__ = "generated_design"
 
@@ -32,10 +29,10 @@ class GeneratedDesign(Base, TimestampMixin):
     session_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("design_session.id", ondelete="CASCADE"), nullable=False
     )
-    rule_id: Mapped[uuid.UUID] = mapped_column(
+    rule_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("abstraction_rule.id", ondelete="RESTRICT"),
-        nullable=False,
+        nullable=True,
     )
     brief_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("design_brief.id", ondelete="SET NULL"), nullable=True
@@ -48,7 +45,7 @@ class GeneratedDesign(Base, TimestampMixin):
     prompt: Mapped[str] = mapped_column(Text, nullable=False)
     provider: Mapped[str | None] = mapped_column(String(50), nullable=True)
     model: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    image_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     generation_params: Mapped[dict | None] = mapped_column(JSON, nullable=True)

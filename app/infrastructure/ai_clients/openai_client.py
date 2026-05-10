@@ -8,7 +8,7 @@ import base64
 from pathlib import Path
 from typing import Optional
 
-from app.application.ports.ai_client import AIClient, AIMessage, AIResponse
+from app.application.ports.ai_client import AIClient, AIMessage, AIResponse, ImageGenerationResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -26,6 +26,7 @@ class OpenAIClient(AIClient):
             client_kwargs["base_url"] = base_url
         self._client = AsyncOpenAI(**client_kwargs)
         self.model = model
+        self._uses_official_openai = base_url is None
         self.default_params = kwargs
 
     async def complete(
@@ -38,11 +39,12 @@ class OpenAIClient(AIClient):
         payload = [{"role": m.role, "content": m.content} for m in messages]
         # Exclude temperature/max_tokens from default_params to avoid duplicate keyword arg error
         extra = {k: v for k, v in self.default_params.items() if k not in ("temperature", "max_tokens")}
+        token_param = _token_param_name(self.model, self._uses_official_openai)
         response = await self._client.chat.completions.create(
             model=self.model,
             messages=payload,
             temperature=temperature,
-            max_tokens=max_tokens,
+            **{token_param: max_tokens},
             **{**extra, **kwargs},
         )
         choice = response.choices[0]
@@ -79,11 +81,12 @@ class OpenAIClient(AIClient):
         ]
         payload = [{"role": "user", "content": content_parts}]
 
+        token_param = _token_param_name(self.model, self._uses_official_openai)
         response = await self._client.chat.completions.create(
             model=self.model,
             messages=payload,
             temperature=temperature,
-            max_tokens=max_tokens,
+            **{token_param: max_tokens},
         )
         choice = response.choices[0]
         return AIResponse(
@@ -93,10 +96,13 @@ class OpenAIClient(AIClient):
             tokens_used=response.usage.total_tokens if response.usage else None,
         )
 
-    async def generate_image(self, prompt: str, size: str = "1024x1024") -> "ImageGenerationResult":
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
         """Generate an image using DALL-E and return a result object."""
-        from app.infrastructure.ai_clients._image_result import ImageGenerationResult
-
+        if kwargs.get("reference_image_paths"):
+            raise NotImplementedError(
+                "Reference-image final generation is not implemented for this OpenAI-compatible adapter. "
+                "Use a provider adapter that consumes reference_image_paths."
+            )
         response = await self._client.images.generate(
             model=self.model,
             prompt=prompt,
@@ -105,3 +111,9 @@ class OpenAIClient(AIClient):
         )
         image_url = response.data[0].url
         return ImageGenerationResult(image_path=image_url, provider="openai", model=self.model)
+
+
+def _token_param_name(model: str, uses_official_openai: bool) -> str:
+    if uses_official_openai and model.startswith(("gpt-5", "o1", "o3")):
+        return "max_completion_tokens"
+    return "max_tokens"

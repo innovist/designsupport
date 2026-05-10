@@ -7,7 +7,7 @@ from __future__ import annotations
 import base64
 from pathlib import Path
 
-from app.application.ports.ai_client import AIClient, AIMessage, AIResponse
+from app.application.ports.ai_client import AIClient, AIMessage, AIResponse, ImageGenerationResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -109,10 +109,8 @@ class GeminiClient(AIClient):
             tokens_used=None,
         )
 
-    async def generate_image(self, prompt: str, **kwargs) -> "ImageGenerationResult":
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
         """Gemini does not natively support image generation - raise clear error."""
-        from app.infrastructure.ai_clients._image_result import ImageGenerationResult
-
         raise NotImplementedError(
             "Gemini does not support image generation via this API. "
             "Configure an OpenAI or compatible provider for the 'image_generation' feature."

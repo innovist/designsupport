@@ -59,7 +59,6 @@ def api_list_session_trends(session_id: uuid.UUID, db: Session = Depends(get_db)
         db.query(TrendInsight)
         .join(TrendInsight.document)
         .filter(TrendInsight.session_id == session_id)
-        .filter(TrendInsight.is_hypothesis == False)  # noqa: E712
         .all()
     )
     return {"count": len(insights), "insights": [_serialize_insight(i) for i in insights]}
@@ -71,21 +70,37 @@ def api_list_trend_sources(db: Session = Depends(get_db)):
     return [_serialize_source(s) for s in sources]
 
 
+@router.get("/trends/sources")
+def api_list_trend_sources_alias(db: Session = Depends(get_db)):
+    return api_list_trend_sources(db)
+
+
 @router.post("/trend-sources", status_code=201)
 def api_create_trend_source(body: TrendSourceCreate, db: Session = Depends(get_db)):
     source = TrendRepository(db).create_source(body.name, body.url, body.domain)
     return _serialize_source(source)
 
 
+@router.post("/trends/sources", status_code=201)
+def api_create_trend_source_alias(body: TrendSourceCreate, db: Session = Depends(get_db)):
+    return api_create_trend_source(body, db)
+
+
+@router.delete("/trends/sources/{source_id}", status_code=204)
+def api_delete_trend_source_alias(source_id: uuid.UUID, db: Session = Depends(get_db)):
+    TrendRepository(db).delete_source(source_id)
+    return None
+
+
 def _serialize_insight(i: TrendInsight) -> dict:
     return {
         "id": str(i.id),
+        "title": i.title,
         "summary": i.summary,
-        "keywords": i.keywords,
-        "evidence_quote": i.evidence_quote,
+        "keywords": i.keywords or [],
+        "domain_tags": i.domain_tags or [],
         "confidence_score": i.confidence_score,
-        "is_hypothesis": i.is_hypothesis,
-        "source_url": i.document.url if i.document else None,
+        "source_urls": i.source_urls or [],
     }
 
 

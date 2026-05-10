@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 
-from app.application.ports.ai_client import AIClient, AIMessage, AIResponse
+from app.application.ports.ai_client import AIClient, AIMessage, AIResponse, ImageGenerationResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -33,17 +33,28 @@ class ZImageTurboClient(AIClient):
 
     # ─── Text / vision — not applicable for image-only model ─────────────────
 
-    async def complete(self, messages: list[AIMessage], **kwargs) -> AIResponse:
+    async def complete(
+        self,
+        messages: list[AIMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 2000,
+        **kwargs,
+    ) -> AIResponse:
         raise NotImplementedError("z-image-turbo is an image generation model only.")
 
-    async def vision_complete(self, messages: list[AIMessage], image_paths: list[str], **kwargs) -> AIResponse:
+    async def vision_complete(
+        self,
+        messages: list[AIMessage],
+        image_paths: list[str],
+        temperature: float = 0.7,
+        max_tokens: int = 2000,
+        **kwargs,
+    ) -> AIResponse:
         raise NotImplementedError("z-image-turbo is an image generation model only.")
 
     # ─── Image generation ─────────────────────────────────────────────────────
 
-    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> "ImageGenerationResult":
-        from app.infrastructure.ai_clients._image_result import ImageGenerationResult
-
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
         try:
             import httpx
         except ImportError as exc:
@@ -56,12 +67,12 @@ class ZImageTurboClient(AIClient):
             "model": "z-image-turbo",
             "input": {
                 "messages": [
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": [{"text": prompt}]}
                 ]
             },
             "parameters": {
                 "prompt_extend": self._prompt_extend,
-                "size": size,
+                "size": _dashscope_size(size),
             },
         }
         headers = {
@@ -71,7 +82,10 @@ class ZImageTurboClient(AIClient):
 
         async with httpx.AsyncClient(timeout=120.0) as client:
             response = await client.post(_DASHSCOPE_IMAGE_URL, json=payload, headers=headers)
-            response.raise_for_status()
+            if response.is_error:
+                raise RuntimeError(
+                    f"z-image-turbo request failed {response.status_code}: {response.text[:500]}"
+                )
             data = response.json()
 
         image_url = _extract_image_url(data)
@@ -98,3 +112,13 @@ def _extract_image_url(data: dict) -> str | None:
     except (KeyError, IndexError, TypeError):
         pass
     return None
+
+
+def _dashscope_size(size: str) -> str:
+    """DashScope Z-Image expects width*height, while app defaults use widthxheight."""
+    normalized = (size or "1024x1024").lower().replace("×", "x")
+    if "x" in normalized:
+        width, height = normalized.split("x", 1)
+        if width.isdigit() and height.isdigit():
+            return f"{width}*{height}"
+    return size or "1024*1024"

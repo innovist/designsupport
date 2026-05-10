@@ -16,58 +16,76 @@
 
     const FEATURES = [
         {
-            key: 'trend_analysis',
-            label: '트렌드 분석',
-            desc: '웹 크롤링 결과에서 트렌드 인사이트를 추출합니다.',
-            needs: [],
-        },
-        {
             key: 'brief_structuring',
-            label: '브리프 구조화',
+            label: '1. 브리프 구조화',
             desc: '사용자 입력을 구조화된 디자인 브리프로 변환합니다.',
             needs: [],
         },
         {
+            key: 'trend_analysis',
+            label: '2. 트렌드 분석',
+            desc: '웹 크롤링 결과에서 트렌드 인사이트를 추출합니다.',
+            needs: [],
+        },
+        {
             key: 'concept_generation',
-            label: '컨셉 후보 생성',
+            label: '3. 컨셉 후보 생성',
             desc: '트렌드 증거를 기반으로 디자인 컨셉 후보를 생성합니다.',
             needs: [],
         },
         {
-            key: 'chat',
-            label: '챗봇 협업',
-            desc: '세션 내 디자이너와 AI 간 자유 대화를 지원합니다.',
-            needs: [],
-        },
-        {
-            key: 'sketch_analysis',
-            label: '스케치 분석',
-            desc: '업로드된 스케치 이미지를 분석하여 디자인 의도를 파악합니다.',
-            needs: ['multimodal'],
-        },
-        {
             key: 'reference_analysis',
-            label: '레퍼런스 분석',
+            label: '4. 레퍼런스 분석',
             desc: '수집된 레퍼런스 이미지의 시각 요소를 분석합니다.',
             needs: ['multimodal'],
         },
         {
+            key: 'sketch_analysis',
+            label: '4. 스케치 분석',
+            desc: '업로드된 스케치 이미지를 분석하여 디자인 의도를 파악합니다.',
+            needs: ['multimodal'],
+        },
+        {
             key: 'abstraction',
-            label: '추상화 규칙 생성',
-            desc: '컨셉에서 이미지 생성용 추상화 규칙을 도출합니다.',
+            label: '5. 추상화 규칙 생성',
+            desc: '레퍼런스/스케치 분석에서 생성 근거가 되는 추상화 규칙을 도출합니다.',
             needs: [],
         },
         {
+            key: 'sketch_prompt_generation',
+            label: '6A. 스케치 프롬프트 작성',
+            desc: '추상화 규칙을 스케치 생성 모델용 프롬프트로 변환합니다.',
+            needs: [],
+        },
+        {
+            key: 'sketch_generation',
+            label: '6B. 스케치 생성',
+            desc: '스케치 프롬프트를 사용해 탐색용 디자인 스케치를 생성합니다.',
+            needs: ['image'],
+        },
+        {
+            key: 'final_image_prompt_generation',
+            label: '7A. 최종 이미지 프롬프트 작성',
+            desc: '추상화 규칙을 최종 프레젠테이션 이미지용 프롬프트로 변환합니다.',
+            needs: [],
+        },
+        {
+            key: 'final_image_generation',
+            label: '7B. 최종 이미지 생성',
+            desc: '최종 이미지 프롬프트를 사용해 완성 디자인 이미지를 생성합니다.',
+            needs: ['image'],
+        },
+        {
             key: 'spec_writing',
-            label: '스펙 문서 작성',
+            label: '8. 스펙 문서 작성',
             desc: '최종 디자인 스펙 문서를 작성합니다.',
             needs: [],
         },
         {
-            key: 'image_generation',
-            label: '이미지 생성',
-            desc: '추상화 규칙 기반으로 디자인 이미지를 생성합니다.',
-            needs: ['image'],
+            key: 'chat',
+            label: '상시. 챗봇 협업',
+            desc: '세션 내 디자이너와 AI 간 자유 대화를 지원합니다.',
+            needs: [],
         },
     ];
 
@@ -281,6 +299,103 @@
         }
     };
 
+    // ─── Search Backend ────────────────────────────────────────────────────
+
+    function loadSearchBackend() {
+        try {
+            const s = {
+                backend: window.__searchBackend || 'none',
+                externalUrl: window.__searchExternalUrl || '',
+                externalToken: window.__searchExternalToken || '',
+                searxngUrl: window.__searchSearxngUrl || '',
+                crawl4aiUrl: window.__searchCrawl4aiUrl || '',
+            };
+            const sel = document.getElementById('search-backend-select');
+            if (sel) sel.value = s.backend;
+            const extUrl = document.getElementById('search-external-url');
+            if (extUrl) extUrl.value = s.externalUrl;
+            const extTok = document.getElementById('search-external-token');
+            if (extTok) extTok.value = s.externalToken;
+            const sxUrl = document.getElementById('search-searxng-url');
+            if (sxUrl) sxUrl.value = s.searxngUrl;
+            const c4Url = document.getElementById('search-crawl4ai-url');
+            if (c4Url) c4Url.value = s.crawl4aiUrl;
+            toggleSearchBackendFields(s.backend);
+        } catch (e) {
+            console.error('Search backend load error:', e);
+        }
+    }
+
+    function toggleSearchBackendFields(backend) {
+        ['external', 'searxng', 'crawl4ai'].forEach(id => {
+            const el = document.getElementById('search-backend-' + id);
+            if (el) el.style.display = (id === backend) ? 'block' : 'none';
+        });
+    }
+
+    window._onSearchBackendChange = function () {
+        const sel = document.getElementById('search-backend-select');
+        toggleSearchBackendFields(sel ? sel.value : 'none');
+    };
+
+    window._saveSearchBackend = async function () {
+        const sel = document.getElementById('search-backend-select');
+        const backend = sel ? sel.value : 'none';
+        const payload = { search_backend: backend };
+
+        if (backend === 'external') {
+            payload.web_search_crawler_api_base_url = document.getElementById('search-external-url')?.value.trim() || null;
+            payload.web_search_crawler_api_token = document.getElementById('search-external-token')?.value.trim() || null;
+        } else if (backend === 'searxng') {
+            payload.searxng_api_url = document.getElementById('search-searxng-url')?.value.trim() || null;
+        } else if (backend === 'crawl4ai') {
+            payload.crawl4ai_api_url = document.getElementById('search-crawl4ai-url')?.value.trim() || null;
+        }
+
+        try {
+            const res = await fetch('/api/workspace/search-backend', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) throw new Error(await res.text());
+            showToast('검색 백엔드 설정이 저장되었습니다.', 'success');
+        } catch (e) {
+            showToast('저장 실패: ' + e.message, 'error');
+        }
+    };
+
+    window._testSearchBackend = async function () {
+        const statusEl = document.getElementById('search-backend-status');
+        if (statusEl) {
+            statusEl.style.display = 'block';
+            statusEl.style.background = '#fef3c7';
+            statusEl.style.color = '#92400e';
+            statusEl.textContent = '연결 확인 중...';
+        }
+        try {
+            const res = await fetch('/api/workspace/search-backend/test', {method: 'POST'});
+            const data = await res.json().catch(() => ({}));
+            if (statusEl) {
+                if (data.ok) {
+                    statusEl.style.background = '#d1fae5';
+                    statusEl.style.color = '#065f46';
+                    statusEl.textContent = data.message || '연결 확인 완료';
+                } else {
+                    statusEl.style.background = '#fee2e2';
+                    statusEl.style.color = '#b91c1c';
+                    statusEl.textContent = data.detail || data.message || '연결 실패';
+                }
+            }
+        } catch (e) {
+            if (statusEl) {
+                statusEl.style.background = '#fee2e2';
+                statusEl.style.color = '#b91c1c';
+                statusEl.textContent = '연결 확인 실패: ' + e.message;
+            }
+        }
+    };
+
     // ─── Trend Settings ───────────────────────────────────────────────────────
 
     async function loadTrendSettings() {
@@ -300,21 +415,21 @@
         if (!container || !state.trendSettings) return;
         const s = state.trendSettings;
         container.innerHTML = `
-            <div style="display:grid;gap:0.75rem;">
-                <div>
-                    <label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:0.25rem;">기본 도메인</label>
-                    <select id="trend-domain" style="width:100%;max-width:300px;">
+            <div style="display:flex;align-items:flex-end;gap:1.5rem;flex-wrap:wrap;">
+                <div style="display:flex;flex-direction:column;gap:3px;">
+                    <label for="trend-domain" style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);white-space:nowrap;">기본 도메인</label>
+                    <select id="trend-domain" style="width:160px;">
                         <option value="">전체</option>
-                        <option value="industrial" ${s.default_domain === 'industrial' ? 'selected' : ''}>산업디자인</option>
-                        <option value="product_service" ${s.default_domain === 'product_service' ? 'selected' : ''}>제품·서비스</option>
-                        <option value="visual"     ${s.default_domain === 'visual'     ? 'selected' : ''}>시각디자인</option>
-                        <option value="advertising"${s.default_domain === 'advertising'? 'selected' : ''}>광고·브랜딩</option>
+                        <option value="industrial"     ${s.default_domain === 'industrial'     ? 'selected' : ''}>산업디자인</option>
+                        <option value="product_service"${s.default_domain === 'product_service'? 'selected' : ''}>제품·서비스</option>
+                        <option value="visual"         ${s.default_domain === 'visual'         ? 'selected' : ''}>시각디자인</option>
+                        <option value="advertising"    ${s.default_domain === 'advertising'    ? 'selected' : ''}>광고·브랜딩</option>
                     </select>
                 </div>
-                <div>
-                    <label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:0.25rem;">트렌드 수집 기간 (일)</label>
+                <div style="display:flex;flex-direction:column;gap:3px;">
+                    <label for="trend-days" style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);white-space:nowrap;">수집 기간 (일)</label>
                     <input type="number" id="trend-days" value="${s.recency_days || 365}" min="7" max="1095"
-                        style="width:120px;">
+                           style="width:90px;" autocomplete="off">
                 </div>
             </div>`;
     }
@@ -430,6 +545,20 @@
 
             renderProviderStatus();
             renderFeatureModels();
+
+            // Load search backend config
+            try {
+                const sbRes = await fetch('/api/workspace/search-backend');
+                if (sbRes.ok) {
+                    const sb = await sbRes.json();
+                    window.__searchBackend = sb.search_backend || 'none';
+                    window.__searchExternalUrl = sb.web_search_crawler_api_base_url || '';
+                    window.__searchExternalToken = sb.web_search_crawler_api_token || '';
+                    window.__searchSearxngUrl = sb.searxng_api_url || '';
+                    window.__searchCrawl4aiUrl = sb.crawl4ai_api_url || '';
+                }
+            } catch (_) { /* non-critical */ }
+            loadSearchBackend();
         } catch (e) {
             showToast('설정 로드 실패: ' + e.message, 'error');
         }

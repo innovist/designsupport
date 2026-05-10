@@ -52,7 +52,16 @@ class ReferenceAsset(Base, TimestampMixin):
 
     @property
     def thumbnail_url(self) -> str | None:
-        return self.thumbnail_path or self.url
+        if self.thumbnail_path:
+            return self.thumbnail_path
+        if self.url and _is_direct_image_url(self.url):
+            return self.url
+        return None
+
+
+def _is_direct_image_url(url: str) -> bool:
+    path = url.split("?", 1)[0].lower()
+    return path.endswith((".jpg", ".jpeg", ".png", ".webp", ".gif"))
 
 
 class ReferenceAnalysis(Base, TimestampMixin):

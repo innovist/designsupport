@@ -65,13 +65,10 @@ class TrendDocument(Base, TimestampMixin):
 
 class TrendInsight(Base, TimestampMixin):
     """
-    Distilled insight extracted from a TrendDocument.
-
-    INVARIANT: evidence_quote is required. When the source cannot be directly
-    cited, is_hypothesis must be True.
+    Synthesized trend insight derived from multiple TrendDocuments.
+    source_urls holds the list of reference URLs that contributed to this insight.
     """
 
-    # @MX:NOTE: [AUTO] is_hypothesis=True means insight must NOT be used as concept evidence
     __tablename__ = "trend_insight"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -83,11 +80,13 @@ class TrendInsight(Base, TimestampMixin):
     session_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("design_session.id", ondelete="CASCADE"), nullable=True
     )
+    title: Mapped[str | None] = mapped_column(String(200), nullable=True)
     summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     keywords: Mapped[list | None] = mapped_column(JSON, nullable=True)
     domain_tags: Mapped[list | None] = mapped_column(JSON, nullable=True)
-    evidence_quote: Mapped[str] = mapped_column(Text, nullable=False)
+    evidence_quote: Mapped[str | None] = mapped_column(Text, nullable=True)
     confidence_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.5)
     is_hypothesis: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    source_urls: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     document: Mapped["TrendDocument"] = relationship("TrendDocument", back_populates="insights")

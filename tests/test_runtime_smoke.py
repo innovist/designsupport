@@ -6,9 +6,6 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///./test_runtime_smoke.db")
-os.environ.setdefault("UPLOAD_DIR", "./test_uploads")
-
 from main import app  # noqa: E402
 from app.core.database import engine  # noqa: E402
 from app.models.base import Base  # noqa: E402
@@ -17,6 +14,8 @@ importlib.import_module("app.models")
 
 # @MX:NOTE: [AUTO] Test fixture factory - creates clean database schema for each test
 def _client() -> TestClient:
+    if engine.url.get_backend_name() != "sqlite":
+        raise RuntimeError(f"runtime smoke tests must not run against {engine.url}")
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     return TestClient(app)
@@ -90,6 +89,10 @@ def test_settings_api_does_not_expose_raw_keys():
         keys = {item["feature_key"] for item in models.json()}
         assert {
             "abstraction",
+            "sketch_prompt_generation",
+            "sketch_generation",
+            "final_image_prompt_generation",
+            "final_image_generation",
             "sketch_analysis",
             "concept_generation",
             "chat",

@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.errors import not_found_response, validation_error_response
-from app.application.dtos.generation_dtos import SpecDocumentResponse
+from app.application.dtos.generation_dtos import SpecDocumentResponse, SpecGenerationRequest
 from app.application.use_cases.specs.generate_spec import generate_spec, version_spec
 from app.core.database import get_db
 from app.models.specs import SpecDocument
@@ -17,9 +17,14 @@ router = APIRouter(tags=["specs"])
 
 
 @router.post("/sessions/{session_id}/specs", response_model=SpecDocumentResponse, status_code=201)
-def api_generate_spec(session_id: uuid.UUID, db: Session = Depends(get_db)):
+def api_generate_spec(
+    session_id: uuid.UUID,
+    request: SpecGenerationRequest | None = None,
+    db: Session = Depends(get_db),
+):
     try:
-        return generate_spec(db, session_id)
+        selected_design_id = request.selected_design_id if request else None
+        return generate_spec(db, session_id, selected_design_id)
     except ValueError as exc:
         return validation_error_response(str(exc))
 

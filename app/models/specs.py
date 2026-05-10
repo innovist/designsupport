@@ -41,3 +41,8 @@ class SpecDocument(Base, TimestampMixin):
         ForeignKey("spec_document.id", ondelete="SET NULL"),
         nullable=True,
     )
+    selected_design_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("generated_design.id", ondelete="SET NULL"),
+        nullable=True,
+    )

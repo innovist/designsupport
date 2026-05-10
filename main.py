@@ -22,6 +22,8 @@ from app.api.routes.conversations import router as conversations_router
 from app.api.routes.assets import router as assets_router
 from app.api.routes.trends import router as trends_router
 from app.api.routes.references import router as references_router
+from app.api.routes.library import router as library_router
+from app.api.routes.design_references import router as design_references_router
 from app.api.routes.concepts import router as concepts_router
 from app.api.routes.abstraction import router as abstraction_router
 from app.api.routes.generation import router as generation_router
@@ -98,6 +100,8 @@ _API_ROUTERS = [
     assets_router,
     trends_router,
     references_router,
+    design_references_router,
+    library_router,
     concepts_router,
     abstraction_router,
     generation_router,

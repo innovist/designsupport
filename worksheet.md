@@ -1,5 +1,54 @@
 # worksheet.md
 
+181. 재검증 완료(2026-05-10): 정적 검증, 실제 외부 크롤러 재호출, 런타임 API, Playwright UX 검증 재수행.
+결과-`pytest -q` 8건 통과, py_compile/node --check 통과, Alembic `7d8a1c2b9f30 (head)`. 외부 크롤러 `ExternalCrawlerSearchClient`로 웹 검색 3건/이미지 검색 3건 재확인. 이미지 검색은 직접 이미지가 아닌 웹 페이지 URL을 반환하는 특성이 재현되어 `external_page` UX 처리가 유효함을 재확인. E2E 세션 `1f5d8739-2631-4d1e-afc2-69fc7811b01d`: `review_ready`, 트렌드 5, 컨셉 3, 레퍼런스 8, 추상화 1, 생성 2, 스펙 1. Playwright: 탭 잠금 해제, 트렌드/레퍼런스/생성 이미지/스펙/설정 화면 정상, 콘솔·네트워크 오류 0건.
+
+180. 작업 완료(2026-05-10): 외부 크롤러 실제 테스트 + UX/UI/정적/E2E 검증 및 수정.
+실제 크롤링-외부 크롤러 sources 확인(google/duckduckgo/bing/yahoo/daum/nate 등), `sustainable packaging design trend 2026` 웹 검색 3건, `minimal chair design reference` 이미지 검색 3건 수행. 이미지 검색 결과가 실제 이미지 URL이 아니라 웹 페이지 URL임을 확인.
+수정-(1) `/api/trends/sources` UI 호출과 backend alias 정합화. (2) 웹 페이지 레퍼런스는 `external_page`, 직접 이미지 URL만 `external_image`로 저장하고, 웹 레퍼런스 비전 분석 버튼을 숨겨 실패 UX 제거. (3) 직접 이미지가 없을 때 컨셉 기반 추상화 규칙 생성으로 파이프라인 근거 유지. (4) OpenAI gpt-5/o 계열 `max_completion_tokens` 대응. (5) 추상화 JSON 파싱 보강 및 1회 재시도. (6) Gemini inline data URL 이미지는 `uploads/generated/` 파일로 저장. (7) `generated_design.image_path` Text 확장 및 Alembic `7d8a1c2b9f30` 적용. (8) 완료 후 탭 잠금 상태가 풀리지 않는 UX 버그 수정. (9) 트렌드 목록 API가 가설 인사이트를 UI에서 숨기지 않도록 조정.
+검증-`pytest -q` 8건 통과, py_compile/node --check 통과, Alembic head 확인. 런타임 E2E 세션 `1f5d8739-2631-4d1e-afc2-69fc7811b01d`: trend 5건, concept 3건, reference 8건, abstraction 1건, sketch generation 1건 완료, spec v1 생성, 최종 stage `review_ready`. Playwright: 탭 잠금 해제, 트렌드/레퍼런스/생성 이미지/스펙 렌더링, 네트워크/콘솔 오류 0건 확인.
+
+179. 작업 시작(2026-05-10): 요청-외부 크롤링 실제 테스트, UX/UI 사용성, 전체 정적 검증, 런타임 E2E 검증.
+계획-소량 크롤링→UI/워크플로우 점검→정적검증→E2E 전체 실행 후 이슈를 묶어 최소 수정한다.
+
+178. 작업 완료(2026-05-10): 외부 크롤러 API 공식 문서 기반 재구현 + URL 정제 + 유연한 파싱.
+원인-이전 구현이 `POST /api/site/`(범용 웹 크롤러, LLM으로 HTML→JSON 파싱, max_tokens=3000 초과로 실패)를 사용. 공식 API(`crawler_api_docs.md`)는 `POST /api/crawlers/start/`(내장 검색엔진 통합: google/duckduckgo/bing/yahoo/daum/nate)가 정답.
+수정-ExternalCrawlerSearchClient를 공식 API에 맞게 전면 재작성: (1) `POST /api/crawlers/start/` with `{source: ["google","duckduckgo"], keyword: [query], limit: N}`. (2) `GET /api/crawlers/status/` → `result: "started|success|failure|revoked"`. (3) `GET /api/crawlers/data/` with `page/page_size` → `{id, source, title, url, description, created_at}`. (4) 타임아웃 시 `POST /api/crawlers/stop/` 정리. (5) `_clean_url()`: DuckDuckGo 리다이렉트 URL(`//duckduckgo.com/l/?uddg=ENCODED`)에서 실제 URL 추출 + 프로토콜 상대 URL(`//`) 정제. (6) `page_size = limit × 소스수`로 복수 소스 결과 모두 확보. (7) `_build_web_results`/`_build_image_results`: 다양한 키 이름 유연 매핑 + `created_at` → `published_date` 매핑. 실제 테스트: 0건→3건→5건 성공(URL 정제 검증 포함). py_compile + 파이프라인 시뮬레이션 통과. 재검증 완료(논리적/기능적/파이프라인 통합).
+
+177. 작업 완료(2026-05-10): 연구 보고서 기반 검색 백엔드 다중화 구현.
+원인-`.env`에 `WEB_SEARCH_CRAWLER_API_BASE_URL` 존재하나 코드에 미연결(grep 0건)→파이프라인 검색 빈 결과→실패.
+수정-(1) config.py에 SEARCH_BACKEND/web_search_crawler_api_base_url/crawl4ai_api_url 필드 추가. (2) web_search.py에 ExternalCrawlerSearchClient(Firecrawl/AnyCrawl 호환, async polling)+Crawl4AISearchClient 추가, get_search_client() 우선순위 체인(crawl4ai→external→searxng→noop)+자동감지 로직. (3) workspace.py에 GET/PUT /workspace/search-backend, POST /workspace/search-backend/test 엔드포인트 추가. (4) settings.html에 "검색 백엔드 설정" 카드(백엔드 선택 드롭다운+URL/Token 필드+연결확인). (5) settings.js에 로드/저장/테스트 함수. (6) .env에 SEARCH_BACKEND=external 추가. AI 모델 설정은 기존 8개 제공자 카탈로그로 충분(검색 백엔드 자체는 LLM 미사용). py_compile+node syntax check 통과.
+
+176. 작업 완료(2026-05-10): 자동 파이프라인 실패 원인 분석 + 외부 레퍼런스 14건 조사 보고서 작성(구현 X).
+원인-`.env`에 `SEARXNG_API_URL` 미설정, `WEB_SEARCH_CRAWLER_API_BASE_URL`은 존재하나 코드에 미연결(grep 0건). 검색 빈 결과→추상화 0건→generating hard error. 결과-Scrapy/Crawlee/Crawl4AI/Scrapling/AnyCrawl/Vane/MediaCrawler/openrag/LightRAG/PageIndex/OpenDeepSearch/Google CLI/NotebookLM-py/Obscura 14개를 4그룹(A 크롤러 7, B RAG 5, C 통합 2, D 권장조합)으로 분류, 우선순위 표·라이선스·적용가능성·주의사항 포함. 산출물: `references_research_2026-05-10.md`. 권장 우선순위 1-Crawl4AI, 2-OpenDeepSearch, 3-Crawlee, 4-SearxNG, 5-AnyCrawl. 구현은 별도 승인 후 진행.
+
+175. 작업 완료(2026-05-10): UX/UI 3-Lens 종합 재검토 — A11y/디자인 가이드라인/Nielsen 휴리스틱 적용.
+검토 관점: (1) frontend-ui-architect — 시맨틱 마크업/ARIA, (2) web-design-guidelines — 인터랙션/대비/터치 타겟, (3) ux-improve — Nielsen 10 휴리스틱. 변경: (A) 탭바 role=tablist + 각 버튼 role=tab/aria-selected/aria-controls/aria-disabled/tabindex 적용, ←→/Home/End 키보드 네비 추가(잠긴 탭 자동 스킵), (B) 진행 칩에 단계→탭 매핑(stageToTab) 추가하여 완료 칩은 button으로 렌더링·클릭 시 해당 결과 탭으로 점프, role=list/listitem + aria-label("진행 중/완료/실패") 부착, (C) 사이드바 stage-item을 div→button 전환·키보드 접근 가능, locked 스타일 추가, focus-visible outline, (D) project-modal과 gen-dialog에 role=dialog/aria-modal/aria-labelledby/aria-describedby 부여, ESC 키로 닫기, 백드롭 클릭 시 닫기, body 스크롤 잠금, 닫을 때 호출 element로 포커스 복귀. 정적 검증 통과. 잔여 후속(별도 작업): 자동 파이프라인 취소 API+버튼, 페이지 헤더 스타일 통일, 디자인 토큰화, 죽은 템플릿 6개 정리.
+
+174. 작업 완료(2026-05-10): 전체 UX 정합성 종합 감사 후 핵심 통증 보강.
+감사 결과 8개 이슈 중 사용자가 가장 크게 체감하는 3건 처리. (A) 브리프 중복 입력 인상 해소 — 세션 생성 시 createNewDraft가 프로젝트 brief를 세션 brief로 이미 자동 복사하고 있음. 안내 부재가 진짜 원인이라 판단, 브리프 탭 안내문에 "프로젝트 브리프가 이미 복사되어 있음, 변형할 부분만 다듬으세요" 명시. (B) 결과 탭 잠금 시 토스트 + 입력 탭 자동 이동(handleLockedTabClick) — 사용자가 어디로 가야 할지 막막한 상황 해소. (C) 좌측 사이드바 "파이프라인" 라벨을 "주요 단계"로 변경 + "상세 진행 상태는 상단 진행바" 보조 안내 추가하여 상단 진행바와의 역할 분리 명확화. 후속 정리 항목(미실행, 향후 별도 작업): 죽은 템플릿 6개(chatbot/dashboard/history/home/ideas/new_session.html) 정리, 페이지별 헤더 스타일 통일, hardcoded 색상→디자인 토큰 마이그레이션, "디자인안/세션/draft" 코드 변수명 일관성. JS 정적 검증 통과.
+
+173. 작업 완료(2026-05-10): UX 모델 재정립 — 입력/결과 그룹 분리.
+원인-사용자 시퀀스에서 '수동 보강' 진입 시점이 모호. 입력과 출력이 한 화면에 섞여 있어 매 탭마다 사용자가 입력해야 하는지 결과만 보면 되는지 혼란. 결정-탭 바를 「📝 입력(브리프)」 / 「📊 결과 검토(트렌드·레퍼런스/컨셉/생성/스펙)」 두 그룹으로 시각 분리, 결과 그룹은 pipeline_stage가 brief_input일 때 잠금(클릭 시 안내). 보강 시퀀스를 "결과 보강 → 입력으로 돌아가 자동 생성 재실행"으로 정의. 모드 분리(자동/수동)는 자료 입력량으로 자연스레 결정되므로 도입 보류. 변경-session_detail.js에 INPUT_TABS/OUTPUT_TABS, _isOutputLocked, 그룹 렌더링 추가; 모든 결과 탭의 tab-help를 보라색 테마+"📊 결과 검토" 라벨로 통일; 브리프 탭은 "📝 입력 단계" 라벨+노란 안내; tab-group/tab-locked CSS 추가. JS/Python 정적 검증 통과.
+
+172. 작업 완료(2026-05-10): 자동 파이프라인 실패 원인 수정 및 UX/시각화 개선.
+원인-검색 query에 brief 본문 전체(개행 포함 장문)가 들어가 SearXNG no results→자료 0건→추상화 규칙 0건→generating에서 hard error. 추가로 옵션 카드 의미 불명확, 진행 표시 빈약. 수정-(1) `_extract_search_keywords` 헬퍼 추가, trend/reference query에 적용(60/50자 캡, 개행·문장부호 정규화). (2) 실패 메시지 친절화. (3) 브리프 탭 안내 배너 신설(시작점·자동 실행 사실·다른 탭 역할 명시), 옵션 카드 라벨 "AI 자동 · 힌트(선택)"로 통일. (4) 진행률 바 sticky 노출, % + n/7 카운트, 그라디언트 fill, 진행/완료/실패 상태색, 펄스 애니메이션, 단계별 칩 디자인 적용. (5) 실패 시 사유를 토스트와 진행바 하단에 표출. py_compile / node syntax check 통과.
+
+171. 작업 완료(2026-05-10): 설정 저장 후 재시작 시 초기화 문제 수정.
+원인-DEFAULT_FEATURE_MODELS에 카탈로그에 없는 gpt-4o-mini/gpt-4o 사용→UI 드롭다운 불일치. 수정-app/core/model_catalog.py 분리, DEFAULT_FEATURE_MODELS 최적 재매핑(deepseek-v4-pro/flash, qwen3.6, gemini-2.5-flash-image), startup 시 stale 모델 자동 교정 로직 추가, DB 기존값 마이그레이션 완료.
+
+170. 작업 완료(2026-05-09 19:52): Awesome-Nano-Banana-images 구조 벤치마크 반영.
+작업-외부 원문 복제 없이 산출물/주체/구도/재질/보존규칙 기반 프롬프트 작성 지침과 직접모사 검증 추가. 결과-py_compile 및 pytest 8건 통과.
+
+169. 작업 시작(2026-05-09 19:46): 요청-Awesome-Nano-Banana-images 벤치마크 기반 이미지 프롬프트 로직 강화.
+계획-외부 원문 복제 없이 공통 구조만 추상화하고, 직접 모사 금지 검증을 추가한다.
+
+168. 작업 완료(2026-05-09 19:40): 스케치/최종 이미지 생성 경로 분리.
+작업-feature key 4개 추가, 전용 프롬프트 작성 유스케이스, 생성 output_kind, 설정/세션 UI 파이프라인 정렬 적용. 결과-py_compile 및 pytest 5건 통과.
+
+167. 작업 시작(2026-05-09 19:29): 요구사항-스케치/최종 이미지 모델과 각 프롬프트 작성 모델 분리.
+계획-파이프라인 순서에 맞춰 feature key, 생성 요청, 설정 UI, 세션 생성 UI 정합성 수정 후 테스트.
+
 166. 작업 완료(2026-05-09): 이미지 생성 모델 확장. zimage_client.py(DashScope multimodal API, prompt_extend 파라미터 제어), gemini_image_client.py(google-genai generate_content+response_modalities=["IMAGE"], base64 data URL 반환). 카탈로그: OpenAI gpt-image-1, Gemini 이미지 3종(3.1-flash/3-pro/2.5-flash), z-image-turbo 2종(standard/think). factory.py: Alibaba z-image-turbo→ZImageTurboClient, Gemini 이미지→GeminiImageClient 분기. 총 37개 모델, 이미지 7종 확인.
 165. 작업 시작(2026-05-09): z-image-turbo think/standard 구분, OpenAI gpt-image-1, Gemini 이미지 모델 추가. 정확한 엔드포인트·호출 방법 리서치 후 반영.
 164. 작업 완료(2026-05-09): _MODEL_CATALOG 전면 수정(.env 실제 모델ID 반영): OpenAI gpt-5.4/mini/nano, Gemini gemini-3.1-pro-preview/3-flash-preview/3.1-flash-lite, DeepSeek deepseek-chat/v4-pro/v4-flash, Alibaba qwen3.6-flash/Max-non/Plus-Non 등 9종+z-image-turbo, Xiaomi mimo-v2.5/pro-non 등 7종, MiniMax M2.7/highspeed, Kimi k2.6/k2.5 +non 4종, Seedream 4.5-251128. factory.py: -non 변환테이블(_QWEN/_MIMO/_KIMI_MODEL_MAP), .env base URL 사용, Minimax temp≥0.01 강제, Kimi thinking flag 필수. 8개 제공자 모두 configured=true 확인.

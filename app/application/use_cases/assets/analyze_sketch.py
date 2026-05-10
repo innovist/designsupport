@@ -4,7 +4,6 @@ Use-cases: AI sketch analysis and user confirmation.
 
 from __future__ import annotations
 
-import json
 import uuid
 
 from sqlalchemy.orm import Session
@@ -13,6 +12,7 @@ from app.application.ports.ai_client import AIMessage
 from app.core.logging import get_logger
 from app.infrastructure.ai_clients.factory import get_ai_client
 from app.models.assets import SketchAnalysis, UserSketchAsset
+from app.utils.json_parse import parse_json_object
 
 logger = get_logger(__name__)
 
@@ -47,10 +47,7 @@ async def analyze_sketch(db: Session, sketch_id: uuid.UUID) -> SketchAnalysis:
     )
 
     try:
-        raw = response.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0]
-        parsed: dict = json.loads(raw)
+        parsed = parse_json_object(response.content)
     except Exception as parse_err:
         logger.warning("Sketch analysis JSON parse failed: %s", response.content[:200])
         raise ValueError(f"스케치 분석 결과를 파싱할 수 없습니다. AI 응답 형식 오류: {parse_err}") from parse_err

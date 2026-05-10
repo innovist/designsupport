@@ -236,6 +236,21 @@ def api_get_progress(session_id: uuid.UUID, db: Session = Depends(get_db)):
         return not_found_response(str(exc))
 
 
+@router.post("/sessions/{session_id}/cancel")
+def api_cancel_pipeline(session_id: uuid.UUID, db: Session = Depends(get_db)):
+    """자동 파이프라인 취소. 다음 단계 경계에서 중단된다."""
+    from app.models.session import DesignSession
+    session = db.get(DesignSession, session_id)
+    if not session:
+        return not_found_response(f"Session {session_id} not found")
+    if session.pipeline_stage in ("brief_input", "review_ready", "failed"):
+        return validation_error_response("실행 중인 파이프라인이 없습니다.")
+    from app.application.services.pipeline_orchestrator import request_pipeline_cancel
+    request_pipeline_cancel(session_id)
+    logger.info("[SESSION] cancel requested session=%s", session_id)
+    return {"status": "cancelling", "session_id": str(session_id)}
+
+
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 
 # @MX:WARN: [AUTO] Complex dashboard aggregation with 5+ table joins and nested queries

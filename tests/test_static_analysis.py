@@ -2,7 +2,11 @@
 
 import importlib
 import py_compile
+import shutil
+import subprocess
 from pathlib import Path
+
+import pytest
 
 
 def test_python_sources_compile():
@@ -30,4 +34,23 @@ def test_app_modules_import():
             importlib.import_module(module_name)
         except Exception as exc:
             failures.append(f"{module_name}: {type(exc).__name__}: {exc}")
+    assert failures == []
+
+
+def test_static_javascript_syntax():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node executable is required for JavaScript syntax validation")
+
+    failures = []
+    for path in Path("static/js").rglob("*.js"):
+        result = subprocess.run(
+            [node, "--check", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            failures.append(f"{path}: {result.stderr.strip()}")
+
     assert failures == []

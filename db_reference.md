@@ -185,7 +185,7 @@ This file records schema-affecting specification changes that must be reflected 
 - (feature_key, active)
 - (version)
 
-**9 Fixed Feature Keys**: TrendResearch, ConceptChat, UserSketchAnalysis, ReferenceAnalysis, Abstraction, SketchPrompt, ImageGeneration, SpecWriting, Verification
+**Canonical Feature Keys**: TrendResearch, ConceptChat, UserSketchAnalysis, ReferenceAnalysis, Abstraction, SketchPromptGeneration, SketchGeneration, FinalImagePromptGeneration, FinalImageGeneration, SpecWriting, Verification
 
 ### model_catalog.PromptPolicy
 
@@ -1091,16 +1091,132 @@ No new DB fields were added for these runtime API endpoints.
 
 **Migration**: `alembic/versions/482a29aee870_initial_schema.py`
 
+## 2026-05-10 — Generated Image Storage Runtime Alignment
+
+### generated_design
+
+**Source**: `app/models/generation.py`, `app/application/use_cases/generation/create_generation_job.py`
+
+**Change**:
+- `generated_design.image_path` is now `Text` instead of `String(500)`.
+- Runtime generation stores inline `data:image/*;base64,...` responses as files under `uploads/generated/` and persists the relative path (`generated/{design_id}.{ext}`).
+
+**Reason**: Image providers can return either hosted URLs or inline base64 data URLs. Persisting inline data directly exceeded the previous 500-character column limit and produced invalid `/uploads/data:image...` UI paths.
+
+**Migration**: `alembic/versions/7d8a1c2b9f30_expand_generated_design_image_path.py`
+
+## 2026-05-11 — Concept-First Draft Generation
+
+### generated_design
+
+**Source**: `app/models/generation.py`, `app/application/use_cases/generation/create_generation_job.py`
+
+**Change**:
+- `generated_design.rule_id` is now nullable.
+- Draft generation requires `concept_id`; `rule_id` is optional and only used when an abstraction rule exists.
+- Final generation uses a completed draft as the required source and can inherit that draft's optional `rule_id` and `concept_id`.
+
+**Reason**: Users choose design direction from concept candidates. Abstraction rules may not exist yet and are not understandable as the primary selection object in the UI.
+
+**Migration**: `alembic/versions/b4a9c6e2f105_generated_design_rule_nullable.py`
+
 ### feature_model_setting
 
 **Source**: `app/models/workspace.py`, `app/infrastructure/repositories/workspace_repository.py`
 
 **Required/default behavior**:
 - Default workspace initialization now creates one `FeatureModelSetting` row for each canonical feature key:
-  `abstraction`, `sketch_analysis`, `concept_generation`, `chat`, `image_generation`, `reference_analysis`, `brief_structuring`, `spec_writing`, `trend_analysis`.
+  `brief_structuring`, `trend_analysis`, `concept_generation`, `reference_analysis`, `sketch_analysis`, `abstraction`, `sketch_prompt_generation`, `sketch_generation`, `final_image_prompt_generation`, `final_image_generation`, `spec_writing`, `chat`.
+- `image_generation` may remain for legacy compatibility, but runtime generation now routes through the separated sketch/final image keys.
 - Provider/model defaults are editable in the user workspace settings page.
 - API key values remain `.env`-only and are not stored in this table.
 
 **Reason**: Runtime AI routes must resolve feature-specific models consistently and must fail clearly when provider API keys are missing.
 
 **Migration**: `alembic/versions/482a29aee870_initial_schema.py`
+
+---
+
+## 2026-05-10 — Design Reference Image Search API
+
+### Image Search API Keys
+
+**Source**: `app/core/config.py`
+
+**Purpose**: External image API credentials for design reference search
+
+**Environment Variables**:
+- `UNSPLASH_ACCESS_KEY`: Unsplash API access key (optional)
+- `PEXELS_API_KEY`: Pexels API key (optional)
+- `PIXABAY_API_KEY`: Pixabay API key (optional)
+
+**Behavior**:
+- Design reference search tries Unsplash first (high quality design images)
+- Falls back to Pexels if Unsplash fails or returns no results
+- Falls back to Pixabay if both previous sources fail
+- All three APIs are optional - the feature gracefully degrades if no keys are configured
+- Results are normalized to a common `DesignReferenceImage` dataclass
+
+**API Endpoint**: `POST /api/design-references/search`
+
+**Request Body**:
+```json
+{
+  "query": "minimalist product design",
+  "per_page": 10
+}
+```
+
+**Response**:
+```json
+{
+  "count": 10,
+  "images": [
+    {
+      "id": "unsplash-abc123",
+      "source": "unsplash",
+      "title": "Photo description",
+      "image_url": "https://...",
+      "thumbnail_url": "https://...",
+      "photographer": "Photographer Name",
+      "source_url": "https://unsplash.com/...",
+      "width": 4000,
+      "height": 3000
+    }
+  ]
+}
+```
+
+**Implementation Files**:
+- `app/infrastructure/search/design_reference_client.py` - Search client with fallback logic
+- `app/api/routes/design_references.py` - FastAPI route handler
+- `main.py` - Router registration
+
+**Migration**: None (configuration-only change)
+
+---
+
+## [2026-05-10] trend_insight 테이블 변경
+
+**Migration**: `a3f1e9d42c08_trend_insight_add_title_source_urls.py`
+
+**추가 컬럼**:
+- `title VARCHAR(200) NULLABLE` — 트렌드 제목 (10~20자, 한국어)
+- `source_urls JSON NULLABLE` — 이 트렌드를 구성한 참고자료 목록 `[{"url": "...", "title": "..."}]`
+
+**변경 컬럼**:
+- `evidence_quote TEXT` — `NOT NULL` → `NULLABLE` (종합 분석 방식에서 개별 인용문 불필요)
+
+**동기**: 트렌드 분석 방식을 URL당 1개 인사이트 추출 → 여러 URL 종합 분석 후 5개 트렌드 생성으로 변경.
+각 트렌드는 `source_urls`에 해당 트렌드를 뒷받침하는 참고자료 URL 목록을 저장.
+
+---
+
+## [2026-05-11] 보고서 기준 이미지 추적
+
+**Migration**: `c61d3b8e4a9f_spec_document_selected_design.py`
+
+**추가 컬럼**:
+- `spec_document.selected_design_id UUID NULLABLE` — 보고서 버전이 기준으로 삼은 `generated_design.id`. 대상 이미지 삭제 시 `SET NULL`.
+
+**동기**: 보고서는 세션 전체가 아니라 사용자가 선택한 작성 완료 이미지에 대한 산출물이어야 한다. 여러 최종안과 보고서 버전이 공존할 수 있으므로, 각 보고서 버전이 어떤 생성 이미지를 기준으로 작성되었는지 추적한다.

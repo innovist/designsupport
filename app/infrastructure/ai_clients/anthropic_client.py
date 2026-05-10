@@ -7,7 +7,7 @@ from __future__ import annotations
 import base64
 from pathlib import Path
 
-from app.application.ports.ai_client import AIClient, AIMessage, AIResponse
+from app.application.ports.ai_client import AIClient, AIMessage, AIResponse, ImageGenerationResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -84,9 +84,7 @@ class AnthropicClient(AIClient):
             provider="anthropic",
         )
 
-    async def generate_image(self, prompt: str, **kwargs) -> "ImageGenerationResult":
-        from app.infrastructure.ai_clients._image_result import ImageGenerationResult
-
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
         raise NotImplementedError(
             "Anthropic does not support image generation. "
             "Configure an OpenAI provider for the 'image_generation' feature."

@@ -27,18 +27,28 @@
 
     const AUTO_STAGE_LABELS = {
         brief_input: '브리프', researching: '트렌드 조사', concepting: '컨셉 생성',
-        referencing: '레퍼런스 수집', abstracting: '추상화', generating: '이미지 생성', documenting: '스펙 작성',
+        referencing: '레퍼런스 수집', abstracting: '추상화', generating: '초안 이미지 생성', documenting: '보고서 작성',
         review_ready: '완료', failed: '실패'
     };
 
+    // Stage list shown in left sidebar (visual progress)
     const STAGES = [
-        { key: 'brief_input', label: '브리프',       tab: 'brief'   },
-        { key: 'researching', label: '자료·컨셉',    tab: 'sources' },
-        { key: 'generating',  label: '결과 이미지',  tab: 'output'  },
-        { key: 'review_ready', label: '스펙',        tab: 'spec'    }
+        { key: 'brief_input',  label: '브리프',  tab: 'brief'    },
+        { key: 'researching',  label: '조사',    tab: 'research' },
+        { key: 'concepting',   label: '컨셉',    tab: 'concepts' },
+        { key: 'generating',   label: '생성',    tab: 'output'   },
+        { key: 'review_ready', label: '보고서',  tab: 'spec'     }
     ];
 
-    const TABS = STAGES;
+    const INPUT_TABS = [
+        { tab: 'brief',    label: '브리프' }
+    ];
+    const OUTPUT_TABS = [
+        { tab: 'research', label: '트렌드·레퍼런스', stage: 'researching' },
+        { tab: 'concepts', label: '컨셉',          stage: 'concepting'  },
+        { tab: 'output',   label: '생성 이미지',     stage: 'generating'  },
+        { tab: 'spec',     label: '보고서',        stage: 'review_ready' }
+    ];
 
     // ─── Utils ────────────────────────────────────────────────────────────────
 
@@ -77,15 +87,81 @@
 
     // ─── Tabs ─────────────────────────────────────────────────────────────────
 
+    function _isOutputLocked() {
+        const s = state.session && state.session.pipeline_stage;
+        // 결과 탭은 파이프라인이 실제로 진행되어 결과가 있는 상태에서만 활성
+        return !s || s === 'brief_input';
+    }
+
+    function _renderTabButton(t, locked) {
+        const isActive = t.tab === state.activeTab;
+        const cls = 'tab-btn' + (isActive ? ' tab-active' : '') + (locked ? ' tab-locked' : '');
+        const onClick = locked
+            ? "SessionWorkspace.handleLockedTabClick()"
+            : "SessionWorkspace.switchTab('" + t.tab + "')";
+        const titleAttr = locked ? '아직 자동 생성이 실행되지 않았습니다. 클릭하면 입력 탭으로 이동합니다.' : t.label;
+        const ariaSelected = isActive ? 'true' : 'false';
+        const ariaDisabled = locked ? 'true' : 'false';
+        const tabIndex = isActive ? '0' : '-1';
+        return '<button id="tab-btn-' + t.tab + '" class="' + cls + '" role="tab" aria-selected="' + ariaSelected + '" ' +
+            'aria-controls="tab-' + t.tab + '" aria-disabled="' + ariaDisabled + '" ' +
+            'tabindex="' + tabIndex + '" data-tab="' + t.tab + '" data-locked="' + (locked ? '1' : '0') + '" ' +
+            'onclick="' + onClick + '" title="' + esc(titleAttr) + '">' +
+            esc(t.label) + '</button>';
+    }
+
+    function handleLockedTabClick() {
+        showToast('아직 브리프 단계입니다. 「자동 생성」을 실행하면 결과 탭이 열립니다.', 'error');
+        switchTab('brief');
+    }
+
     function buildTabBar() {
         const bar = document.getElementById('ws-tab-bar');
-        bar.innerHTML = TABS.map(function (t) {
-            return '<button class="tab-btn' + (t.tab === state.activeTab ? ' tab-active' : '') + '" ' +
-                'onclick="SessionWorkspace.switchTab(\'' + t.tab + '\')">' + esc(t.label) + '</button>';
-        }).join('');
+        if (!bar) return;
+        const locked = _isOutputLocked();
+        if (locked && state.activeTab !== 'brief') state.activeTab = 'brief';
+        const visibleTabs = locked ? INPUT_TABS : INPUT_TABS.concat(OUTPUT_TABS);
+        bar.setAttribute('role', 'tablist');
+        bar.setAttribute('aria-label', '디자인안 작업 단계');
+        bar.innerHTML = visibleTabs.map(function (t) { return _renderTabButton(t, false); }).join('');
+        // also wire panes
+        ['brief'].concat(OUTPUT_TABS.map(function (t) { return t.tab; })).forEach(function (k) {
+            const pane = document.getElementById('tab-' + k);
+            if (pane) {
+                pane.classList.toggle('active', k === state.activeTab);
+                pane.setAttribute('role', 'tabpanel');
+                pane.setAttribute('aria-labelledby', 'tab-btn-' + k);
+                if (k !== state.activeTab) pane.setAttribute('hidden', '');
+                else pane.removeAttribute('hidden');
+            }
+        });
+    }
+
+    function _handleTabBarKeydown(e) {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+        const bar = document.getElementById('ws-tab-bar');
+        if (!bar) return;
+        const tabs = Array.from(bar.querySelectorAll('button[role="tab"]')).filter(function (b) { return b.getAttribute('data-locked') !== '1'; });
+        if (tabs.length === 0) return;
+        const currentIdx = tabs.findIndex(function (t) { return t.getAttribute('data-tab') === state.activeTab; });
+        let nextIdx;
+        if (e.key === 'ArrowLeft')  nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'ArrowRight') nextIdx = (currentIdx + 1) % tabs.length;
+        else if (e.key === 'Home')  nextIdx = 0;
+        else                        nextIdx = tabs.length - 1;
+        e.preventDefault();
+        const target = tabs[nextIdx];
+        switchTab(target.getAttribute('data-tab'));
+        target.focus();
     }
 
     function switchTab(tabKey) {
+        // 결과 탭이 잠긴 상태면 차단
+        const isOutput = OUTPUT_TABS.some(function (t) { return t.tab === tabKey; });
+        if (isOutput && _isOutputLocked()) {
+            showToast('아직 브리프 단계입니다. 「자동 생성」을 실행하면 결과 탭이 열립니다.', 'error');
+            return;
+        }
         document.querySelectorAll('.ws-tab-pane').forEach(function (el) { el.classList.remove('active'); });
         const pane = document.getElementById('tab-' + tabKey);
         if (pane) pane.classList.add('active');
@@ -106,22 +182,16 @@
         };
         switch (tabKey) {
             case 'chat':        loadMessages(); break;
-            case 'sources':
-                call('loadSketches');
+            case 'research':
                 call('loadTrends');
-                call('loadConcepts');
                 call('loadReferences');
+                call('loadSketches');
                 break;
-            case 'output':
-                call('loadAbstraction');
-                call('loadGenerations');
-                break;
-            case 'sketch':      call('loadSketches'); break;
-            case 'trend':       call('loadTrends'); break;
             case 'concepts':    call('loadConcepts'); break;
-            case 'references':  call('loadReferences'); break;
-            case 'abstraction': call('loadAbstraction'); break;
-            case 'generation':  call('loadGenerations'); break;
+            case 'output':
+                call('loadGenerations');
+                call('loadAbstraction');
+                break;
             case 'spec':        call('loadSpec'); break;
         }
     }
@@ -133,28 +203,43 @@
         const stageOrder = STAGES.map(function (s) { return s.key; });
         const currentIdx = stageOrder.indexOf(pipelineStage);
 
-        document.getElementById('stage-list').innerHTML = STAGES.map(function (s, idx) {
+        const outputLocked = _isOutputLocked();
+        const visibleStages = outputLocked ? STAGES.slice(0, 1) : STAGES;
+        const stageList = document.getElementById('stage-list');
+        if (!stageList) {
+            updateDecisionPanel();
+            return;
+        }
+        stageList.innerHTML = visibleStages.map(function (s, idx) {
             let indicatorClass = 'pending';
             let indicatorChar = (idx + 1);
             if (idx < currentIdx) { indicatorClass = 'done'; indicatorChar = '✓'; }
             else if (s.key === pipelineStage) { indicatorClass = 'current'; indicatorChar = '●'; }
 
             const isActive = s.tab === state.activeTab;
+            const isOutput = s.tab !== 'brief';
+            const disabled = isOutput && outputLocked;
+            const aria = isActive ? ' aria-current="true"' : '';
+            const disAttr = disabled ? ' disabled aria-disabled="true"' : '';
+            const onClick = disabled
+                ? "SessionWorkspace.handleLockedTabClick()"
+                : "SessionWorkspace.switchTab('" + s.tab + "')";
             return (
-                '<div class="stage-item' + (isActive ? ' active' : '') + (idx < currentIdx ? ' completed' : '') + '" ' +
-                'onclick="SessionWorkspace.switchTab(\'' + s.tab + '\')">' +
-                '<div class="stage-indicator ' + indicatorClass + '">' + indicatorChar + '</div>' +
+                '<button type="button" class="stage-item' + (isActive ? ' active' : '') + (idx < currentIdx ? ' completed' : '') + (disabled ? ' locked' : '') + '" ' +
+                'onclick="' + onClick + '"' + aria + disAttr + '>' +
+                '<span class="stage-indicator ' + indicatorClass + '" aria-hidden="true">' + indicatorChar + '</span>' +
                 '<span>' + esc(s.label) + '</span>' +
-                '</div>'
+                '</button>'
             );
         }).join('');
         updateDecisionPanel();
     }
 
     function normalizeStage(stage) {
-        if (['researching', 'concepting', 'referencing', 'abstracting'].includes(stage)) return 'researching';
-        if (['generating', 'documenting'].includes(stage)) return 'generating';
-        if (stage === 'review_ready') return 'review_ready';
+        if (['researching', 'referencing'].includes(stage)) return 'researching';
+        if (stage === 'concepting') return 'concepting';
+        if (['abstracting', 'generating'].includes(stage)) return 'generating';
+        if (['documenting', 'review_ready'].includes(stage)) return 'review_ready';
         return 'brief_input';
     }
 
@@ -173,11 +258,11 @@
             referencing: '선택한 컨셉과 연결되는 레퍼런스를 수집하세요.',
             abstraction: '분석된 레퍼런스 또는 스케치에서 추상화 규칙을 생성하세요.',
             abstracting: '분석된 레퍼런스 또는 스케치에서 추상화 규칙을 생성하세요.',
-            generation: '추상화 규칙을 선택해 이미지를 생성하세요.',
-            generating: '생성 결과와 실패 사유를 확인하세요.',
-            spec: '결정 로그와 출처가 포함된 스펙 문서를 생성하세요.',
-            documenting: '결정 로그와 출처가 포함된 스펙 문서를 생성하세요.',
-            review_ready: '검토 필요 항목과 최종 스펙을 확인하세요.',
+            generation: '추상화 규칙을 선택해 초안을 생성하세요.',
+            generating: '초안 이미지 결과와 실패 사유를 확인하세요. 최종안은 검토 의견 입력 후 생성합니다.',
+            spec: '기준 이미지를 선택해 디자인 보고서를 생성하세요.',
+            documenting: '기준 이미지를 선택해 디자인 보고서를 생성하세요.',
+            review_ready: '완료된 디자인 보고서를 확인하세요.',
             failed: '실패 원인을 확인하고 재시도 가능한 단계부터 다시 실행하세요.'
         };
         setText('decision-current-stage', stage);
@@ -214,7 +299,14 @@
         }
         state.session = await res.json();
         const s = state.session;
-        document.getElementById('session-title-el').textContent = (s.brief && s.brief.purpose) ? s.brief.purpose : ('세션 ' + SESSION_ID.slice(0, 8));
+        document.getElementById('session-title-el').textContent = '디자인안 ' + SESSION_ID.slice(0, 4).toUpperCase();
+        const briefSummary = document.getElementById('session-brief-summary');
+        if (briefSummary && s.brief && s.brief.purpose) {
+            briefSummary.textContent = s.brief.purpose;
+            briefSummary.style.display = 'block';
+        } else if (briefSummary) {
+            briefSummary.style.display = 'none';
+        }
         const backLink = document.getElementById('back-to-project-link');
         if (backLink && s.project_id) {
             backLink.href = '/projects/' + s.project_id;
@@ -223,6 +315,7 @@
         badge.textContent = s.status || '활성';
         badge.className = 'badge' + (s.status === 'completed' ? ' badge-success' : '');
         document.getElementById('session-stage-label').textContent = s.pipeline_stage ? ('단계: ' + s.pipeline_stage) : '';
+        buildTabBar();
         buildStageList();
         updateDecisionPanel();
     }
@@ -247,37 +340,47 @@
         const container = document.getElementById('brief-form-container');
         container.innerHTML =
             '<div class="brief-workbench">' +
-            '<div class="brief-primary">' +
             '<label class="brief-label">통합 브리프</label>' +
-            '<textarea id="brief-purpose" class="brief-main-input" placeholder="요구 조건, 목표, 분위기, 제약, 원하는 결과물을 한 번에 입력하세요. 스케치/레퍼런스/조사 방향은 있으면 아래 선택 영역에 추가하면 됩니다.">' + esc(brief.purpose || '') + '</textarea>' +
-            '<div class="brief-actions">' +
-            '<button class="btn btn-primary" onclick="SessionWorkspace.saveBrief()">브리프 저장</button>' +
-            '<button class="btn btn-success" onclick="SessionWorkspace.saveAndRun()">저장 후 자동 생성</button>' +
-            '</div>' +
-            '</div>' +
-            '<div class="brief-options">' +
-            optionCard('trend', '트렌드 조사', '필요하면 조사 방향을 입력하고, 비워두면 브리프 기반으로 AI가 검색합니다.', 'brief-trend-direction', '조사 방향 또는 키워드') +
-            optionCard('concept', '컨셉', '사용자 컨셉이 있으면 적고, 없으면 AI가 후보를 제안합니다.', 'brief-context', '선호 컨셉, 피해야 할 방향') +
-            optionCard('reference', '레퍼런스', '직접 검색하거나 스케치 기반으로 찾을 수 있습니다.', 'brief-reference-direction', '레퍼런스 검색어') +
-            optionCard('abstract', '추상화', '필요한 경우 자료·스케치에서 규칙을 추출해 이미지 생성에 씁니다.', 'brief-constraints', '유지/변형할 요소') +
-            optionCard('generation', '이미지 생성', '켜두면 추상화 이후 최종 이미지를 바로 생성합니다.', 'brief-result-form', '원하는 이미지 스타일 또는 산출물') +
-            '<div class="brief-advanced">' +
+            '<textarea id="brief-purpose" class="brief-main-input" placeholder="요구 조건, 목표, 분위기, 제약, 원하는 결과물을 한 번에 입력하세요.">' + esc(brief.purpose || '') + '</textarea>' +
+            '<div class="brief-meta-grid">' +
             formField('도메인', 'select-domain', 'brief-domain', brief.domain, '') +
-            formField('대상 사용자', 'text', 'brief-target-user', brief.target_user, '선택 입력') +
-            formField('사용 형태', 'text', 'brief-use-case', brief.use_case, '선택 입력') +
+            formField('대상 사용자', 'text', 'brief-target-user', brief.target_user, '예: 1인 가구, 디자이너, 이동이 잦은 사용자') +
+            formField('사용 형태', 'text', 'brief-use-case', brief.use_case, '예: 책상 위 독서, 휴대, 협소 공간') +
+            '</div>' +
+            '<div class="brief-run-panel">' +
+            '<div><div style="font-size:13px;font-weight:700;color:var(--text-primary);">생성 방식</div><div class="brief-save-status" id="brief-save-status">자동 저장 대기 중</div></div>' +
+            '<div class="brief-run-actions">' +
+            '<button class="btn btn-primary" onclick="SessionWorkspace.saveAndRun()">자동 생성</button>' +
+            '<button class="btn btn-secondary" onclick="SessionWorkspace.toggleManualPanel()">수동 생성</button>' +
             '</div>' +
             '</div>' +
+            '<div class="manual-step-panel" id="manual-step-panel">' +
+            '<div class="manual-step-title">다음 단계 수동 생성</div>' +
+            '<div class="manual-step-actions">' +
+            "<button class=\"btn btn-sm btn-outline\" onclick=\"SessionWorkspace.goManualStep('researching', 'research')\">조사 단계</button>" +
+            "<button class=\"btn btn-sm btn-outline\" onclick=\"SessionWorkspace.goManualStep('concepting', 'concepts')\">컨셉 단계</button>" +
+            "<button class=\"btn btn-sm btn-outline\" onclick=\"SessionWorkspace.goManualStep('generating', 'output')\">생성 단계</button>" +
             '</div>' +
+            '</div>' +
+            '<table class="brief-options-table">' +
+            '<thead><tr><th style="width:190px;">생성 항목</th><th>역할</th><th style="width:42%;">방향 입력</th></tr></thead>' +
+            '<tbody>' +
+            optionRow('trend', '트렌드 조사', '브리프 관련 근거 텍스트 수집', 'brief-trend-direction', '조사 힌트', true) +
+            optionRow('concept', '컨셉 생성', '디자인 방향 후보 생성', 'brief-context', '선호/회피 힌트', true) +
+            optionRow('reference', '이미지 레퍼런스', '컨셉에 맞는 시각 이미지 수집', 'brief-reference-direction', '이미지 검색어', true) +
+            optionRow('abstract', '디자인 규칙 도출', '형태/구조/소재 규칙화', 'brief-constraints', '유지/변형 요소', true) +
+            optionRow('draft-generation', '초안 이미지', '선택 컨셉 기반 초안 생성', 'brief-sketch-output', '초안 스타일 힌트', true) +
+            '</tbody></table>' +
             '</div>';
+        bindBriefAutoSave();
     }
 
-    function optionCard(key, title, desc, inputId, placeholder) {
-        const checked = key === 'trend' || key === 'concept' || key === 'abstract';
-        return '<div class="brief-option-card">' +
-            '<label><input type="checkbox" id="opt-' + key + '"' + (checked ? ' checked' : '') + '> ' + esc(title) + '</label>' +
-            '<p>' + esc(desc) + '</p>' +
-            '<input type="text" id="' + inputId + '" placeholder="' + esc(placeholder) + '">' +
-            '</div>';
+    function optionRow(key, title, desc, inputId, placeholder, checked) {
+        return '<tr>' +
+            '<td><label><input type="checkbox" id="opt-' + key + '"' + (checked ? ' checked' : '') + '> <span>' + esc(title) + '</span></label></td>' +
+            '<td><div class="option-desc">' + esc(desc) + '</div></td>' +
+            '<td><input type="text" id="' + inputId + '" placeholder="' + esc(placeholder) + ' (선택)"></td>' +
+            '</tr>';
     }
 
     function formField(labelText, type, id, value, placeholder) {
@@ -289,18 +392,52 @@
                 const labels = { industrial: '산업', product_service: '제품·서비스', visual: '시각', advertising: '광고', general: '일반' };
                 return '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + labels[o] + '</option>';
             }).join('');
-            return '<div><label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:4px;">' + esc(labelText) + '</label>' +
-                '<select id="' + id + '" style="width:100%;">' + optHtml + '</select></div>';
+            return '<div class="brief-field"><label>' + esc(labelText) + '</label>' +
+                '<select id="' + id + '">' + optHtml + '</select></div>';
         }
         if (type === 'textarea') {
             return '<div><label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:4px;">' + esc(labelText) + '</label>' +
                 '<textarea id="' + id + '" placeholder="' + esc(ph) + '" style="min-height:80px;">' + esc(val) + '</textarea></div>';
         }
-        return '<div><label style="display:block;font-size:var(--font-sm);font-weight:600;margin-bottom:4px;">' + esc(labelText) + '</label>' +
+        return '<div class="brief-field"><label>' + esc(labelText) + '</label>' +
             '<input type="text" id="' + id + '" value="' + esc(val) + '" placeholder="' + esc(ph) + '"></div>';
     }
 
-    async function saveBrief() {
+    let _briefAutoSaveTimer = null;
+
+    function setBriefSaveStatus(text, isError) {
+        const el = document.getElementById('brief-save-status');
+        if (!el) return;
+        el.textContent = text;
+        el.style.color = isError ? 'var(--color-danger)' : 'var(--text-muted)';
+    }
+
+    function bindBriefAutoSave() {
+        const ids = [
+            'brief-purpose', 'brief-domain', 'brief-target-user', 'brief-use-case',
+            'brief-trend-direction', 'brief-context', 'brief-reference-direction',
+            'brief-constraints', 'brief-sketch-output',
+            'opt-trend', 'opt-concept', 'opt-reference', 'opt-abstract', 'opt-draft-generation'
+        ];
+        ids.forEach(function (id) {
+            const el = document.getElementById(id);
+            if (!el || el._autoSaveBound) return;
+            el.addEventListener('input', scheduleBriefAutoSave);
+            el.addEventListener('change', scheduleBriefAutoSave);
+            el._autoSaveBound = true;
+        });
+    }
+
+    function scheduleBriefAutoSave() {
+        setBriefSaveStatus('자동 저장 중...', false);
+        clearTimeout(_briefAutoSaveTimer);
+        _briefAutoSaveTimer = setTimeout(function () {
+            saveBrief({ silent: true });
+        }, 700);
+    }
+
+    async function saveBrief(options) {
+        const silent = !!(options && options.silent);
         const payload = {
             purpose: getVal('brief-purpose'),
             domain: getVal('brief-domain'),
@@ -317,16 +454,40 @@
                 body: JSON.stringify(payload)
             });
             if (!res.ok) throw new Error('저장 실패');
-            showToast('브리프가 저장되었습니다.', 'success');
+            setBriefSaveStatus('자동 저장됨', false);
+            if (!silent) showToast('브리프가 저장되었습니다.', 'success');
             await loadSession();
+            bindBriefAutoSave();
         } catch (err) {
-            showToast('브리프 저장 실패: ' + err.message, 'error');
+            setBriefSaveStatus('자동 저장 실패', true);
+            if (!silent) showToast('브리프 저장 실패: ' + err.message, 'error');
         }
     }
 
     async function saveAndRun() {
-        await saveBrief();
+        await saveBrief({ silent: true });
         await startAutoPipeline();
+    }
+
+    function toggleManualPanel() {
+        const panel = document.getElementById('manual-step-panel');
+        if (panel) panel.classList.toggle('open');
+    }
+
+    async function goManualStep(stage, tabKey) {
+        try {
+            await saveBrief({ silent: true });
+            const res = await fetch('/api/sessions/' + SESSION_ID + '/stage', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pipeline_stage: stage })
+            });
+            if (!res.ok) throw new Error('단계 이동 실패');
+            await loadSession();
+            switchTab(tabKey);
+        } catch (err) {
+            showToast('단계 이동 실패: ' + err.message, 'error');
+        }
     }
 
     function getVal(id) {
@@ -448,13 +609,15 @@
 
     function collectRunOptions() {
         const abstraction = isChecked('opt-abstract');
-        const generation = abstraction && isChecked('opt-generation');
+        const generateDrafts = abstraction && isChecked('opt-draft-generation');
         return {
             research: isChecked('opt-trend'),
             concepts: isChecked('opt-concept'),
             references: isChecked('opt-reference'),
             abstraction: abstraction,
-            generation: generation,
+            generation: generateDrafts,
+            generate_drafts: generateDrafts,
+            generate_final_images: false,
             spec: true
         };
     }
@@ -467,9 +630,30 @@
     function _startProgressPolling() {
         const bar = document.getElementById('auto-progress-bar');
         if (bar) bar.style.display = 'block';
+        const cancelBtn = document.getElementById('auto-cancel-btn');
+        if (cancelBtn) cancelBtn.style.display = 'inline-block';
         if (_progressPoller) clearInterval(_progressPoller);
         _progressPoller = setInterval(_pollProgress, 3000);
         _pollProgress();
+    }
+
+    async function cancelAutoPipeline() {
+        if (!confirm('자동 생성을 취소하시겠습니까?\n\n현재 진행 중인 단계까지만 완료되고 이후 단계는 중단됩니다. 이미 생성된 결과는 유지됩니다.')) {
+            return;
+        }
+        try {
+            const res = await fetch('/api/sessions/' + SESSION_ID + '/cancel', { method: 'POST' });
+            const data = await res.json();
+            if (!res.ok) {
+                showToast((data && data.detail) || '취소 요청에 실패했습니다.', 'error');
+                return;
+            }
+            showToast('파이프라인 취소 요청이 전송되었습니다. 현재 단계 완료 후 중단됩니다.', 'success');
+            var cancelBtn = document.getElementById('auto-cancel-btn');
+            if (cancelBtn) cancelBtn.disabled = true;
+        } catch (err) {
+            showToast('취소 요청 실패: ' + err.message, 'error');
+        }
     }
 
     async function _pollProgress() {
@@ -487,10 +671,19 @@
                     const done = data.pipeline_stage === 'review_ready';
                     bar.style.borderColor = done ? 'var(--color-success)' : 'var(--color-danger)';
                 }
+                var cancelBtn = document.getElementById('auto-cancel-btn');
+                if (cancelBtn) cancelBtn.style.display = 'none';
                 document.getElementById('auto-mode-btn').disabled = false;
                 await loadSession();
                 lazyLoadTab('spec');
-                showToast(data.pipeline_stage === 'review_ready' ? '파이프라인 완료! 스펙을 검토하세요.' : '파이프라인 실패. 실패 원인을 확인하세요.', data.pipeline_stage === 'review_ready' ? 'success' : 'error');
+                if (data.pipeline_stage === 'review_ready') {
+                    showToast('파이프라인 완료! 보고서를 검토하세요.', 'success');
+                } else {
+                    const log = data.auto_progress_log || [];
+                    const last = log.length > 0 ? log[log.length - 1] : null;
+                    const reason = (last && last.note) ? last.note : '실패 원인을 진행률 바에서 확인하세요.';
+                    showToast('파이프라인 실패: ' + reason.replace(/^오류:\s*/, ''), 'error');
+                }
             }
         } catch (_) {}
     }
@@ -498,27 +691,66 @@
     function _renderProgressBar(data) {
         const stage = data.pipeline_stage || '';
         const log = data.auto_progress_log || [];
+        const failed = stage === 'failed';
+        const completed = stage === 'review_ready';
         const stageEl = document.getElementById('auto-stage-label');
         if (stageEl) stageEl.textContent = AUTO_STAGE_LABELS[stage] || stage;
 
+        const pipeline = ['researching', 'concepting', 'referencing', 'abstracting', 'generating', 'documenting', 'review_ready'];
+        const completedStages = log.map(function (e) { return e.stage; });
+        const doneCount = pipeline.filter(function (s) { return completedStages.includes(s) || (completed && s === 'review_ready'); }).length;
+        const pct = completed ? 100 : Math.min(100, Math.round((doneCount / pipeline.length) * 100));
+
+        const fill = document.getElementById('auto-progress-fill');
+        if (fill) {
+            fill.style.width = pct + '%';
+            fill.classList.toggle('is-running', !completed && !failed);
+            if (failed) fill.style.background = 'linear-gradient(90deg,#ef4444,#f97316)';
+            else if (completed) fill.style.background = 'linear-gradient(90deg,#10b981,#22c55e)';
+            else fill.style.background = 'linear-gradient(90deg,#3b82f6,#06b6d4)';
+        }
+        const pctEl = document.getElementById('auto-progress-percent');
+        if (pctEl) pctEl.textContent = pct + '%';
+        const cntEl = document.getElementById('auto-progress-count');
+        if (cntEl) cntEl.textContent = doneCount + '/' + pipeline.length;
+
         const stepsEl = document.getElementById('auto-progress-steps');
         if (stepsEl) {
-            const completedStages = log.map(function (e) { return e.stage; });
-            const pipeline = ['researching', 'concepting', 'referencing', 'abstracting', 'generating', 'documenting', 'review_ready'];
+            const stageToTab = { researching: 'research', concepting: 'concepts', referencing: 'research',
+                                 abstracting: 'output',  generating: 'output',   documenting: 'spec', review_ready: 'spec' };
+            stepsEl.setAttribute('role', 'list');
             stepsEl.innerHTML = pipeline.map(function (s) {
-                const done = completedStages.includes(s);
-                const isCurrent = s === stage;
-                const color = done ? '#d1fae5' : isCurrent ? '#dbeafe' : '#f3f4f6';
-                const textColor = done ? '#065f46' : isCurrent ? '#1e40af' : '#6b7280';
-                return '<span style="background:' + color + ';color:' + textColor + ';border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;">' +
-                    (done ? '✓ ' : isCurrent ? '⟳ ' : '') + esc(AUTO_STAGE_LABELS[s] || s) + '</span>';
+                const done = completedStages.includes(s) || (completed && s === 'review_ready');
+                const isCurrent = !done && !failed && s === stage;
+                const isFailedHere = failed && s === stage;
+                let cls = 'mc-step pending';
+                let icon = '○';
+                let aria = '대기';
+                if (done) { cls = 'mc-step done'; icon = '✓'; aria = '완료'; }
+                else if (isFailedHere) { cls = 'mc-step failed'; icon = '✕'; aria = '실패'; }
+                else if (isCurrent) { cls = 'mc-step current'; icon = '⟳'; aria = '진행 중'; }
+                const tab = stageToTab[s];
+                const clickable = done && tab;
+                const tag = clickable ? 'button' : 'span';
+                const onclick = clickable ? ' onclick="SessionWorkspace.switchTab(\'' + tab + '\')"' : '';
+                const role = ' role="listitem"';
+                const ariaLabel = ' aria-label="' + esc((AUTO_STAGE_LABELS[s] || s) + ' (' + aria + ')' + (clickable ? ' — 클릭하면 결과 탭으로 이동' : '')) + '"';
+                const cursor = clickable ? ' style="cursor:pointer;"' : '';
+                const typeAttr = clickable ? ' type="button"' : '';
+                return '<' + tag + ' class="' + cls + '"' + typeAttr + role + ariaLabel + onclick + cursor + '>' +
+                    '<span class="mc-step-icon" aria-hidden="true">' + icon + '</span>' + esc(AUTO_STAGE_LABELS[s] || s) + '</' + tag + '>';
             }).join('');
         }
 
         const noteEl = document.getElementById('auto-latest-note');
-        if (noteEl && log.length > 0) {
-            const last = log[log.length - 1];
-            noteEl.textContent = last.note || '';
+        if (noteEl) {
+            if (failed) {
+                const errMsg = data.failure_reason || (log.length > 0 ? (log[log.length - 1].note || '') : '');
+                noteEl.innerHTML = '<span style="color:#991b1b;font-weight:600;">⚠ 실패</span> ' + esc(errMsg || '오류가 발생했습니다.');
+            } else if (log.length > 0) {
+                const last = log[log.length - 1];
+                noteEl.textContent = last.note || '';
+            }
         }
     }
 
@@ -526,6 +758,22 @@
 
     async function init() {
         buildTabBar();
+        const tabBar = document.getElementById('ws-tab-bar');
+        if (tabBar && !tabBar._kbBound) { tabBar.addEventListener('keydown', _handleTabBarKeydown); tabBar._kbBound = true; }
+        if (!document._mcEscBound) {
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Escape') return;
+                const dlg = document.getElementById('gen-dialog');
+                if (dlg && dlg.style.display === 'flex' && typeof window.SessionWorkspace.closeGenerationDialog === 'function') {
+                    window.SessionWorkspace.closeGenerationDialog();
+                }
+                const imageModal = document.getElementById('gen-image-modal');
+                if (imageModal && imageModal.style.display === 'block' && typeof window.SessionWorkspace.closeGenerationImage === 'function') {
+                    window.SessionWorkspace.closeGenerationImage();
+                }
+            });
+            document._mcEscBound = true;
+        }
         buildStageList();
         await loadSession();
         await loadBrief();
@@ -560,6 +808,7 @@
 
         // tab & nav
         switchTab: switchTab,
+        handleLockedTabClick: handleLockedTabClick,
         buildTabBar: buildTabBar,
         buildStageList: buildStageList,
         updateDecisionPanel: updateDecisionPanel,
@@ -567,6 +816,8 @@
         // brief
         saveBrief: saveBrief,
         saveAndRun: saveAndRun,
+        toggleManualPanel: toggleManualPanel,
+        goManualStep: goManualStep,
 
         // chat
         sendMessage: sendMessage,
@@ -582,18 +833,22 @@
         decideConcept: function () {},
         loadReferences: function () {},
         searchReferences: function () {},
+        searchDesignReferences: function () {},
+        openDesignRef: function () {},
         analyzeReference: function () {},
         loadAbstraction: function () {},
         generateAbstraction: function () {},
         loadGenerations: function () {},
         openGenerationDialog: function () {},
         closeGenerationDialog: function () {},
+        closeGenerationImage: function () {},
         submitGeneration: function () {},
         loadSpec: function () {},
         generateSpec: function () {},
         printSpec: function () {},
 
         startAutoPipeline: startAutoPipeline,
+        cancelAutoPipeline: cancelAutoPipeline,
         reload: reload
     };
 

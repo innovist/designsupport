@@ -68,12 +68,12 @@ async def api_test_feature_model_connection(
         client = await get_ai_client(db, feature_key)
         provider = getattr(client, "provider", None) or client.__class__.__name__
         model = getattr(client, "model", None) or getattr(client, "_model", None)
-        if feature_key == "image_generation":
+        if feature_key in {"image_generation", "sketch_generation", "final_image_generation"}:
             return {
                 "ok": True,
                 "provider": provider,
                 "model": model,
-                "message": "이미지 생성 모델 설정을 확인했습니다. 실제 API 호출은 이미지 생성 시 검증됩니다.",
+                "message": "이미지 모델 설정을 확인했습니다. 실제 API 호출은 생성 실행 시 검증됩니다.",
             }
         response = await client.complete(
             [AIMessage(role="user", content="Reply with OK only.")],
@@ -119,101 +119,95 @@ def api_get_key_aliases():
     return {"configured_providers": get_api_key_aliases()}
 
 
-# Full model catalog per provider — used by settings UI
-# Model IDs match .env model comparison table (2026-05-05).
-# "-non" variants share the same API model_id but disable thinking mode (factory handles this).
-_MODEL_CATALOG = {
-    "openai": {
-        "label": "OpenAI",
-        "models": [
-            {"id": "gpt-5.4",       "label": "GPT-5.4",       "types": ["text", "multimodal"]},
-            {"id": "gpt-5.4-mini",  "label": "GPT-5.4 mini",  "types": ["text", "multimodal"]},
-            {"id": "gpt-5.4-nano",  "label": "GPT-5.4 nano",  "types": ["text", "multimodal"]},
-            {"id": "gpt-image-1",   "label": "GPT Image-1",   "types": ["image"]},
-        ],
-    },
-    "gemini": {
-        "label": "Google Gemini",
-        "models": [
-            {"id": "gemini-3.1-pro-preview",        "label": "Gemini 3.1 Pro",              "types": ["text", "multimodal"]},
-            {"id": "gemini-3-flash-preview",         "label": "Gemini 3 Flash",              "types": ["text", "multimodal"]},
-            {"id": "gemini-3.1-flash-lite",          "label": "Gemini 3.1 Flash Lite",       "types": ["text", "multimodal"]},
-            {"id": "gemini-3.1-flash-image-preview", "label": "Gemini 3.1 Flash Image",      "types": ["image"]},
-            {"id": "gemini-3-pro-image-preview",     "label": "Gemini 3 Pro Image",          "types": ["image"]},
-            {"id": "gemini-2.5-flash-image",         "label": "Gemini 2.5 Flash Image",      "types": ["image"]},
-        ],
-    },
-    "deepseek": {
-        "label": "DeepSeek",
-        "models": [
-            {"id": "deepseek-chat",     "label": "DeepSeek v3.2 Chat",  "types": ["text"]},
-            {"id": "deepseek-v4-pro",   "label": "DeepSeek V4 Pro",     "types": ["text"]},
-            {"id": "deepseek-v4-flash", "label": "DeepSeek V4 Flash",   "types": ["text"]},
-        ],
-    },
-    "alibaba": {
-        "label": "Alibaba (Qwen)",
-        "models": [
-            {"id": "qwen3.6-flash",       "label": "Qwen 3.6 Flash",               "types": ["text", "multimodal"]},
-            {"id": "qwen3.6-Flash-non",   "label": "Qwen 3.6 Flash (no think)",    "types": ["text", "multimodal"]},
-            {"id": "qwen3.6-max-preview", "label": "Qwen 3.6 Max",                 "types": ["text", "multimodal"]},
-            {"id": "qwen3.6-Max-non",     "label": "Qwen 3.6 Max (no think)",      "types": ["text", "multimodal"]},
-            {"id": "qwen3.6-plus",        "label": "Qwen 3.6 Plus",                "types": ["text", "multimodal"]},
-            {"id": "qwen3.6-Plus-Non",    "label": "Qwen 3.6 Plus (no think)",     "types": ["text", "multimodal"]},
-            {"id": "qwen-plus",           "label": "Qwen 3.5 Plus",                "types": ["text", "multimodal"]},
-            {"id": "qwen3.5-flash",       "label": "Qwen 3.5 Flash",               "types": ["text", "multimodal"]},
-            {"id": "z-image-turbo",       "label": "Z Image Turbo (Standard)",      "types": ["image"]},
-            {"id": "z-image-turbo-think", "label": "Z Image Turbo (Think +prompt)", "types": ["image"]},
-        ],
-    },
-    "xiaomi": {
-        "label": "Xiaomi Mimo",
-        "models": [
-            {"id": "mimo-v2.5-pro",     "label": "Mimo v2.5 Pro",            "types": ["text"]},
-            {"id": "mimo-v2.5-pro-non", "label": "Mimo v2.5 Pro (no think)", "types": ["text"]},
-            {"id": "mimo-v2.5",         "label": "Mimo v2.5",                "types": ["text", "multimodal"]},
-            {"id": "mimo-v2.5-non",     "label": "Mimo v2.5 (no think)",     "types": ["text", "multimodal"]},
-            {"id": "mimo-v2-pro",       "label": "Mimo v2 Pro",              "types": ["text"]},
-            {"id": "mimo-v2-omni",      "label": "Mimo v2 Omni",             "types": ["text", "multimodal"]},
-            {"id": "mimo-v2-flash",     "label": "Mimo v2 Flash",            "types": ["text"]},
-        ],
-    },
-    "minimax": {
-        "label": "Minimax",
-        "models": [
-            {"id": "MiniMax-M2.7",           "label": "MiniMax M2.7",           "types": ["text"]},
-            {"id": "MiniMax-M2.7-highspeed", "label": "MiniMax M2.7 Highspeed", "types": ["text"]},
-        ],
-    },
-    "kimi": {
-        "label": "Kimi (Moonshot)",
-        "models": [
-            {"id": "kimi-k2.6",     "label": "Kimi K2.6",            "types": ["text", "multimodal"]},
-            {"id": "kimi-k2.6-non", "label": "Kimi K2.6 (no think)", "types": ["text", "multimodal"]},
-            {"id": "kimi-k2.5",     "label": "Kimi K2.5",            "types": ["text", "multimodal"]},
-            {"id": "kimi-k2.5-non", "label": "Kimi K2.5 (no think)", "types": ["text", "multimodal"]},
-        ],
-    },
-    "seedream": {
-        "label": "Seedream (ByteDance)",
-        "models": [
-            {"id": "seedream-5-0-260128",  "label": "Seedream 5.0", "types": ["image"]},
-            {"id": "seedream-4-5-251128",  "label": "Seedream 4.5", "types": ["image"]},
-            {"id": "seedream-4-0-250828",  "label": "Seedream 4.0", "types": ["image"]},
-        ],
-    },
-}
-
-
 @router.get("/workspace/available-models")
 def api_get_available_models():
     """Return model catalog filtered to configured providers."""
     from app.core.config import get_settings
+    from app.core.model_catalog import MODEL_CATALOG
     configured = get_settings().available_providers()
     result = {}
-    for provider, info in _MODEL_CATALOG.items():
+    for provider, info in MODEL_CATALOG.items():
         result[provider] = {
             **info,
             "configured": provider in configured,
         }
     return result
+
+
+@router.get("/workspace/search-backend")
+def api_get_search_backend():
+    """Return current search backend configuration."""
+    from app.core.config import get_settings
+    s = get_settings()
+    return {
+        "search_backend": s.search_backend,
+        "web_search_crawler_api_base_url": s.web_search_crawler_api_base_url or "",
+        "web_search_crawler_api_token": "***" if s.web_search_crawler_api_token else "",
+        "searxng_api_url": s.searxng_api_url or "",
+        "crawl4ai_api_url": s.crawl4ai_api_url or "",
+    }
+
+
+@router.put("/workspace/search-backend")
+async def api_update_search_backend(updates: dict):
+    """Update search backend settings in .env file."""
+    from pathlib import Path
+
+    env_path = Path(".env")
+    if not env_path.exists():
+        return {"ok": False, "detail": ".env 파일이 없습니다."}
+
+    lines = env_path.read_text(encoding="utf-8").splitlines()
+    keys_to_update = {
+        "search_backend": "SEARCH_BACKEND",
+        "web_search_crawler_api_base_url": "WEB_SEARCH_CRAWLER_API_BASE_URL",
+        "web_search_crawler_api_token": "WEB_SEARCH_CRAWLER_API_TOKEN",
+        "searxng_api_url": "SEARXNG_API_URL",
+        "crawl4ai_api_url": "CRAWL4AI_API_URL",
+    }
+
+    existing_keys = {line.split("=")[0].strip() for line in lines if "=" in line and not line.strip().startswith("#")}
+
+    for field, env_key in keys_to_update.items():
+        if field not in updates:
+            continue
+        value = updates[field]
+        if value is None:
+            value = ""
+        env_line = f"{env_key}={value}"
+
+        if env_key in existing_keys:
+            lines = [
+                env_line if line.split("=")[0].strip() == env_key else line
+                for line in lines
+            ]
+        else:
+            lines.append(env_line)
+
+    env_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # Update the cached settings
+    from app.core.config import Settings, get_settings
+    get_settings.cache_clear()
+    new_settings = Settings()
+    import app.core.config as cfg_mod
+    cfg_mod.settings = new_settings
+
+    return {"ok": True, "search_backend": updates.get("search_backend", "none")}
+
+
+@router.post("/workspace/search-backend/test")
+async def api_test_search_backend():
+    """Test the current search backend connectivity."""
+    from app.infrastructure.search.web_search import get_search_client
+
+    client = get_search_client()
+    try:
+        results = await client.web_search("test query design trends", num_results=3)
+        return {
+            "ok": True,
+            "message": f"연결 확인 완료 ({len(results)}건 결과 반환)",
+            "result_count": len(results),
+        }
+    except Exception as exc:
+        return {"ok": False, "message": f"연결 실패: {exc}"}

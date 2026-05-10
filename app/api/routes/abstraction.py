@@ -21,7 +21,7 @@ router = APIRouter(tags=["abstraction"])
 
 
 class AbstractionRequest(BaseModel):
-    source_type: str  # reference | sketch
+    source_type: str  # reference | sketch | concept
     source_id: uuid.UUID | None = None
 
 

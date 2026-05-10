@@ -4,23 +4,43 @@ Use-cases: generate concept candidates and record decisions.
 
 from __future__ import annotations
 
-import json
 import uuid
 
 from sqlalchemy.orm import Session
 
 from app.application.ports.ai_client import AIMessage
+from app.application.use_cases.trends.insight_text import format_insight_for_prompt
 from app.core.logging import get_logger
 from app.infrastructure.ai_clients.factory import get_ai_client
 from app.infrastructure.repositories.session_repository import SessionRepository
 from app.models.concepts import ConceptCandidate, ConceptDecision
 from app.models.trends import TrendInsight
+from app.utils.json_parse import parse_json_array
 
 logger = get_logger(__name__)
 
 _CONCEPT_PROMPT = """
-You are a design concept strategist. Given the design brief and trend evidence below,
-generate 3 to 5 distinct concept candidates.
+You are a visual design concept specialist. Your role is to generate distinct VISUAL DESIGN CONCEPTS — not product features, not technology specs, not business models.
+
+A visual design concept defines: how the design LOOKS, how it FEELS, and what visual language it speaks.
+Each concept must address at least one of: Form Language, Color Direction, Material/Texture, Mood/Atmosphere, or Visual Metaphor.
+
+STRICTLY FORBIDDEN in descriptions or rationale:
+- Product features or functions (e.g. "smart sensor integration", "AI capabilities")
+- Technology specifications (e.g. "app connectivity", "IoT platform")
+- Business or service models (e.g. "subscription tier", "B2B solution")
+- Market, sales, operational, or UX workflow claims unless they are directly visible in the design form
+
+CORRECT visual concept examples:
+- "유기적 곡선과 내추럴 소재의 조화 — 부드러운 형태언어와 무광 소재 대비"
+- "미니멀리즘 + 금속 텍스처 대비 — 절제된 형태에 산업적 표면 마감"
+- "레트로 미래주의 조형 언어 — 기하학적 볼륨과 크롬 반사 효과"
+
+Write every concept as a DESIGN DIRECTION that a designer can sketch:
+- name: short visual title, not a product slogan
+- description: visible shape, proportion, material, surface, color, line, silhouette, composition
+- rationale: why this visual language fits the brief and trend evidence
+- risk: visual/production design risk only, not business risk
 
 IMPORTANT: All textual fields (name, description, rationale, risk) MUST be written in Korean (한국어).
 Only field keys remain in English.
@@ -28,23 +48,42 @@ Only field keys remain in English.
 Design Brief:
 {brief_text}
 
-Trend Evidence (verified facts only - is_hypothesis=false):
+Trend Evidence (verified facts only — use as visual inspiration, not feature ideas):
 {trend_evidence}
 
-Return ONLY a JSON array of objects, each with:
+Return ONLY a JSON array of 3 to 5 objects, each with:
 {{
-  "name": "컨셉 이름 (한국어)",
-  "description": "2-3 문장 설명 (한국어)",
+  "name": "시각적 컨셉 이름 — 조형/색채/소재 언어를 담은 이름 (한국어)",
+  "description": "이 디자인이 어떻게 보이고 어떤 느낌인지 — 형태언어·색상 방향·소재·분위기·시각적 은유 중 하나 이상을 포함한 2-3문장 (한국어)",
   "score": 0.0-1.0,
-  "rationale": "이 컨셉이 브리프와 근거에 부합하는 이유 (한국어)",
-  "risk": "잠재적 위험 또는 한계 (한국어)",
+  "rationale": "이 시각적 방향이 브리프의 목적/타겟/맥락에 부합하는 이유, 트렌드 근거와의 연결 (한국어)",
+  "risk": "이 시각적 접근의 잠재적 한계 또는 실현 난이도 (한국어)",
   "trend_evidence": [{{ "source": "url", "quote": "direct quote" }}]
 }}
 """
 
 _CONCEPT_BRIEF_ONLY_PROMPT = """
-You are a design concept strategist. No trend data is available, so generate concepts
-based solely on the design brief using your domain expertise.
+You are a visual design concept specialist. Your role is to generate distinct VISUAL DESIGN CONCEPTS — not product features, not technology specs, not business models.
+
+A visual design concept defines: how the design LOOKS, how it FEELS, and what visual language it speaks.
+Each concept must address at least one of: Form Language, Color Direction, Material/Texture, Mood/Atmosphere, or Visual Metaphor.
+
+STRICTLY FORBIDDEN in descriptions or rationale:
+- Product features or functions (e.g. "smart sensor integration", "AI capabilities")
+- Technology specifications (e.g. "app connectivity", "IoT platform")
+- Business or service models (e.g. "subscription tier", "B2B solution")
+- Market, sales, operational, or UX workflow claims unless they are directly visible in the design form
+
+CORRECT visual concept examples:
+- "유기적 곡선과 내추럴 소재의 조화 — 부드러운 형태언어와 무광 소재 대비"
+- "미니멀리즘 + 금속 텍스처 대비 — 절제된 형태에 산업적 표면 마감"
+- "레트로 미래주의 조형 언어 — 기하학적 볼륨과 크롬 반사 효과"
+
+Write every concept as a DESIGN DIRECTION that a designer can sketch:
+- name: short visual title, not a product slogan
+- description: visible shape, proportion, material, surface, color, line, silhouette, composition
+- rationale: why this visual language fits the brief
+- risk: visual/production design risk only, not business risk
 
 IMPORTANT: All textual fields (name, description, rationale, risk) MUST be written in Korean (한국어).
 Only field keys remain in English.
@@ -54,11 +93,11 @@ Design Brief:
 
 Return ONLY a JSON array of 3 objects, each with:
 {{
-  "name": "컨셉 이름 (한국어)",
-  "description": "2-3 문장 설명 (한국어)",
+  "name": "시각적 컨셉 이름 — 조형/색채/소재 언어를 담은 이름 (한국어)",
+  "description": "이 디자인이 어떻게 보이고 어떤 느낌인지 — 형태언어·색상 방향·소재·분위기·시각적 은유 중 하나 이상을 포함한 2-3문장 (한국어)",
   "score": 0.0-1.0,
-  "rationale": "이 컨셉이 브리프에 부합하는 이유 (한국어)",
-  "risk": "잠재적 위험 또는 한계 (한국어)",
+  "rationale": "이 시각적 방향이 브리프의 목적/타겟/맥락에 부합하는 이유 (한국어)",
+  "risk": "이 시각적 접근의 잠재적 한계 또는 실현 난이도 (한국어)",
   "trend_evidence": []
 }}
 """
@@ -111,10 +150,13 @@ async def generate_concepts(
     client = await get_ai_client(db, "concept_generation")
 
     if verified_insights:
-        trend_text = "\n".join(
-            f"- {i.evidence_quote} (source: {i.document.url})"
-            for i in verified_insights
-        )
+        evidence_lines = [
+            line for insight in verified_insights
+            if (line := format_insight_for_prompt(insight))
+        ]
+        if not evidence_lines:
+            raise ValueError("Verified trend evidence has no usable summary or source text.")
+        trend_text = "\n".join(evidence_lines)
         prompt = _CONCEPT_PROMPT.format(brief_text=brief_text, trend_evidence=trend_text)
     else:
         logger.warning("[CONCEPT] no verified insights; using brief-only prompt session=%s", session_id)
@@ -123,16 +165,13 @@ async def generate_concepts(
     response = await client.complete(
         [AIMessage(role="user", content=prompt)],
         temperature=0.7,
-        max_tokens=2000,
+        max_tokens=4000,
     )
 
     try:
-        raw = response.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0]
-        candidates_data: list[dict] = json.loads(raw)
+        candidates_data = parse_json_array(response.content, required_key="name")
     except Exception:
-        logger.warning("Concept generation parse failed: %s", response.content[:300])
+        logger.warning("Concept generation parse failed: %s", response.content[:400])
         raise ValueError("AI returned invalid JSON for concept candidates")
 
     evidence_ids = [str(i.id) for i in verified_insights]

@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadProjects() {
     try {
-        const response = await fetch('/api/v1/projects/');
+        const response = await fetch('/api/projects');
         if (response.ok) {
             projects = await response.json();
             const select = document.getElementById('filter-project');
             projects.forEach(p => {
                 const option = document.createElement('option');
                 option.value = p.id;
-                option.textContent = p.title || _t('common.noTitle');
+                option.textContent = p.name || _t('common.noTitle');
                 select.appendChild(option);
             });
         }
@@ -42,14 +42,15 @@ async function loadProjects() {
 
 async function loadSessions() {
     try {
-        const response = await fetch('/api/v1/sessions/');
+        const response = await fetch('/api/sessions');
         if (response.ok) {
             sessions = await response.json();
             const select = document.getElementById('filter-session');
             sessions.forEach(s => {
                 const option = document.createElement('option');
                 option.value = s.id;
-                option.textContent = s.session_title || _t('common.noTitle');
+                const briefTitle = s.brief && s.brief.purpose ? s.brief.purpose : null;
+                option.textContent = briefTitle || _t('common.noTitle');
                 select.appendChild(option);
             });
         }
@@ -80,7 +81,7 @@ async function loadImages() {
         params.append('page', currentPage);
         params.append('limit', PAGE_SIZE);
 
-        const response = await fetch(`/api/v1/library?${params}`);
+        const response = await fetch(`/api/library?${params}`);
 
         if (response.ok) {
             const data = await response.json();

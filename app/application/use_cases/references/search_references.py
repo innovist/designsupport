@@ -4,7 +4,6 @@ Use-cases: search for reference assets and analyze individual references.
 
 from __future__ import annotations
 
-import json
 import uuid
 from datetime import datetime, timezone
 
@@ -16,6 +15,7 @@ from app.infrastructure.ai_clients.factory import get_ai_client
 from app.infrastructure.search.image_search import get_image_search_client
 from app.models.session import DesignSession
 from app.models.references import ReferenceAnalysis, ReferenceAsset
+from app.utils.json_parse import parse_json_object
 
 logger = get_logger(__name__)
 
@@ -53,11 +53,13 @@ async def search_references(
     assets: list[ReferenceAsset] = []
     for result in results:
         risk = _assess_copyright_risk(result.source_domain, result.url)
+        is_direct_image = _is_direct_image_url(result.image_url)
         asset = ReferenceAsset(
             session_id=session_id,
-            asset_type="external",
-            url=result.url,
+            asset_type="external_image" if is_direct_image else "external_page",
+            url=result.image_url if is_direct_image else result.url,
             title=result.title,
+            thumbnail_path=result.image_url,
             source_domain=result.source_domain,
             copyright_risk=risk,
             high_risk_blocked=(risk == "high"),
@@ -84,6 +86,8 @@ async def analyze_reference(db: Session, reference_id: uuid.UUID) -> ReferenceAn
         raise PermissionError(
             f"Reference {reference_id} is blocked due to high copyright risk"
         )
+    if asset.asset_type != "external_image" and not _is_direct_image_url(asset.url or ""):
+        raise ValueError("이미지 파일 URL이 아닌 웹 레퍼런스는 비전 분석을 실행할 수 없습니다.")
 
     client = await get_ai_client(db, "reference_analysis")
     response = await client.vision_complete(
@@ -94,10 +98,7 @@ async def analyze_reference(db: Session, reference_id: uuid.UUID) -> ReferenceAn
     )
 
     try:
-        raw = response.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0]
-        parsed: dict = json.loads(raw)
+        parsed = parse_json_object(response.content)
     except Exception as parse_err:
         logger.warning("Reference analysis parse failed: %s", response.content[:200])
         raise ValueError(f"레퍼런스 분석 결과를 파싱할 수 없습니다: {parse_err}") from parse_err
@@ -152,3 +153,10 @@ def _assess_copyright_risk(domain: str | None, url: str) -> str:
         if term in url_lower:
             return "medium"
     return "unknown"
+
+
+def _is_direct_image_url(url: str | None) -> bool:
+    if not url:
+        return False
+    path = url.split("?", 1)[0].lower()
+    return path.endswith((".jpg", ".jpeg", ".png", ".webp", ".gif"))

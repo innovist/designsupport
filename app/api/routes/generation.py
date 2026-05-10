@@ -12,6 +12,7 @@ from app.application.dtos.generation_dtos import GeneratedDesignResponse, Genera
 from app.application.use_cases.generation.create_generation_job import (
     create_generation_job,
     get_generation_result,
+    retry_generation_job,
 )
 from app.core.database import get_db
 from app.infrastructure.ai_clients.factory import SettingsRequiredError
@@ -21,14 +22,14 @@ router = APIRouter(tags=["generation"])
 
 
 @router.post("/sessions/{session_id}/generations", response_model=GeneratedDesignResponse, status_code=202)
-def api_create_generation(
+async def api_create_generation(
     session_id: uuid.UUID,
     body: GenerationRequest,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     try:
-        return create_generation_job(db, session_id, body, background_tasks)
+        return await create_generation_job(db, session_id, body, background_tasks)
     except SettingsRequiredError as exc:
         return settings_required_response(exc)
     except ValueError as exc:
@@ -51,3 +52,17 @@ def api_get_generation(generation_id: uuid.UUID, db: Session = Depends(get_db)):
         return get_generation_result(db, generation_id)
     except ValueError as exc:
         return not_found_response(str(exc))
+
+
+@router.post("/generations/{generation_id}/retry", response_model=GeneratedDesignResponse, status_code=202)
+def api_retry_generation(
+    generation_id: uuid.UUID,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    try:
+        return retry_generation_job(db, generation_id, background_tasks)
+    except SettingsRequiredError as exc:
+        return settings_required_response(exc)
+    except ValueError as exc:
+        return validation_error_response(str(exc))

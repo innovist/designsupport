@@ -84,7 +84,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="toast" style="position:fixed;top:80px;right:24px;z-index:9999;display:none;padding:12px 20px;border-radius:8px;font-size:var(--font-sm);font-weight:600;box-shadow:var(--shadow-lg);min-width:220px;"></div>
+<div id="toast" style="position:fixed;top:80px;right:24px;z-index:9999;display:none;padding:12px 20px;border-radius:8px;font-size:var(--font-sm);font-weight:600;box-shadow:var(--shadow-card-hover);min-width:220px;"></div>
 
 <header style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
     <div>
@@ -107,6 +107,71 @@
     <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:0.75rem;">
         API 키를 추가하거나 변경하려면 서버의 <code style="background:var(--bg-secondary);padding:2px 6px;border-radius:3px;">.env</code> 파일을 직접 수정하고 서버를 재시작하세요.
     </p>
+</div>
+
+<!-- 검색 백엔드 설정 -->
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3 class="card-title">검색 백엔드 설정</h3>
+        <button class="btn btn-primary btn-sm" onclick="window._saveSearchBackend()">저장</button>
+    </div>
+    <div id="search-backend-container">
+        <div style="display:grid;gap:0.75rem;">
+            <div style="display:flex;align-items:flex-end;gap:1.5rem;flex-wrap:wrap;">
+                <div style="display:flex;flex-direction:column;gap:3px;">
+                    <label for="search-backend-select" style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);white-space:nowrap;">백엔드 선택</label>
+                    <select id="search-backend-select" style="width:200px;" onchange="window._onSearchBackendChange()">
+                        <option value="none">사용 안 함 (수동만)</option>
+                        <option value="external">외부 크롤러 API</option>
+                        <option value="searxng">SearXNG</option>
+                        <option value="crawl4ai">Crawl4AI</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="window._testSearchBackend()">연결 확인</button>
+            </div>
+
+            <!-- External Crawler fields -->
+            <div id="search-backend-external" style="display:none;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                        <label style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);">API URL</label>
+                        <input type="url" id="search-external-url" placeholder="http://host:port" style="width:100%;">
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                        <label style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);">API Token</label>
+                        <input type="password" id="search-external-token" placeholder="토큰" style="width:100%;">
+                    </div>
+                </div>
+                <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:0.5rem;">
+                    Firecrawl / AnyCrawl 호환 API. <code style="background:var(--bg-secondary);padding:2px 6px;border-radius:3px;">WEB_SEARCH_CRAWLER_API_BASE_URL</code> 참조.
+                </p>
+            </div>
+
+            <!-- SearXNG fields -->
+            <div id="search-backend-searxng" style="display:none;">
+                <div style="display:flex;flex-direction:column;gap:3px;max-width:400px;">
+                    <label style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);">SearXNG URL</label>
+                    <input type="url" id="search-searxng-url" placeholder="http://localhost:8888" style="width:100%;">
+                </div>
+                <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:0.5rem;">
+                    로컬 SearXNG 인스턴스. JSON API가 활성화되어야 합니다.
+                </p>
+            </div>
+
+            <!-- Crawl4AI fields -->
+            <div id="search-backend-crawl4ai" style="display:none;">
+                <div style="display:flex;flex-direction:column;gap:3px;max-width:400px;">
+                    <label style="font-size:var(--font-xs);font-weight:600;color:var(--text-muted);">Crawl4AI API URL</label>
+                    <input type="url" id="search-crawl4ai-url" placeholder="http://localhost:11235" style="width:100%;">
+                </div>
+                <p style="font-size:var(--font-xs);color:var(--text-muted);margin-top:0.5rem;">
+                    Crawl4AI 서비스 (LLM 친화적 Markdown 출력). Docker: <code style="background:var(--bg-secondary);padding:2px 6px;border-radius:3px;">crawl4ai</code>
+                </p>
+            </div>
+
+            <div id="search-backend-status" style="display:none;padding:0.5rem 0.75rem;border-radius:6px;font-size:var(--font-sm);font-weight:600;"></div>
+        </div>
+    </div>
 </div>
 
 <!-- 기능별 AI 모델 설정 -->

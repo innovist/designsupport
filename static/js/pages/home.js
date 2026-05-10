@@ -154,7 +154,7 @@ async function loadRecentImages() {
     const metaCount = document.getElementById('hero-meta-count');
 
     try {
-        const res = await fetch('/api/v1/library?limit=8&sort=created_at_desc');
+        const res = await fetch('/api/library?limit=8&sort=created_at_desc');
         if (res.ok) {
             const data = await res.json();
             const images = data.images || [];

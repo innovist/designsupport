@@ -8,8 +8,9 @@ Returns base64 data URL since the API returns inline bytes, not a hosted URL.
 from __future__ import annotations
 
 import base64
+from pathlib import Path
 
-from app.application.ports.ai_client import AIClient, AIMessage, AIResponse
+from app.application.ports.ai_client import AIClient, AIMessage, AIResponse, ImageGenerationResult
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -29,17 +30,28 @@ class GeminiImageClient(AIClient):
 
     # ─── Text / vision — not applicable ──────────────────────────────────────
 
-    async def complete(self, messages: list[AIMessage], **kwargs) -> AIResponse:
+    async def complete(
+        self,
+        messages: list[AIMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 2000,
+        **kwargs,
+    ) -> AIResponse:
         raise NotImplementedError("GeminiImageClient is for image generation only.")
 
-    async def vision_complete(self, messages: list[AIMessage], image_paths: list[str], **kwargs) -> AIResponse:
+    async def vision_complete(
+        self,
+        messages: list[AIMessage],
+        image_paths: list[str],
+        temperature: float = 0.7,
+        max_tokens: int = 2000,
+        **kwargs,
+    ) -> AIResponse:
         raise NotImplementedError("GeminiImageClient is for image generation only.")
 
     # ─── Image generation ─────────────────────────────────────────────────────
 
-    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> "ImageGenerationResult":
-        from app.infrastructure.ai_clients._image_result import ImageGenerationResult
-
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
         try:
             from google import genai
             from google.genai import types
@@ -52,9 +64,21 @@ class GeminiImageClient(AIClient):
             response_modalities=["IMAGE"],
         )
 
+        contents: list[object] = [prompt]
+        for image_path in kwargs.get("reference_image_paths") or []:
+            path = Path(image_path)
+            if not path.exists():
+                raise ValueError(f"Reference image file not found: {image_path}")
+            contents.append(
+                types.Part.from_bytes(
+                    data=path.read_bytes(),
+                    mime_type=_mime_type_for_path(path),
+                )
+            )
+
         response = await client.aio.models.generate_content(
             model=self._model,
-            contents=prompt,
+            contents=contents,
             config=config,
         )
 
@@ -80,3 +104,12 @@ def _extract_image_bytes(response: object) -> tuple[bytes | None, str]:
     except (AttributeError, IndexError, TypeError):
         pass
     return None, "image/png"
+
+
+def _mime_type_for_path(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix in {".jpg", ".jpeg"}:
+        return "image/jpeg"
+    if suffix == ".webp":
+        return "image/webp"
+    return "image/png"

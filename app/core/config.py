@@ -34,6 +34,11 @@ class Settings(BaseSettings):
     kimi_api_key: Optional[str] = None
     bytedance_seedream_api_key: Optional[str] = None
 
+    # ─── Image search APIs ────────────────────────────────────────────────────
+    unsplash_access_key: Optional[str] = None
+    pexels_api_key: Optional[str] = None
+    pixabay_api_key: Optional[str] = None
+
     # ─── File storage ─────────────────────────────────────────────────────────
     upload_dir: str = "./uploads"
     static_dir: str = "./static"
@@ -51,6 +56,13 @@ class Settings(BaseSettings):
 
     # ─── SearXNG (optional) ───────────────────────────────────────────────────
     searxng_api_url: Optional[str] = None
+
+    # ─── Search backend selection & configuration ─────────────────────────────
+    search_backend: str = "none"  # none / searxng / external / crawl4ai
+    web_search_crawler_api_base_url: Optional[str] = None
+    web_search_crawler_api_token: Optional[str] = None
+    web_search_crawler_api_poll_interval_seconds: int = 30
+    crawl4ai_api_url: Optional[str] = None
 
     class Config:
         env_file = ".env"

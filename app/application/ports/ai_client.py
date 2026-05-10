@@ -8,6 +8,13 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class ImageGenerationResult(BaseModel):
+    """Result returned by generate_image implementations."""
+    image_path: str
+    provider: str
+    model: str
+
+
 class AIMessage(BaseModel):
     role: str  # "user" | "assistant" | "system"
     content: str
@@ -46,3 +53,7 @@ class AIClient(ABC):
         **kwargs,
     ) -> AIResponse:
         """Send a vision-capable chat-completion request."""
+
+    async def generate_image(self, prompt: str, size: str = "1024x1024", **kwargs) -> ImageGenerationResult:
+        """Generate an image from a prompt and optional provider-specific image inputs."""
+        raise NotImplementedError(f"{type(self).__name__} does not support image generation")

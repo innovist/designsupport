@@ -56,9 +56,9 @@ class FeatureModelSetting(Base, TimestampMixin):
     Stores which AI provider/model to use for each pipeline feature.
 
     feature_key values:
-      abstraction, sketch_analysis, concept_generation, chat,
-      image_generation, reference_analysis, brief_structuring,
-      spec_writing, trend_analysis
+      brief_structuring, trend_analysis, concept_generation, reference_analysis,
+      sketch_analysis, abstraction, sketch_prompt_generation, sketch_generation,
+      final_image_prompt_generation, final_image_generation, spec_writing, chat
     """
 
     # @MX:ANCHOR: [AUTO] Central routing table for all AI model selection

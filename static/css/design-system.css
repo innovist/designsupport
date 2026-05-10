@@ -7,7 +7,7 @@
 :root {
   /* 배경 색상 - idea_gen과 동일 */
   --bg-primary: #ffffff;
-  --bg-secondary: #ffffff;  /* 모든 바탕은 흰색 */
+  --bg-secondary: #fafaf9;  /* 미세한 따뜻한 톤 */
   --bg-card: #ffffff;
   --bg-hover: #f0f0f0;
 
@@ -30,9 +30,17 @@
 
   /* 보더/그림자 - idea_gen 스타일 */
   --border-color: #e0e0e0;
+  --border-color-strong: #c8c8c8;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  /* Vercel-style layered card shadows */
+  --shadow-card: rgba(0,0,0,0.07) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 4px, rgba(0,0,0,0.03) 0px 6px 12px -4px;
+  --shadow-card-hover: rgba(0,0,0,0.09) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, rgba(0,0,0,0.05) 0px 12px 20px -6px;
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.18);
+  --radius-lg: 12px;
+  --transition-fast: 0.12s ease;
+  --transition-base: 0.18s ease;
 
   /* 간격 - idea_gen 동일 */
   --spacing-xs: 0.25rem;  /* 4px */
@@ -70,13 +78,15 @@ body {
 
 /* ==================== 레이아웃 (idea_gen 풀스크린) ==================== */
 .header {
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 12px 24px;  /* 스크린샷: 작은 헤더 */
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  padding: 12px 24px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .container {
@@ -86,9 +96,9 @@ body {
 }
 
 .main-content {
-  padding: 24px 24px;  /* 스크린샷: 작은 상단 패딩 */
+  padding: 12px 24px;
   min-height: calc(100vh - 60px);
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
 }
 
 /* ==================== 3컬럼 레이아웃 (idea_gen 스타일) ==================== */
@@ -138,10 +148,10 @@ body {
 }
 
 /* ==================== 타이포그래피 ==================== */
-h1 { font-size: var(--font-2xl); font-weight: 700; margin-bottom: var(--spacing-md); color: var(--text-primary); }
-h2 { font-size: var(--font-xl); font-weight: 600; margin-bottom: var(--spacing-md); color: var(--text-primary); }
-h3 { font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary); }
-h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary); }
+h1 { font-size: var(--font-2xl); font-weight: 700; margin-bottom: var(--spacing-md); color: var(--text-primary); letter-spacing: -0.025em; }
+h2 { font-size: var(--font-xl); font-weight: 600; margin-bottom: var(--spacing-md); color: var(--text-primary); letter-spacing: -0.015em; }
+h3 { font-size: var(--font-lg); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary); letter-spacing: -0.01em; }
+h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary); letter-spacing: -0.005em; }
 
 .text-primary { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }
@@ -150,16 +160,16 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
 /* ==================== 카드 (idea_gen 스타일) ==================== */
 .card {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;  /* 스크린샷: 작은 border-radius */
-  padding: 16px;       /* 스크린샷: 작은 패딩 */
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
   margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition-base);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .card-compact {
@@ -197,7 +207,7 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
   padding: 12px;
   margin-bottom: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .session-card:hover {
@@ -246,15 +256,22 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
 /* ==================== 버튼 (idea_gen 스타일) ==================== */
 .btn {
   display: inline-block;
-  padding: 8px 16px;  /* 스크린샷: 작은 버튼 */
+  padding: 8px 16px;
   font-size: var(--font-sm);
   font-weight: 600;
+  line-height: 1.2;
   text-decoration: none;
-  border-radius: 6px;  /* 작은 border-radius */
+  border-radius: 6px;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
   text-align: center;
+  vertical-align: middle;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .btn-sm {
@@ -312,13 +329,21 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
 
 /* ==================== 배지 ==================== */
 .badge {
-  display: inline-block;
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
   font-size: var(--font-xs);
   font-weight: 600;
   border-radius: 4px;
   background: var(--color-primary);
   color: var(--text-white);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge-pill {
+  border-radius: 9999px;
+  padding: 3px 10px;
 }
 
 .badge-success { background: var(--color-success); }
@@ -338,7 +363,7 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
   text-decoration: none;
   font-weight: 500;
   font-size: var(--font-base);
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast);
   padding: 4px 0;
 }
 
@@ -364,19 +389,19 @@ h4 { font-size: var(--font-base); font-weight: 600; margin-bottom: var(--spacing
 .tab-btn {
   background: none;
   border: none;
-  padding: 12px 20px;
+  padding: 9px 14px;
   font-size: var(--font-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: all 0.2s;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .tab-btn:hover {
   color: var(--text-primary);
-  background: var(--bg-hover);
+  background: transparent;
 }
 
 .tab-btn.tab-active {
@@ -407,7 +432,7 @@ input[type="radio"] {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  box-shadow: var(--shadow-focus);
 }
 
 textarea {
@@ -528,8 +553,8 @@ textarea {
 
 /* ==================== 스크롤바 스타일 ==================== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -572,3 +597,26 @@ textarea {
   font-size: var(--font-sm);
   color: var(--text-secondary);
 }
+
+/* ──────────────────── Skeleton loading ──────────────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -468px 0; }
+  100% { background-position:  468px 0; }
+}
+.skeleton-line {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 468px 100%;
+  animation: skeleton-shimmer 1.3s ease-in-out infinite;
+  border-radius: 4px;
+}
+.skeleton-card {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ──────────────────── Badge 상태 변형 ──────────────────── */
+.badge-neutral   { background: #f3f4f6; color: #374151; }
+.badge-created   { background: #eff6ff; color: #1e40af; }
+.badge-running   { background: #f0fdf4; color: #166534; }
+.badge-completed { background: #ecfdf5; color: #065f46; }
+.badge-draft     { background: #f9fafb; color: #6b7280; box-shadow: 0 0 0 1px #e5e7eb; }

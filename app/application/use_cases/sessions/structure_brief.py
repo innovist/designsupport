@@ -16,6 +16,7 @@ from app.core.logging import get_logger
 from app.infrastructure.ai_clients.factory import get_ai_client
 from app.infrastructure.repositories.session_repository import SessionRepository
 from app.models.session import DesignBrief, ChatMessage
+from app.utils.json_parse import parse_json_object
 
 logger = get_logger(__name__)
 
@@ -50,8 +51,6 @@ async def structure_brief(db: Session, session_id: uuid.UUID) -> DesignBrief:
     Parse conversation history and upsert DesignBrief.
     Returns the Brief object (is_complete indicates whether all fields are present).
     """
-    import json
-
     session_repo = SessionRepository(db)
     session = session_repo.get_by_id(session_id)
     if not session:
@@ -77,10 +76,7 @@ async def structure_brief(db: Session, session_id: uuid.UUID) -> DesignBrief:
     )
 
     try:
-        raw = response.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0]
-        extracted: dict = json.loads(raw)
+        extracted = parse_json_object(response.content)
     except Exception:
         logger.warning("Failed to parse brief JSON from AI response: %s", response.content[:200])
         extracted = {}
